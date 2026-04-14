@@ -13,3 +13,39 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Security - Never commit credentials
+*.key
+*.pem
+*.jks
+*.keystore
+google-services.json
+api_keys.xml
+**/secrets/
+**/credentials.json
+.env
+.env.local
+*.token
+
+# Documentation - Temporary files
+SETUP_COMPLETE.md
+VERIFICATION_CHECKLIST.md
+FIX_403_*.md
+ADD_SSH_KEY.md
+*_MANUAL_*.md
+SECURE_*.md
+commit.ps1
+commit.sh
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS
+.DS_Store
+.env.*.local
+
