@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentDashboardBinding
@@ -63,6 +64,11 @@ class DashboardFragment : Fragment() {
         // Setup RecyclerView (R15, R16)
         setupRecyclerView()
 
+        // Setup logout button (R04)
+        binding.btnLogout.setOnClickListener {
+            logout()
+        }
+
         // Observe ViewModel state and update UI
         observeViewModel()
         
@@ -71,6 +77,10 @@ class DashboardFragment : Fragment() {
         if (userId != -1) {
             Log.d(TAG, "onViewCreated(): Loading data for userId $userId")
             viewModel.loadDashboardData(userId)
+
+            // Show welcome message with username
+            val username = sessionManager.getUsername()
+            binding.tvWelcome.text = "Welcome back, $username!"
         } else {
             Log.w(TAG, "onViewCreated(): No active session found")
         }
@@ -107,6 +117,17 @@ class DashboardFragment : Fragment() {
             }
             binding.tvOverspendingWarning.visibility = if (hasOverspending) View.VISIBLE else View.GONE
         }
+    }
+
+    /**
+     * Handle user logout (R04).
+     */
+    private fun logout() {
+        Log.d(TAG, "logout(): User requested logout")
+        sessionManager.clearSession()
+
+        // Navigate back to login screen
+        findNavController().navigate(R.id.loginFragment)
     }
 
     override fun onDestroyView() {

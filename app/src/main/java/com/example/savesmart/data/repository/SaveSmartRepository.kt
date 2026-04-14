@@ -26,7 +26,139 @@ class SaveSmartRepository(
         if (existingUser != null) return false
         
         val newUser = User(username = username, passwordHash = passwordHash, fullName = username)
-        return userDao.insertUser(newUser) > 0
+        val userId = userDao.insertUser(newUser)
+        val success = userId > 0
+
+        // If registration successful, create sample categories for new user (R05)
+        if (success) {
+            createSampleCategoriesForUser(userId.toInt())
+        }
+
+        return success
+    }
+
+    private suspend fun createSampleCategoriesForUser(userId: Int) {
+        Log.d(TAG, "createSampleCategoriesForUser: Creating sample categories for userId=$userId")
+
+        // Define some sample categories (R05)
+        val sampleCategories = listOf(
+            com.example.savesmart.data.entity.Category(
+                userId = userId,
+                name = "Food & Dining",
+                colorHex = "#FF6B6B",
+                maxGoalMilliunits = 200_000L, // R2,000.00
+                minGoalMilliunits = 100_000L   // R1,000.00
+            ),
+            com.example.savesmart.data.entity.Category(
+                userId = userId,
+                name = "Transport",
+                colorHex = "#4ECDC4",
+                maxGoalMilliunits = 150_000L, // R1,500.00
+                minGoalMilliunits = 75_000L   // R750.00
+            ),
+            com.example.savesmart.data.entity.Category(
+                userId = userId,
+                name = "Entertainment",
+                colorHex = "#45B7D1",
+                maxGoalMilliunits = 100_000L, // R1,000.00
+                minGoalMilliunits = 50_000L   // R500.00
+            ),
+            com.example.savesmart.data.entity.Category(
+                userId = userId,
+                name = "Shopping",
+                colorHex = "#96CEB4",
+                maxGoalMilliunits = 80_000L,  // R800.00
+                minGoalMilliunits = 40_000L   // R400.00
+            )
+        )
+
+        // Insert each sample category into the database
+        for (category in sampleCategories) {
+            val categoryId = categoryDao.insertCategory(category)
+            Log.d(TAG, "createSampleCategoriesForUser: Created category '${category.name}' with ID=$categoryId")
+        }
+
+        // Create sample expenses for current month (R08)
+        createSampleExpensesForUser(userId)
+
+        Log.d(TAG, "createSampleCategoriesForUser: Created ${sampleCategories.size} sample categories")
+    }
+
+    private suspend fun createSampleExpensesForUser(userId: Int) {
+        Log.d(TAG, "createSampleExpensesForUser: Creating sample expenses for userId=$userId")
+
+        // Get the categories we just created
+        val categories = categoryDao.getCategoriesForUser(userId)
+
+        if (categories.isEmpty()) {
+            Log.w(TAG, "createSampleExpensesForUser: No categories found, skipping expense creation")
+            return
+        }
+
+        val currentTime = System.currentTimeMillis()
+        val calendar = java.util.Calendar.getInstance()
+
+        // Create some sample expenses for this month
+        val sampleExpenses = mutableListOf<com.example.savesmart.data.entity.Expense>()
+
+        // Food expenses
+        val foodCategory = categories.find { it.name == "Food & Dining" }
+        if (foodCategory != null) {
+            sampleExpenses.add(com.example.savesmart.data.entity.Expense(
+                userId = userId,
+                categoryId = foodCategory.categoryId,
+                amountMilliunits = 45_000L, // R450.00
+                description = "Lunch at restaurant",
+                dateMillis = currentTime - (2 * 24 * 60 * 60 * 1000L), // 2 days ago
+                startTimeMillis = currentTime - (2 * 24 * 60 * 60 * 1000L) + (12 * 60 * 60 * 1000L), // 12:00
+                endTimeMillis = currentTime - (2 * 24 * 60 * 60 * 1000L) + (13 * 60 * 60 * 1000L)    // 13:00
+            ))
+            sampleExpenses.add(com.example.savesmart.data.entity.Expense(
+                userId = userId,
+                categoryId = foodCategory.categoryId,
+                amountMilliunits = 25_000L, // R250.00
+                description = "Groceries",
+                dateMillis = currentTime - (5 * 24 * 60 * 60 * 1000L), // 5 days ago
+                startTimeMillis = currentTime - (5 * 24 * 60 * 60 * 1000L) + (10 * 60 * 60 * 1000L), // 10:00
+                endTimeMillis = currentTime - (5 * 24 * 60 * 60 * 1000L) + (11 * 60 * 60 * 1000L)    // 11:00
+            ))
+        }
+
+        // Transport expenses
+        val transportCategory = categories.find { it.name == "Transport" }
+        if (transportCategory != null) {
+            sampleExpenses.add(com.example.savesmart.data.entity.Expense(
+                userId = userId,
+                categoryId = transportCategory.categoryId,
+                amountMilliunits = 15_000L, // R150.00
+                description = "Uber ride",
+                dateMillis = currentTime - (1 * 24 * 60 * 60 * 1000L), // 1 day ago
+                startTimeMillis = currentTime - (1 * 24 * 60 * 60 * 1000L) + (18 * 60 * 60 * 1000L), // 18:00
+                endTimeMillis = currentTime - (1 * 24 * 60 * 60 * 1000L) + (18 * 60 * 60 * 1000L) + (30 * 60 * 1000L) // 18:30
+            ))
+        }
+
+        // Entertainment expenses
+        val entertainmentCategory = categories.find { it.name == "Entertainment" }
+        if (entertainmentCategory != null) {
+            sampleExpenses.add(com.example.savesmart.data.entity.Expense(
+                userId = userId,
+                categoryId = entertainmentCategory.categoryId,
+                amountMilliunits = 35_000L, // R350.00
+                description = "Movie tickets",
+                dateMillis = currentTime - (7 * 24 * 60 * 60 * 1000L), // 7 days ago
+                startTimeMillis = currentTime - (7 * 24 * 60 * 60 * 1000L) + (20 * 60 * 60 * 1000L), // 20:00
+                endTimeMillis = currentTime - (7 * 24 * 60 * 60 * 1000L) + (22 * 60 * 60 * 1000L)    // 22:00
+            ))
+        }
+
+        // Insert sample expenses
+        for (expense in sampleExpenses) {
+            val expenseId = expenseDao.insertExpense(expense)
+            Log.d(TAG, "createSampleExpensesForUser: Created expense '${expense.description}' with ID=$expenseId")
+        }
+
+        Log.d(TAG, "createSampleExpensesForUser: Created ${sampleExpenses.size} sample expenses")
     }
 
     suspend fun loginUser(username: String, passwordHash: String): User? {
