@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SaveSmart</string>
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+    <string name="dashboard_title">Dashboard</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register_here">Register here</string>
+    <string name="err_fill_all_fields">Please fill in all fields</string>
 </resources>
