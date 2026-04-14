@@ -37,6 +37,7 @@
             android:textColorHint="@color/text_secondary" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Password Input with Eye Icon Toggle (R03, T06) -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         android:layout_width="match_parent"
@@ -44,7 +45,8 @@
         android:layout_marginBottom="24dp"
         app:boxBackgroundMode="none"
         app:hintEnabled="false"
-        app:passwordToggleEnabled="true">
+        app:endIconMode="password_toggle"
+        app:passwordToggleTint="@color/primary_blue">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"

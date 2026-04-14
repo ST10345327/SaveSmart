@@ -14,21 +14,13 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Header Row: Color + Name + Status -->
+        <!-- Header Row: Name + Status (R16) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_marginBottom="8dp">
-
-            <!-- Color Indicator -->
-            <ImageView
-                android:id="@+id/ivColorIndicator"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/primary_blue" />
 
             <!-- Category Name -->
             <TextView
@@ -37,16 +29,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Food"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
 
             <!-- Status Badge (R16) -->
             <TextView
-                android:id="@+id/tvStatus"
+                android:id="@+id/tvBudgetStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✓ Good"
+                android:text="Good"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/good_green"
@@ -56,60 +48,38 @@
 
         </LinearLayout>
 
-        <!-- Spending Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Spending Amount (R15) -->
+        <TextView
+            android:id="@+id/tvSpendingAmount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:text="R150.00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Spent: "
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary" />
-
-            <TextView
-                android:id="@+id/tvSpending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R150.00"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:layout_marginEnd="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Budget: "
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary" />
-
-            <TextView
-                android:id="@+id/tvBudget"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R500.00"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary" />
-
-        </LinearLayout>
+        <!-- Goal Amount -->
+        <TextView
+            android:id="@+id/tvGoalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal: R500.00"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp" />
 
         <!-- Progress Bar (R15) -->
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="8dp"
             android:progress="30"
             android:progressBackgroundTint="@color/border"
-            android:progressTint="@color/good_green" />
+            android:progressTint="@color/good_green"
+            android:max="100" />
 
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
-

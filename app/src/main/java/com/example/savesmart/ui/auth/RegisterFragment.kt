@@ -69,7 +69,8 @@ class RegisterFragment : Fragment() {
         }
 
         binding.tvLoginLink.setOnClickListener {
-            findNavController().navigateUp()
+            // Navigate to Login without keeping Register in back stack (R02, T01)
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
     }
 

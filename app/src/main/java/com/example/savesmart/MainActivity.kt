@@ -57,13 +57,18 @@ class MainActivity : AppCompatActivity() {
             sessionManager = SessionManager(this)
             Log.d(TAG, "onCreate: SessionManager initialized")
 
+            // Clean up legacy session data to prevent auto-login bugs (T01)
+            validateAndCleanSession()
+
             // Setup navigation
             val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
             Log.d(TAG, "onCreate: Navigation setup complete")
 
-            // Check if user is logged in (R02)
-            checkAutoLogin()
+            // Delay auto-login check to allow fragments to initialize
+            mainLayout.post {
+                checkAutoLogin()
+            }
 
         } catch (e: Exception) {
             Log.e(TAG, "onCreate: Error during initialization", e)
@@ -71,41 +76,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Check if user has active session and auto-login if available (R02).
-     * If no session, show login screen.
-     * If session exists, navigate to dashboard directly.
+     * Validate session data and clean up if corrupted.
+     * Prevents jumping to dashboard when session data is invalid or leftover from tests.
      */
-    private fun checkAutoLogin() {
-        Log.d(TAG, "checkAutoLogin: Checking for active session")
+    private fun validateAndCleanSession() {
+        Log.d(TAG, "validateAndCleanSession: Checking for invalid session data")
 
         val isLoggedIn = sessionManager.isLoggedIn()
         val userId = sessionManager.getUserId()
         val username = sessionManager.getUsername()
 
-        Log.d(TAG, "checkAutoLogin: isLoggedIn=$isLoggedIn, userId=$userId, username=$username")
+        Log.d(TAG, "validateAndCleanSession: Current SharedPrefs state:")
+        Log.d(TAG, "  - isLoggedIn: $isLoggedIn")
+        Log.d(TAG, "  - userId: $userId")
+        Log.d(TAG, "  - username: '$username'")
 
-        if (isLoggedIn && userId > 0) {
-            Log.d(TAG, "checkAutoLogin: Session found - auto-logging in user (ID=$userId, username=$username)")
-            // User is already logged in - navigate to dashboard directly
-            navigateToDashboard()
+        // If session claims to be logged in but lacks valid user data, clear it (T01)
+        // This handles corrupted sessions from previous test runs
+        if (isLoggedIn && (userId <= 0 || username.isNullOrEmpty())) {
+            Log.w(TAG, "validateAndCleanSession: ⚠️ Found corrupted session data - clearing it")
+            Log.w(TAG, "  - isLoggedIn=$isLoggedIn, userId=$userId, username='$username'")
+            sessionManager.clearSession()
+            Log.d(TAG, "validateAndCleanSession: ✅ Corrupted session cleared - user will see login screen")
+        } else if (isLoggedIn && userId > 0 && !username.isNullOrEmpty()) {
+            Log.d(TAG, "validateAndCleanSession: ✅ Session data is valid - will auto-login")
         } else {
-            Log.d(TAG, "checkAutoLogin: No session found - showing login screen")
-            // No session - show login screen (default start destination)
+            Log.d(TAG, "validateAndCleanSession: No active session - user will see login screen")
         }
     }
 
     /**
-     * Navigate to dashboard after successful auth or auto-login (R02).
+     * Check if user has active session and auto-login if available (R02).
+     * If no session, show login screen (default start destination).
+     * If session exists and is valid, navigate to dashboard directly.
      */
-    private fun navigateToDashboard() {
-        try {
-            Log.d(TAG, "navigateToDashboard: Navigating to dashboard")
-            navController.navigate(R.id.action_loginFragment_to_dashboardFragment)
-            Log.d(TAG, "navigateToDashboard: Navigation complete")
-        } catch (e: Exception) {
-            Log.e(TAG, "navigateToDashboard: Navigation failed", e)
+    private fun checkAutoLogin() {
+        Log.d(TAG, "checkAutoLogin: Starting session validation...")
+
+        val isLoggedIn = sessionManager.isLoggedIn()
+        val userId = sessionManager.getUserId()
+        val username = sessionManager.getUsername()
+
+        Log.d(TAG, "checkAutoLogin: Raw values - isLoggedIn=$isLoggedIn, userId=$userId, username='$username'")
+
+        // Strict validation: ALL conditions must be true (R02, T01)
+        val hasValidSession = isLoggedIn && userId > 0 && !username.isNullOrEmpty()
+
+        Log.d(TAG, "checkAutoLogin: Session validation result = $hasValidSession")
+
+        if (hasValidSession) {
+            Log.d(TAG, "checkAutoLogin: ✅ Valid session found - auto-logging in user (ID=$userId, username=$username)")
+            try {
+                // Navigate to dashboard and remove login from back stack
+                val navOptions = androidx.navigation.NavOptions.Builder()
+                    .setPopUpTo(R.id.loginFragment, true)
+                    .build()
+                navController.navigate(R.id.dashboardFragment, null, navOptions)
+                Log.d(TAG, "checkAutoLogin: ✅ Successfully navigated to Dashboard")
+            } catch (e: Exception) {
+                Log.e(TAG, "checkAutoLogin: ❌ Navigation failed", e)
+            }
+        } else {
+            Log.d(TAG, "checkAutoLogin: ❌ No valid session - user will see login screen")
+            // Do NOT navigate - let nav_graph show login screen as default start destination
         }
     }
+
 
     /**
      * Logout current user and show login screen (R04).

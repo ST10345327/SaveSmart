@@ -4,32 +4,40 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <!-- Login Fragment -->
+    <!-- Login Fragment (R02, T01) -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.savesmart.ui.auth.LoginFragment"
         android:label="@string/login_title">
 
+        <!-- Navigate to Register screen -->
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
 
+        <!-- Navigate to Dashboard and remove Login from back stack (R02, T01) -->
         <action
             android:id="@+id/action_loginFragment_to_dashboardFragment"
-            app:destination="@id/dashboardFragment" />
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
 
     </fragment>
 
-    <!-- Register Fragment -->
+    <!-- Register Fragment (R01, T01) -->
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.savesmart.ui.auth.RegisterFragment"
         android:label="@string/register_title">
 
+        <!-- Navigate to Dashboard and remove all auth screens from back stack (R01, R02, T01) -->
         <action
             android:id="@+id/action_registerFragment_to_dashboardFragment"
-            app:destination="@id/dashboardFragment" />
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
 
+        <!-- Back to Login to register a different account (user clicked "Already have account") -->
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />

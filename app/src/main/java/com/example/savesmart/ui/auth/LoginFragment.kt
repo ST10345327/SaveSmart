@@ -23,6 +23,7 @@ class LoginFragment : Fragment() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var sessionManager: SessionManager
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

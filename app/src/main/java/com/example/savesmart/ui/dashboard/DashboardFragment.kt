@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentDashboardBinding
+import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
 
 /**
@@ -59,6 +60,10 @@ class DashboardFragment : Fragment() {
         viewModel = DashboardViewModel(repository)
         sessionManager = SessionManager(requireContext())
 
+        // Setup RecyclerView (R15, R16)
+        setupRecyclerView()
+
+        // Observe ViewModel state and update UI
         observeViewModel()
         
         // Load data for current user (R15)
@@ -72,18 +77,35 @@ class DashboardFragment : Fragment() {
     }
 
     /**
+     * Setup RecyclerView with CategoryAdapter (R15, R16).
+     */
+    private fun setupRecyclerView() {
+        val adapter = CategoryAdapter()
+        binding.rvCategories.adapter = adapter
+        binding.rvCategories.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+    }
+
+    /**
      * Requirement R15, R16: Observe ViewModel state and update UI.
      */
     private fun observeViewModel() {
         viewModel.totalSpent.observe(viewLifecycleOwner) { total ->
             Log.d(TAG, "observeViewModel(): Received total spent: $total")
-            // Update total spent TextView here (Requirement R15)
-            // binding.tvTotalSpent.text = CurrencyUtils.formatMilliunits(total)
+            // Update total spent TextView (Requirement R15)
+            binding.tvTotalSpending.text = CurrencyUtils.formatMilliunits(total)
         }
 
         viewModel.categoriesSummary.observe(viewLifecycleOwner) { summaries ->
             Log.d(TAG, "observeViewModel(): Received ${summaries.size} category summaries")
             // Update RecyclerView with category summaries (Requirement R16)
+            val adapter = binding.rvCategories.adapter as? CategoryAdapter
+            adapter?.submitList(summaries)
+
+            // Check for overspending (R16)
+            val hasOverspending = summaries.any { category ->
+                CurrencyUtils.getBudgetStatus(category.totalMilliunits, category.maxGoalMilliunits) == CurrencyUtils.BudgetStatus.OVER
+            }
+            binding.tvOverspendingWarning.visibility = if (hasOverspending) View.VISIBLE else View.GONE
         }
     }
 

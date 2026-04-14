@@ -13,16 +13,9 @@
         android:theme="@style/Theme.SaveSmart"
         tools:targetApi="31">
 
+        <!-- Main Activity with Navigation Component (new) (T01) -->
         <activity
-            android:name="com.example.savesmart.ui.dashboard.DashboardActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.savesmart.ui.auth.RegisterActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.savesmart.ui.auth.LoginActivity"
+            android:name="com.example.savesmart.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
