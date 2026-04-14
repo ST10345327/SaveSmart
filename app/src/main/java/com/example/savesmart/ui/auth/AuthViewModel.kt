@@ -1,11 +1,3 @@
-/**
- * Reference:
- * - Android Developers (2024) ViewModel overview. Google LLC.
- *   Available at: https://developer.android.com/topic/libraries/architecture/viewmodel (Accessed: 24 March 2026).
- * - Android Developers (2024) Kotlin coroutines on Android. Google LLC.
- *   Available at: https://developer.android.com/kotlin/coroutines (Accessed: 24 March 2026).
- */
-
 package com.example.savesmart.ui.auth
 
 import android.util.Log
@@ -17,15 +9,6 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.util.SecurityUtils
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for handling authentication logic.
- *
- * GitHub commit suggestion:
- *   [auth] implement login and registration logic in AuthViewModel
- *   - Added SHA-256 hashing for passwords
- *   - Implemented viewModelScope for database operations
- *   Refs: R01, R02, T01
- */
 class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 
     private val TAG = "AuthViewModel"
@@ -33,61 +16,79 @@ class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
     private val _authState = MutableLiveData<AuthResult>()
     val authState: LiveData<AuthResult> = _authState
 
-    /**
-     * Authenticates a user with hashed password validation (R02).
-     */
     fun login(username: String, password: String) {
-        Log.d(TAG, "login() called for user: $username")
+        if (username.isEmpty() || password.isEmpty()) {
+            _authState.value = AuthResult.Error("Username and password are required")
+            return
+        }
+
         viewModelScope.launch {
             try {
                 val hashedPassword = SecurityUtils.hashPassword(password)
                 val user = repository.loginUser(username, hashedPassword)
                 
                 if (user != null) {
-                    Log.d(TAG, "login() success for user: $username")
-                    _authState.value = AuthResult.Success(username)
+                    _authState.value = AuthResult.Success(user)
                 } else {
-                    Log.w(TAG, "login() failed: Invalid credentials for $username")
                     _authState.value = AuthResult.Error("Invalid username or password")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "login() unexpected error", e)
-                _authState.value = AuthResult.Error("An unexpected error occurred")
-            } finally {
-                Log.d(TAG, "login() execution completed")
+                _authState.value = AuthResult.Error("Login failed: ${e.message}")
             }
         }
     }
 
-    /**
-     * Registers a new user with SHA-256 hashed password (R01).
-     */
-    fun register(username: String, password: String) {
-        Log.d(TAG, "register() called for user: $username")
+    fun register(username: String, password: String, confirmPassword: String) {
+        if (username.isEmpty() || password.isEmpty()) {
+            _authState.value = AuthResult.Error("Username and password are required")
+            return
+        }
+
+        if (password.length < 6) {
+            _authState.value = AuthResult.Error("Password must be at least 6 characters")
+            return
+        }
+
+        if (password != confirmPassword) {
+            _authState.value = AuthResult.Error("Passwords do not match")
+            return
+        }
+
+        // Added security check: Password should not be the same as username
+        if (password.lowercase() == username.lowercase()) {
+            _authState.value = AuthResult.Error("Password cannot be the same as username")
+            return
+        }
+
         viewModelScope.launch {
             try {
+                val isTaken = repository.isUsernameTaken(username)
+                if (isTaken) {
+                    _authState.value = AuthResult.Error("Username already taken")
+                    return@launch
+                }
+
                 val hashedPassword = SecurityUtils.hashPassword(password)
                 val success = repository.registerUser(username, hashedPassword)
                 
                 if (success) {
-                    Log.d(TAG, "register() success for user: $username")
-                    _authState.value = AuthResult.Success(username)
+                    val newUser = repository.loginUser(username, hashedPassword)
+                    if (newUser != null) {
+                        _authState.value = AuthResult.Success(newUser)
+                    } else {
+                        _authState.value = AuthResult.Error("Registration succeeded but login failed")
+                    }
                 } else {
-                    Log.w(TAG, "register() failed: User $username already exists")
-                    _authState.value = AuthResult.Error("User already exists")
+                    _authState.value = AuthResult.Error("Registration failed")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "register() unexpected error", e)
-                _authState.value = AuthResult.Error("Registration failed")
+                _authState.value = AuthResult.Error("Registration error: ${e.message}")
             }
         }
     }
 }
 
-/**
- * Sealed class to represent authentication states.
- */
 sealed class AuthResult {
-    data class Success(val username: String) : AuthResult()
+    data class Success(val user: com.example.savesmart.data.entity.User) : AuthResult()
     data class Error(val message: String) : AuthResult()
 }

@@ -1,11 +1,3 @@
-/**
- * Reference:
- * - Android Developers (2024) Fragment overview. Google LLC.
- *   https://developer.android.com/guide/fragments
- * - Android Developers (2024) View Binding. Google LLC.
- *   https://developer.android.com/topic/libraries/view-binding
- */
-
 package com.example.savesmart.ui.auth
 
 import android.os.Bundle
@@ -13,40 +5,91 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.savesmart.R
+import com.example.savesmart.data.database.SaveSmartDatabase
+import com.example.savesmart.data.repository.SaveSmartRepository
+import com.example.savesmart.databinding.FragmentRegisterBinding
+import com.example.savesmart.util.SessionManager
 
-/**
- * Fragment for user registration (placeholder).
- *
- * GitHub commit suggestion:
- *   [auth] Create RegisterFragment placeholder
- *   - Navigation target for login screen
- *   - To be implemented with full registration flow
- *   Refs: R01, T06
- */
 class RegisterFragment : Fragment() {
 
-    companion object {
-        private const val TAG = "RegisterFragment"
-    }
+    private val TAG = "RegisterFragment"
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var viewModel: AuthViewModel
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView: RegisterFragment created")
-        // Temporary view - will be replaced with fragment_register.xml layout
-        return LinearLayout(requireContext()).apply {
-            setBackgroundColor(requireContext().getColor(R.color.background))
-        }
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: Initializing RegisterFragment")
+
+        val db = SaveSmartDatabase.getInstance(requireContext())
+        val repository = SaveSmartRepository(db)
+        viewModel = AuthViewModel(repository)
+        sessionManager = SessionManager(requireContext())
+
+        // Clear fields when returning to this screen
+        binding.etUsername.setText("")
+        binding.etPassword.setText("")
+        binding.etConfirmPassword.setText("")
+
+        setupListeners()
+        observeViewModel()
+    }
+
+    private fun setupListeners() {
+        binding.btnRegister.setOnClickListener {
+            val username = binding.etUsername.text.toString().trim()
+            val password = binding.etPassword.text.toString()
+            val confirmPassword = binding.etConfirmPassword.text.toString()
+
+            if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                Toast.makeText(context, getString(R.string.err_fill_all_fields), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (password != confirmPassword) {
+                Toast.makeText(context, getString(R.string.err_passwords_mismatch), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            viewModel.register(username, password, confirmPassword)
+        }
+
+        binding.tvLoginLink.setOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.authState.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is AuthResult.Success -> {
+                    sessionManager.saveSession(result.user.userId, result.user.username)
+                    Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_registerFragment_to_dashboardFragment)
+                }
+                is AuthResult.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
-

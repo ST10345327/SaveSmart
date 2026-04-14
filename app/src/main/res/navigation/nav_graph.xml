@@ -24,7 +24,17 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.savesmart.ui.auth.RegisterFragment"
-        android:label="@string/register_title" />
+        android:label="@string/register_title">
+
+        <action
+            android:id="@+id/action_registerFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+
+    </fragment>
 
     <!-- Dashboard Fragment -->
     <fragment

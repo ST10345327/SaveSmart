@@ -1,3 +1,9 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Room persistence library. Google LLC.
+ *   Available at: https://developer.android.com/training/data-storage/room (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.data.dao
 
 import androidx.lifecycle.LiveData
@@ -9,6 +15,14 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.savesmart.data.entity.Expense
 
+/**
+ * Data Access Object for Expense entity.
+ *
+ * GitHub commit suggestion:
+ *   [db] add monthly spending query to ExpenseDao
+ *   - Implemented aggregation query for total spending
+ *   Refs: R15, T02
+ */
 @Dao
 interface ExpenseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,8 +37,11 @@ interface ExpenseDao {
     @Query("SELECT COUNT(*) FROM expenses WHERE user_id = :userId AND is_deleted = 0")
     suspend fun getTotalExpenseCount(userId: Int): Int
 
+    /**
+     * Requirement R15: Sum all expense amounts for a specific user within a date range.
+     */
     @Query("SELECT COALESCE(SUM(amount_milliunits), 0) FROM expenses WHERE user_id = :userId AND date_millis BETWEEN :startMillis AND :endMillis AND is_deleted = 0")
-    suspend fun getTotalSpendingInRange(userId: Int, startMillis: Long, endMillis: Long): Long
+    suspend fun getTotalSpendingForUser(userId: Int, startMillis: Long, endMillis: Long): Long
 
     @Query("SELECT date_millis, SUM(amount_milliunits) AS totalMilliunits FROM expenses WHERE user_id = :userId AND date_millis BETWEEN :startMillis AND :endMillis AND is_deleted = 0 GROUP BY date_millis ORDER BY date_millis ASC")
     suspend fun getDailySpending(userId: Int, startMillis: Long, endMillis: Long): List<DailySpending>

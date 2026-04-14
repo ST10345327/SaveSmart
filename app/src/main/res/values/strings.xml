@@ -5,8 +5,11 @@
     <string name="dashboard_title">Dashboard</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
     <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="register_here">Register here</string>
     <string name="err_fill_all_fields">Please fill in all fields</string>
+    <string name="err_passwords_mismatch">Passwords do not match</string>
 </resources>
