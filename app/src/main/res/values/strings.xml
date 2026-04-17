@@ -12,4 +12,20 @@
     <string name="register_here">Register here</string>
     <string name="err_fill_all_fields">Please fill in all fields</string>
     <string name="err_passwords_mismatch">Passwords do not match</string>
+
+    <!-- Expense Strings -->
+    <string name="title_add_expense">Add Expense</string>
+    <string name="label_amount">Amount (R)</string>
+    <string name="label_category">Category</string>
+    <string name="label_date">Date</string>
+    <string name="label_description">Description</string>
+    <string name="hint_amount">0.00</string>
+    <string name="hint_select_date">Select Date</string>
+    <string name="hint_description">What was this for?</string>
+    <string name="btn_save_expense">Save Expense</string>
+    <string name="msg_expense_saved">Expense saved successfully!</string>
+    <string name="msg_expense_failed">Failed to save expense.</string>
+    <string name="err_enter_amount">Enter amount</string>
+    <string name="err_invalid_amount">Invalid amount</string>
+    <string name="err_select_category">Please select a category</string>
 </resources>

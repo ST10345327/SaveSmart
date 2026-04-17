@@ -108,10 +108,10 @@ class AddExpenseFragment : Fragment() {
 
         viewModel.operationSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Expense saved successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.msg_expense_saved), Toast.LENGTH_SHORT).show()
                 findNavController().navigateUp()
             } else {
-                Toast.makeText(requireContext(), "Failed to save expense.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.msg_expense_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -145,18 +145,18 @@ class AddExpenseFragment : Fragment() {
         val categoryIndex = binding.spinnerCategory.selectedItemPosition
 
         if (amountStr.isEmpty()) {
-            binding.etAmount.error = "Enter amount"
+            binding.etAmount.error = getString(R.string.err_enter_amount)
             return
         }
 
         val amountMilliunits = CurrencyUtils.parseRandInput(amountStr)
         if (amountMilliunits == null || amountMilliunits <= 0) {
-            binding.etAmount.error = "Invalid amount"
+            binding.etAmount.error = getString(R.string.err_invalid_amount)
             return
         }
 
         if (categoryIndex == -1 || categoriesList.isEmpty()) {
-            Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.err_select_category), Toast.LENGTH_SHORT).show()
             return
         }
 
