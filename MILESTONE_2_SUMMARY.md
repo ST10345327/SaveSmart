@@ -1,4 +1,4 @@
-# SaveSmart - Milestone 2 Summary
+
 
 ## 🎉 What We Accomplished Today
 

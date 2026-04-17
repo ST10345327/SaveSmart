@@ -40,7 +40,7 @@ data class Expense(
     val categoryId: Int? = null,
 
     @ColumnInfo(name = "amount_milliunits")
-    val amount_milliunits: Long,
+    val amountMilliunits: Long,
 
     @ColumnInfo(name = "description")
     val description: String = "",

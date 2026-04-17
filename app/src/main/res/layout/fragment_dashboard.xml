@@ -1,121 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@color/background">
 
-    <!-- Header -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dashboard_title"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Welcome Message -->
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome back!"
-        android:textSize="16sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Logout Button -->
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:textSize="12sp"
-        android:textColor="@color/text_primary"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_gravity="end"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Total Spending Card (R15) -->
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/card_surface"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <LinearLayout
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dashboard_title"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Welcome Message -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome back!"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_gravity="end"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Total Spending Card (R15) -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/card_surface"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Monthly Spending"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvTotalSpending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R0.00"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_blue"
-                android:layout_marginTop="8dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Monthly Spending"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvTotalSpending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R0.00"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_blue"
+                    android:layout_marginTop="8dp" />
 
-    </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
-    <!-- Overspending Warning (R16) -->
-    <TextView
-        android:id="@+id/tvOverspendingWarning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="⚠ Category over budget!"
-        android:textColor="@color/over_red"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:padding="12dp"
-        android:background="@color/card_surface"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone"
-        android:gravity="center" />
+        </androidx.cardview.widget.CardView>
 
-    <!-- Loading Progress -->
-    <ProgressBar
-        android:id="@+id/progressBar"
+        <!-- Overspending Warning (R16) -->
+        <TextView
+            android:id="@+id/tvOverspendingWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠ Category over budget!"
+            android:textColor="@color/over_red"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:background="@color/card_surface"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            android:gravity="center" />
+
+        <!-- Category List Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category Breakdown"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Category RecyclerView (R14, R15, R16) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
+
+    </LinearLayout>
+
+    <!-- Floating Action Button for Add Expense (R08) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:contentDescription="Add Expense"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/primary_blue"
+        app:tint="@color/white" />
 
-    <!-- Category List Header -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Category Breakdown"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:layout_marginBottom="12dp" />
-
-    <!-- Category RecyclerView (R14, R15, R16) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCategories"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp" />
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.savesmart.databinding.ItemCategorySpendingBinding
+import com.example.savesmart.util.BudgetStatus
 import com.example.savesmart.util.CurrencyUtils
 
 /**
@@ -59,28 +60,28 @@ class CategoryAdapter : ListAdapter<CategoryWithSpending, CategoryAdapter.Catego
             val budgetStatus = CurrencyUtils.getBudgetStatus(category.totalMilliunits, category.maxGoalMilliunits)
 
             when (budgetStatus) {
-                CurrencyUtils.BudgetStatus.GOOD -> {
+                BudgetStatus.GOOD -> {
                     binding.tvBudgetStatus.text = "Good"
                     binding.tvBudgetStatus.setTextColor(android.graphics.Color.parseColor("#16A34A")) // green
                     binding.progressBar.progressTintList = android.content.res.ColorStateList.valueOf(
                         android.graphics.Color.parseColor("#16A34A")
                     )
                 }
-                CurrencyUtils.BudgetStatus.CLOSE -> {
+                BudgetStatus.CLOSE -> {
                     binding.tvBudgetStatus.text = "Close"
                     binding.tvBudgetStatus.setTextColor(android.graphics.Color.parseColor("#F59E0B")) // amber
                     binding.progressBar.progressTintList = android.content.res.ColorStateList.valueOf(
                         android.graphics.Color.parseColor("#F59E0B")
                     )
                 }
-                CurrencyUtils.BudgetStatus.OVER -> {
+                BudgetStatus.OVER -> {
                     binding.tvBudgetStatus.text = "Over!"
                     binding.tvBudgetStatus.setTextColor(android.graphics.Color.parseColor("#DC2626")) // red
                     binding.progressBar.progressTintList = android.content.res.ColorStateList.valueOf(
                         android.graphics.Color.parseColor("#DC2626")
                     )
                 }
-                CurrencyUtils.BudgetStatus.NO_GOAL -> {
+                BudgetStatus.NO_GOAL -> {
                     binding.tvBudgetStatus.text = "No goal set"
                     binding.tvBudgetStatus.setTextColor(android.graphics.Color.parseColor("#6B7280")) // gray
                     binding.progressBar.progressTintList = android.content.res.ColorStateList.valueOf(

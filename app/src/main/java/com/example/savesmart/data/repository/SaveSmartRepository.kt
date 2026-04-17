@@ -7,6 +7,8 @@ import com.example.savesmart.data.dao.CategoryDao
 import com.example.savesmart.data.dao.ExpenseDao
 import com.example.savesmart.data.dao.UserDao
 import com.example.savesmart.data.entity.Badge
+import com.example.savesmart.data.entity.Category
+import com.example.savesmart.data.entity.Expense
 import com.example.savesmart.data.entity.User
 import com.example.savesmart.data.entity.UserBadge
 import com.example.savesmart.ui.dashboard.CategoryWithSpending
@@ -78,8 +80,8 @@ class SaveSmartRepository(
             Log.d(TAG, "createSampleCategoriesForUser: Created category '${category.name}' with ID=$categoryId")
         }
 
-        // Create sample expenses for current month (R08)
-        createSampleExpensesForUser(userId)
+        // Removed creation of sample expenses to ensure dashboard starts at zero (T01)
+        // createSampleExpensesForUser(userId)
 
         Log.d(TAG, "createSampleCategoriesForUser: Created ${sampleCategories.size} sample categories")
     }
@@ -170,6 +172,32 @@ class SaveSmartRepository(
     }
 
     fun getUserLive(userId: Int): LiveData<User?> = userDao.getUserByIdLive(userId)
+
+    // ────────────────────────────────────────────────────────────────────────
+    // CATEGORY METHODS (R05, R06)
+    // ────────────────────────────────────────────────────────────────────────
+
+    fun getCategoriesForUserLive(userId: Int): LiveData<List<Category>> {
+        return categoryDao.getCategoriesForUserLive(userId)
+    }
+
+    // ────────────────────────────────────────────────────────────────────────
+    // EXPENSE METHODS (R08, R10, R12, R13)
+    // ────────────────────────────────────────────────────────────────────────
+
+    suspend fun insertExpense(expense: Expense): Long {
+        Log.d(TAG, "insertExpense(): description=${expense.description}, amount=${expense.amountMilliunits}")
+        return expenseDao.insertExpense(expense)
+    }
+
+    fun getExpensesInRangeLive(userId: Int, startMillis: Long, endMillis: Long): LiveData<List<Expense>> {
+        return expenseDao.getExpensesInRangeLive(userId, startMillis, endMillis)
+    }
+
+    suspend fun deleteExpense(expenseId: Int) {
+        Log.d(TAG, "deleteExpense(): expenseId=$expenseId")
+        expenseDao.softDeleteExpense(expenseId)
+    }
 
     // ────────────────────────────────────────────────────────────────────────
     // DASHBOARD METHODS (R14, R15, R16)
