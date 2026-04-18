@@ -45,8 +45,7 @@ class CategoriesViewModel(private val repository: SaveSmartRepository) : ViewMod
         viewModelScope.launch {
             try {
                 if (category.categoryId == 0) {
-                    // This logic is usually in the repo, but we need to ensure it's called
-                    // repository.insertCategory(category)
+                    repository.insertCategory(category)
                 } else {
                     repository.updateCategory(category)
                 }

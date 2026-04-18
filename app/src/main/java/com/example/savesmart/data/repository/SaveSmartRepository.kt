@@ -181,6 +181,11 @@ class SaveSmartRepository(
         return categoryDao.getCategoriesForUserLive(userId)
     }
 
+    suspend fun insertCategory(category: Category): Long {
+        Log.d(TAG, "insertCategory: Inserting category '${category.name}'")
+        return categoryDao.insertCategory(category)
+    }
+
     suspend fun updateCategory(category: Category) {
         Log.d(TAG, "updateCategory: Updating category '${category.name}'")
         categoryDao.updateCategory(category)
