@@ -4,6 +4,8 @@
  *   Available at: https://developer.android.com/guide/fragments (Accessed: 24 March 2026).
  * - Android Developers (2024) View Binding. Google LLC.
  *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ * - Android Developers (2024) Navigation component. Google LLC.
+ *   Available at: https://developer.android.com/guide/navigation (Accessed: 24 March 2026).
  */
 
 package com.example.savesmart.ui.dashboard
@@ -30,11 +32,14 @@ import com.example.savesmart.util.SessionManager
  *   [dashboard] implement DashboardFragment with progress visualization
  *   - Integrated MVVM with DashboardViewModel
  *   - Added logic for monthly spending progress bar
+ *   - Added navigation to Category Management
  *   Refs: R15, R16, T01, T06
  */
 class DashboardFragment : Fragment() {
 
-    private val TAG = "DashboardFragment"
+    companion object {
+        private const val TAG = "DashboardFragment"
+    }
 
     // Requirement T06: ViewBinding pattern to prevent memory leaks
     private var _binding: FragmentDashboardBinding? = null
@@ -48,14 +53,14 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView() called")
+        Log.d(TAG, "onCreateView: started")
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated() called")
+        Log.d(TAG, "onViewCreated: started")
 
         // Initialization (T01)
         val db = SaveSmartDatabase.getInstance(requireContext())
@@ -68,13 +73,27 @@ class DashboardFragment : Fragment() {
 
         // Setup logout button (R04)
         binding.btnLogout.setOnClickListener {
+            Log.d(TAG, "onViewCreated: logout button clicked")
             logout()
         }
 
         // Setup Floating Action Button for Add Expense (R08)
         binding.fabAddExpense.setOnClickListener {
-            Log.d(TAG, "onViewCreated(): FAB clicked - navigating to AddExpenseFragment")
+            Log.d(TAG, "onViewCreated: FAB clicked - navigating to AddExpenseFragment")
             findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
+        }
+        
+        // Setup Navigation to Category Management (R05)
+        // Note: Assuming there is a button with id 'btnManageCategories' in fragment_dashboard.xml
+        // If not, we should use a menu item or another button.
+        try {
+            val btnManageCategories = binding.root.findViewById<View>(R.id.btnManageCategories)
+            btnManageCategories?.setOnClickListener {
+                Log.d(TAG, "onViewCreated: Manage Categories clicked - navigating to CategoriesFragment")
+                findNavController().navigate(R.id.action_dashboardFragment_to_categoriesFragment)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "onViewCreated: Could not find btnManageCategories", e)
         }
 
         // Observe ViewModel state and update UI
@@ -83,14 +102,14 @@ class DashboardFragment : Fragment() {
         // Load data for current user (R15)
         val userId = sessionManager.getUserId()
         if (userId != -1) {
-            Log.d(TAG, "onViewCreated(): Loading data for userId $userId")
+            Log.d(TAG, "onViewCreated: loading data for userId $userId")
             viewModel.loadDashboardData(userId)
 
             // Show welcome message with username
             val username = sessionManager.getUsername()
             binding.tvWelcome.text = "Welcome back, $username!"
         } else {
-            Log.w(TAG, "onViewCreated(): No active session found")
+            Log.w(TAG, "onViewCreated: no active session found")
         }
     }
 
@@ -98,6 +117,7 @@ class DashboardFragment : Fragment() {
      * Setup RecyclerView with CategoryAdapter (R15, R16).
      */
     private fun setupRecyclerView() {
+        Log.d(TAG, "setupRecyclerView: started")
         val adapter = CategoryAdapter()
         binding.rvCategories.adapter = adapter
         binding.rvCategories.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
@@ -108,13 +128,13 @@ class DashboardFragment : Fragment() {
      */
     private fun observeViewModel() {
         viewModel.totalSpent.observe(viewLifecycleOwner) { total ->
-            Log.d(TAG, "observeViewModel(): Received total spent: $total")
+            Log.d(TAG, "observeViewModel: received total spent: $total")
             // Update total spent TextView (Requirement R15)
             binding.tvTotalSpending.text = CurrencyUtils.formatMilliunits(total)
         }
 
         viewModel.categoriesSummary.observe(viewLifecycleOwner) { summaries ->
-            Log.d(TAG, "observeViewModel(): Received ${summaries.size} category summaries")
+            Log.d(TAG, "observeViewModel: received ${summaries.size} category summaries")
             // Update RecyclerView with category summaries (Requirement R16)
             val adapter = binding.rvCategories.adapter as? CategoryAdapter
             adapter?.submitList(summaries)
@@ -131,7 +151,7 @@ class DashboardFragment : Fragment() {
      * Handle user logout (R04).
      */
     private fun logout() {
-        Log.d(TAG, "logout(): User requested logout")
+        Log.d(TAG, "logout: user requested logout")
         sessionManager.clearSession()
 
         // Navigate back to login screen
@@ -140,7 +160,7 @@ class DashboardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView(): Clearing binding")
+        Log.d(TAG, "onDestroyView: clearing binding")
         // Requirement Rule 8: Prevent memory leaks
         _binding = null
     }
