@@ -181,6 +181,16 @@ class SaveSmartRepository(
         return categoryDao.getCategoriesForUserLive(userId)
     }
 
+    suspend fun updateCategory(category: Category) {
+        Log.d(TAG, "updateCategory: Updating category '${category.name}'")
+        categoryDao.updateCategory(category)
+    }
+
+    suspend fun deleteCategory(categoryId: Int) {
+        Log.d(TAG, "deleteCategory: Soft deleting categoryId $categoryId")
+        categoryDao.softDeleteCategory(categoryId)
+    }
+
     // ────────────────────────────────────────────────────────────────────────
     // EXPENSE METHODS (R08, R10, R12, R13)
     // ────────────────────────────────────────────────────────────────────────

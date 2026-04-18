@@ -55,6 +55,11 @@
             android:id="@+id/action_dashboardFragment_to_addExpenseFragment"
             app:destination="@id/addExpenseFragment" />
 
+        <!-- Navigate to Category Management (R05) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
+
     </fragment>
 
     <!-- Add Expense Fragment (R08, R13) -->
@@ -62,5 +67,30 @@
         android:id="@+id/addExpenseFragment"
         android:name="com.example.savesmart.ui.expense.AddExpenseFragment"
         android:label="Add Expense" />
+
+    <!-- Categories List Fragment (R05, R06, R07) -->
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.savesmart.ui.categories.CategoriesFragment"
+        android:label="My Categories">
+
+        <!-- Navigate to Add/Edit Category screen -->
+        <action
+            android:id="@+id/action_categoriesFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+    </fragment>
+
+    <!-- Add/Edit Category Fragment (R05, R06, R14) -->
+    <fragment
+        android:id="@+id/addEditCategoryFragment"
+        android:name="com.example.savesmart.ui.categories.AddEditCategoryFragment"
+        android:label="Category Details">
+
+        <!-- Pass Category ID for editing; default -1 means "New Category" -->
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 
 </navigation>
