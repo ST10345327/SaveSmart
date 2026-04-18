@@ -146,7 +146,7 @@ class AddEditCategoryFragment : Fragment() {
         )
 
         Log.d(TAG, "validateAndSave: success — saving category to repository")
-        // viewModel.saveCategory(category) // Add this method to CategoriesViewModel
+        viewModel.saveCategory(category)
         findNavController().navigateUp()
     }
 
