@@ -12,21 +12,24 @@ package com.example.savesmart
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.savesmart.util.SessionManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
  * Main entry point activity.
  *
  * GitHub commit suggestion:
- *   [auth] Update MainActivity to always show login screen on startup
- *   - Removed auto-login logic to ensure consistent app entry
- *   - Maintained session management for logout functionality
- *   Refs: R02, R04, T01
+ *   [ui] implement BottomNavigationView with Navigation component
+ *   - Integrated BottomNavigationView with NavController
+ *   - Added visibility logic for auth vs main screens
+ *   Refs: R05, R10, R15, R17
  */
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
     private lateinit var navController: NavController
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +63,24 @@ class MainActivity : AppCompatActivity() {
             // Setup navigation
             val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
-            Log.d(TAG, "onCreate: Navigation setup complete")
+            
+            // Setup Bottom Navigation (Requirement R05, R10, R15, R17)
+            bottomNav = findViewById(R.id.bottom_navigation)
+            bottomNav.setupWithNavController(navController)
 
-            // Note: Auto-login check removed to fix issue where app skips login screen (T01)
-            // The app will now always start at the destination defined in nav_graph.xml (LoginFragment)
+            // Show/Hide bottom navigation based on destination
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.loginFragment, R.id.registerFragment -> {
+                        bottomNav.visibility = View.GONE
+                    }
+                    else -> {
+                        bottomNav.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            Log.d(TAG, "onCreate: Navigation setup complete")
 
         } catch (e: Exception) {
             Log.e(TAG, "onCreate: Error during initialization", e)

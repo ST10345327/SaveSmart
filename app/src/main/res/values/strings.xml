@@ -1,15 +1,21 @@
 <resources>
     <string name="app_name">SaveSmart</string>
-    <string name="login_title">Login</string>
-    <string name="register_title">Register</string>
+    <string name="app_tagline">Smart Saving Made Simple</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="register_title">Create Account</string>
     <string name="dashboard_title">Dashboard</string>
     <string name="hint_username">Username</string>
+    <string name="hint_enter_username">Enter your username</string>
     <string name="hint_password">Password</string>
+    <string name="hint_enter_password">Enter your password</string>
     <string name="hint_confirm_password">Confirm Password</string>
-    <string name="btn_login">Login</string>
+    <string name="btn_login">Log In</string>
     <string name="btn_register">Register</string>
     <string name="no_account">Don\'t have an account?</string>
-    <string name="register_here">Register here</string>
+    <string name="register_here">Create Account</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="login_or">or</string>
+    <string name="no_account_register">Don\'t have an account? Register</string>
     <string name="err_fill_all_fields">Please fill in all fields</string>
     <string name="err_passwords_mismatch">Passwords do not match</string>
 

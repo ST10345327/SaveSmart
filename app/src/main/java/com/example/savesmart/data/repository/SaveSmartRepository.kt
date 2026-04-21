@@ -27,6 +27,10 @@ class SaveSmartRepository(
 
     private val TAG = "SaveSmartRepository"
 
+    suspend fun isUsernameTaken(username: String): Boolean {
+        return userDao.getUserByUsername(username) != null
+    }
+
     suspend fun registerUser(username: String, passwordHash: String): Boolean {
         val existingUser = userDao.getUserByUsername(username)
         if (existingUser != null) return false
@@ -102,6 +106,10 @@ class SaveSmartRepository(
 
     fun getExpensesInRangeLive(userId: Int, startMillis: Long, endMillis: Long): LiveData<List<Expense>> = expenseDao.getExpensesInRangeLive(userId, startMillis, endMillis)
     suspend fun deleteExpense(expenseId: Int) = expenseDao.softDeleteExpense(expenseId)
+
+    suspend fun getTotalMonthlySpending(userId: Int, startMillis: Long, endMillis: Long): Long {
+        return expenseDao.getTotalSpendingForUser(userId, startMillis, endMillis)
+    }
 
     suspend fun getCategoriesWithSpending(userId: Int, startMillis: Long, endMillis: Long): List<CategoryWithSpending> {
         val categories = categoryDao.getAllCategoriesForUser(userId)

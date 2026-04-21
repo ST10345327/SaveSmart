@@ -1,58 +1,56 @@
 package com.example.savesmart.ui.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.example.savesmart.R
 import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
-import com.example.savesmart.util.SecurityUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.savesmart.ui.ViewModelFactory
+import com.example.savesmart.ui.dashboard.DashboardActivity
+import com.example.savesmart.util.SessionManager
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var repository: SaveSmartRepository
+    private val viewModel: AuthViewModel by viewModels {
+        val db = SaveSmartDatabase.getInstance(this)
+        val repository = SaveSmartRepository(db)
+        ViewModelFactory(repository)
+    }
+
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val db = SaveSmartDatabase.getInstance(this)
-        repository = SaveSmartRepository(db)
+        sessionManager = SessionManager(this)
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
+        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
 
         btnRegister.setOnClickListener {
             val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString().trim()
+            val confirmPassword = etConfirmPassword.text.toString().trim()
 
-            if (!SecurityUtils.isValidUsername(username)) {
-                Toast.makeText(this, "Invalid username", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            viewModel.register(username, password, confirmPassword)
+        }
 
-            if (!SecurityUtils.isValidPassword(password)) {
-                Toast.makeText(this, "Weak password", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val hashedPassword = SecurityUtils.hashPassword(password)
-
-            lifecycleScope.launch {
-                val success = withContext(Dispatchers.IO) {
-                    repository.registerUser(username, hashedPassword)
-                }
-
-                if (success) {
-                    Toast.makeText(this@RegisterActivity, "Registration successful", Toast.LENGTH_SHORT).show()
+        viewModel.authState.observe(this) { result ->
+            when (result) {
+                is AuthResult.Success -> {
+                    sessionManager.saveUser(result.user.username)
+                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DashboardActivity::class.java))
                     finish()
-                } else {
-                    Toast.makeText(this@RegisterActivity, "User already exists", Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.Error -> {
+                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
