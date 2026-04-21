@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.savesmart.R
@@ -26,6 +27,9 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentAddEditCategoryBinding
 import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * AddEditCategoryFragment — Handles creating and editing expense categories (R05, R06, R14).
@@ -48,6 +52,7 @@ class AddEditCategoryFragment : Fragment() {
 
     private lateinit var viewModel: CategoriesViewModel
     private lateinit var sessionManager: SessionManager
+    private lateinit var repository: SaveSmartRepository
     
     // Using Navigation Safe Args to pass category ID for editing
     private val args: AddEditCategoryFragmentArgs by navArgs()
@@ -69,7 +74,7 @@ class AddEditCategoryFragment : Fragment() {
         Log.d(TAG, "onViewCreated: started")
 
         val db = SaveSmartDatabase.getInstance(requireContext())
-        val repository = SaveSmartRepository(db)
+        repository = SaveSmartRepository(db)
         viewModel = CategoriesViewModel(repository)
         sessionManager = SessionManager(requireContext())
 
@@ -77,6 +82,9 @@ class AddEditCategoryFragment : Fragment() {
         
         if (args.categoryId != -1) {
             loadCategoryData(args.categoryId)
+        } else {
+            binding.tvTitle.text = "Create Category"
+            binding.btnDeleteCategory.visibility = View.GONE
         }
     }
 
@@ -89,24 +97,40 @@ class AddEditCategoryFragment : Fragment() {
         }
         
         // Delete Button (R07) - only visible if editing
-        binding.btnDeleteCategory.visibility = if (args.categoryId != -1) View.VISIBLE else View.GONE
         binding.btnDeleteCategory.setOnClickListener {
             deleteCategory()
         }
-        
-        // Simple Color Selection (R05)
-        setupColorSelection()
     }
 
-    private fun setupColorSelection() {
-        // Logic to handle color selection grid clicks
-        // For simplicity, we can use a set of predefined ImageButtons or a custom View
-        // Update selectedColorHex when a color is picked
-    }
-
+    /**
+     * Requirement R06: Load existing category data for editing.
+     */
     private fun loadCategoryData(categoryId: Int) {
         Log.d(TAG, "loadCategoryData: fetching data for categoryId $categoryId")
-        // Implementation to fetch category from DB and populate fields
+        
+        lifecycleScope.launch(Dispatchers.IO) {
+            val db = SaveSmartDatabase.getInstance(requireContext())
+            val category = db.categoryDao().getCategoryById(categoryId)
+            
+            withContext(Dispatchers.Main) {
+                category?.let { cat ->
+                    Log.d(TAG, "loadCategoryData: Found category '${cat.name}'")
+                    binding.tvTitle.text = "Edit Category"
+                    binding.etCategoryName.setText(cat.name)
+                    
+                    cat.minGoalMilliunits?.let {
+                        binding.etMinGoal.setText(CurrencyUtils.milliunitsToRands(it).toString())
+                    }
+                    
+                    cat.maxGoalMilliunits?.let {
+                        binding.etMaxGoal.setText(CurrencyUtils.milliunitsToRands(it).toString())
+                    }
+                    
+                    selectedColorHex = cat.colorHex
+                    // Note: Update color UI if implemented
+                }
+            }
+        }
     }
 
     /**
@@ -147,12 +171,14 @@ class AddEditCategoryFragment : Fragment() {
 
         Log.d(TAG, "validateAndSave: success — saving category to repository")
         viewModel.saveCategory(category)
+        Toast.makeText(requireContext(), "Category saved", Toast.LENGTH_SHORT).show()
         findNavController().navigateUp()
     }
 
     private fun deleteCategory() {
         Log.d(TAG, "deleteCategory: confirmed for categoryId ${args.categoryId}")
         viewModel.deleteCategory(args.categoryId)
+        Toast.makeText(requireContext(), "Category deleted", Toast.LENGTH_SHORT).show()
         findNavController().navigateUp()
     }
 

@@ -99,6 +99,13 @@ class DashboardFragment : Fragment() {
         } catch (e: Exception) {
             Log.w(TAG, "onViewCreated: Could not find btnManageCategories", e)
         }
+        
+        // Setup Navigation to Reports (R17)
+        binding.tvTotalSpending.setOnLongClickListener {
+            Log.d(TAG, "onViewCreated: Total spending long-clicked - navigating to CategoryReportFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_categoryReportFragment)
+            true
+        }
 
         // Observe ViewModel state and update UI
         observeViewModel()

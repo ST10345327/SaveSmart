@@ -4,8 +4,6 @@
  *   Available at: https://github.com/PhilJay/MPAndroidChart (Accessed: 24 March 2026).
  * - Android Developers (2024) View Binding. Google LLC.
  *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
- * - Material Design (2024) Material Design 3. Google LLC.
- *   Available at: https://m3.material.io (Accessed: 24 March 2026).
  */
 
 package com.example.savesmart.ui.reports
@@ -21,20 +19,19 @@ import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentCategoryReportBinding
 import com.example.savesmart.util.SessionManager
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 /**
- * CategoryReportFragment — Displays spending breakdown using a PieChart (Requirement R17).
+ * CategoryReportFragment — Visualizes spending breakdown using a Pie Chart (Requirement R17).
  *
  * GitHub commit suggestion:
- *   [reports] implement CategoryReportFragment with MPAndroidChart integration
- *   - Configured PieChart with Material Design colors
- *   - Observed aggregated spending data from ReportsViewModel
- *   Refs: R17, T01, T06, T09
+ *   [reports] implement CategoryReportFragment with MPAndroidChart (R17)
+ *   - Configured PieChart with percentage display
+ *   - Integrated with ReportsViewModel for data observation
+ *   Refs: R17, T01, T06
  */
 class CategoryReportFragment : Fragment() {
 
@@ -72,72 +69,59 @@ class CategoryReportFragment : Fragment() {
 
         val userId = sessionManager.getUserId()
         if (userId != -1) {
+            Log.d(TAG, "onViewCreated: loading report for userId $userId")
             viewModel.loadCategoryReport(userId)
         }
     }
 
     private fun setupChart() {
-        Log.d(TAG, "setupChart: configuring pie chart")
+        Log.d(TAG, "setupChart: configuring MPAndroidChart")
         binding.pieChart.apply {
             setUsePercentValues(true)
             description.isEnabled = false
             setExtraOffsets(5f, 10f, 5f, 5f)
             dragDecelerationFrictionCoef = 0.95f
-            
             isDrawHoleEnabled = true
-            setHoleColor(Color.TRANSPARENT)
+            setHoleColor(Color.WHITE)
             setTransparentCircleColor(Color.WHITE)
             setTransparentCircleAlpha(110)
-            
             holeRadius = 58f
             transparentCircleRadius = 61f
-            
             setDrawCenterText(true)
+            centerText = "Spending %"
             rotationAngle = 0f
             isRotationEnabled = true
             isHighlightPerTapEnabled = true
-            
-            animateY(1400, Easing.EaseInOutQuad)
-            
             legend.isEnabled = true
-            setEntryLabelColor(Color.WHITE)
-            setEntryLabelTextSize(12f)
         }
     }
 
     private fun observeViewModel() {
         viewModel.pieEntries.observe(viewLifecycleOwner) { entries ->
             Log.d(TAG, "observeViewModel: received ${entries.size} pie entries")
-            
-            if (entries.isEmpty()) {
-                Log.w(TAG, "observeViewModel: no data to display")
-                // Handle empty state UI if needed
-                return@observe
+            if (entries.isNotEmpty()) {
+                val dataSet = PieDataSet(entries, "Categories")
+                dataSet.setColors(*ColorTemplate.MATERIAL_COLORS)
+                dataSet.sliceSpace = 3f
+                dataSet.selectionShift = 5f
+
+                val data = PieData(dataSet)
+                data.setValueFormatter(PercentFormatter(binding.pieChart))
+                data.setValueTextSize(11f)
+                data.setValueTextColor(Color.BLACK)
+
+                binding.pieChart.data = data
+                binding.pieChart.invalidate() // Refresh chart
+                Log.d(TAG, "observeViewModel: chart invalidated successfully")
+            } else {
+                Log.w(TAG, "observeViewModel: no entries found, chart remains empty")
             }
-
-            val dataSet = PieDataSet(entries, "Categories")
-            dataSet.sliceSpace = 3f
-            dataSet.selectionShift = 5f
-            
-            // Custom colors matching the design system
-            val colors = mutableListOf<Int>()
-            for (c in ColorTemplate.MATERIAL_COLORS) colors.add(c)
-            for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-            dataSet.colors = colors
-
-            val data = PieData(dataSet)
-            data.setValueFormatter(PercentFormatter(binding.pieChart))
-            data.setValueTextSize(11f)
-            data.setValueTextColor(Color.WHITE)
-            
-            binding.pieChart.data = data
-            binding.pieChart.invalidate() // Refresh the chart
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView: clearing binding")
-        _binding = null // T06: Prevent memory leaks
+        _binding = null
     }
 }
