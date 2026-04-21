@@ -5,10 +5,10 @@
  */
 
 plugins {
-    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
-    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.navigation.safeargs)
 }
 
 android {
@@ -38,11 +38,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-        }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
+
     // Requirement T06: Enable ViewBinding for cleaner UI code
     viewBinding {
         enable = true
