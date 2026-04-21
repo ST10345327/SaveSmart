@@ -60,6 +60,11 @@
             android:id="@+id/action_dashboardFragment_to_categoriesFragment"
             app:destination="@id/categoriesFragment" />
 
+        <!-- Navigate to Reports (R17) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_categoryReportFragment"
+            app:destination="@id/categoryReportFragment" />
+
     </fragment>
 
     <!-- Add Expense Fragment (R08, R13) -->
@@ -92,5 +97,11 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+
+    <!-- Category Spending Report Fragment (R17) -->
+    <fragment
+        android:id="@+id/categoryReportFragment"
+        android:name="com.example.savesmart.ui.reports.CategoryReportFragment"
+        android:label="Spending Analysis" />
 
 </navigation>

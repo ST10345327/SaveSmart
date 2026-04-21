@@ -5,6 +5,7 @@
     <color name="good_green">#16A34A</color>
     <color name="close_amber">#F59E0B</color>
     <color name="over_red">#DC2626</color>
+    <color name="red">#DC2626</color> <!-- Added for compatibility with older layouts -->
     <color name="rewards_purple">#7C3AED</color>
     <color name="background">#F5F5F7</color>
     <color name="card_surface">#FFFFFF</color>
