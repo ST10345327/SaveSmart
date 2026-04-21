@@ -4,22 +4,29 @@
  *   Available at: https://developer.android.com/reference/android/app/DatePickerDialog (Accessed: 24 March 2026).
  * - Android Developers (2024) View Binding. Google LLC.
  *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ * - Android Developers (2024) Capture a photo. Google LLC.
+ *   Available at: https://developer.android.com/training/camera/photobasics (Accessed: 24 March 2026).
  * - YNAB API (2024) YNAB API v1 documentation: milliunits and data model.
  *   Available at: https://api.ynab.com/v1 (Accessed: 24 March 2026).
- * - Android Developers (2024) Navigation component. Google LLC.
- *   Available at: https://developer.android.com/guide/navigation (Accessed: 24 March 2026).
  */
 
 package com.example.savesmart.ui.expense
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.savesmart.R
@@ -30,19 +37,16 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentAddExpenseBinding
 import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 /**
  * AddExpenseFragment — Handles the creation of new expense records (Requirement R08).
- *
- * GitHub commit suggestion:
- *   [expense] finalize AddExpenseFragment with validation and navigation (R08, R13)
- *   - Implemented operationSuccess observer for feedback
- *   - Integrated with Room via SaveSmartRepository
- *   - Added strict logging and milliunit validation
- *   Refs: R08, R10, R13, T10
+ * Includes receipt photo capture functionality (Requirement R09).
  */
 class AddExpenseFragment : Fragment() {
 
@@ -58,13 +62,29 @@ class AddExpenseFragment : Fragment() {
     
     private var selectedDate = Calendar.getInstance()
     private var categoriesList = listOf<Category>()
+    
+    private var currentPhotoPath: String? = null
+    private var photoUri: Uri? = null
+
+    // Camera Result Launcher (R09)
+    private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Camera: Photo taken successfully. Path: $currentPhotoPath")
+            binding.ivReceipt.visibility = View.VISIBLE
+            binding.layoutAddPhoto.visibility = View.GONE
+            binding.ivReceipt.setImageURI(photoUri)
+        } else {
+            Log.w(TAG, "Camera: Photo capture cancelled or failed")
+            currentPhotoPath = null
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView: started")
+        Log.d(TAG, "onCreateView: entry")
         _binding = FragmentAddExpenseBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -83,18 +103,19 @@ class AddExpenseFragment : Fragment() {
 
         val userId = sessionManager.getUserId()
         if (userId != -1) {
-            Log.d(TAG, "onViewCreated: loading categories for user $userId")
             viewModel.loadCategories(userId)
-        } else {
-            Log.w(TAG, "onViewCreated: no valid session found")
         }
     }
 
     private fun setupUI() {
-        Log.d(TAG, "setupUI: initializing listeners")
         updateDateLabel()
+        
         binding.etDate.setOnClickListener {
             showDatePicker()
+        }
+
+        binding.cardReceipt.setOnClickListener {
+            dispatchTakePictureIntent()
         }
 
         binding.btnSave.setOnClickListener {
@@ -104,7 +125,6 @@ class AddExpenseFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
-            Log.d(TAG, "observeViewModel: received ${categories.size} categories")
             categoriesList = categories
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -116,21 +136,56 @@ class AddExpenseFragment : Fragment() {
         }
 
         viewModel.operationSuccess.observe(viewLifecycleOwner) { success ->
-            Log.d(TAG, "observeViewModel: operationSuccess = $success")
             if (success) {
-                // R08: Provide feedback and return to previous screen
                 Toast.makeText(requireContext(), getString(R.string.msg_expense_saved), Toast.LENGTH_SHORT).show()
                 findNavController().navigateUp()
             } else {
-                // R13: Handle failed save attempt
-                Log.w(TAG, "observeViewModel: save operation failed")
                 Toast.makeText(requireContext(), getString(R.string.msg_expense_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    /**
+     * Requirement R09: Launch camera to capture receipt photo.
+     */
+    private fun dispatchTakePictureIntent() {
+        Log.d(TAG, "dispatchTakePictureIntent: started")
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    Log.e(TAG, "Error occurred while creating the File", ex)
+                    null
+                }
+                photoFile?.also {
+                    val uri: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.example.savesmart.fileprovider",
+                        it
+                    )
+                    photoUri = uri
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                    takePhotoLauncher.launch(takePictureIntent)
+                }
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "RECEIPT_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
     private fun showDatePicker() {
-        Log.d(TAG, "showDatePicker: showing dialog")
         DatePickerDialog(
             requireContext(),
             { _, year, month, day ->
@@ -150,32 +205,23 @@ class AddExpenseFragment : Fragment() {
         binding.etDate.setText(format.format(selectedDate.time))
     }
 
-    /**
-     * Requirement R13: Input validation before saving.
-     * Requirement T10: Milliunit currency storage.
-     */
     private fun validateAndSave() {
-        Log.d(TAG, "validateAndSave: validation started")
         val amountStr = binding.etAmount.text.toString()
         val description = binding.etDescription.text.toString()
         val categoryIndex = binding.spinnerCategory.selectedItemPosition
 
         if (amountStr.isEmpty()) {
-            Log.w(TAG, "validateAndSave: empty amount")
             binding.etAmount.error = getString(R.string.err_enter_amount)
             return
         }
 
-        // T10: Convert to milliunits (Long) to avoid floating point issues
         val amountMilliunits = CurrencyUtils.parseRandInput(amountStr)
         if (amountMilliunits == null || amountMilliunits <= 0) {
-            Log.w(TAG, "validateAndSave: invalid amount — $amountStr")
             binding.etAmount.error = getString(R.string.err_invalid_amount)
             return
         }
 
         if (categoryIndex == -1 || categoriesList.isEmpty()) {
-            Log.w(TAG, "validateAndSave: no category selected")
             Toast.makeText(requireContext(), getString(R.string.err_select_category), Toast.LENGTH_SHORT).show()
             return
         }
@@ -190,16 +236,16 @@ class AddExpenseFragment : Fragment() {
             description = description,
             dateMillis = selectedDate.timeInMillis,
             startTimeMillis = selectedDate.timeInMillis,
-            endTimeMillis = selectedDate.timeInMillis + (1 * 60 * 60 * 1000) 
+            endTimeMillis = selectedDate.timeInMillis + (1 * 60 * 60 * 1000),
+            receiptPhotoPath = currentPhotoPath // Save path to DB (R09)
         )
 
-        Log.d(TAG, "validateAndSave: success — saving expense to repository")
+        Log.d(TAG, "validateAndSave: saving expense with path $currentPhotoPath")
         viewModel.saveExpense(expense)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView: cleaning up binding")
         _binding = null
     }
 }

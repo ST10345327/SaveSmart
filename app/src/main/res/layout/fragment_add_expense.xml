@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reference:
+    - Android Developers (2024) View Binding. Google LLC.
+      Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+    - Android Developers (2024) Capture a photo. Google LLC.
+      Available at: https://developer.android.com/training/camera/photobasics (Accessed: 24 March 2026).
+-->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -15,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Expense"
+            android:text="@string/title_add_expense"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
@@ -25,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Amount (R)"
+            android:text="@string/label_amount"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
@@ -36,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@drawable/bg_input"
-            android:hint="0.00"
+            android:hint="@string/hint_amount"
             android:inputType="numberDecimal"
             android:paddingHorizontal="16dp"
             android:textColor="@color/text_primary"
@@ -46,7 +53,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="@string/label_category"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
@@ -64,7 +71,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="@string/label_date"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
@@ -76,7 +83,7 @@
             android:layout_height="56dp"
             android:background="@drawable/bg_input"
             android:focusable="false"
-            android:hint="Select Date"
+            android:hint="@string/hint_select_date"
             android:inputType="none"
             android:paddingHorizontal="16dp"
             android:textColor="@color/text_primary"
@@ -86,7 +93,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/label_description"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
@@ -99,18 +106,73 @@
             android:minHeight="100dp"
             android:background="@drawable/bg_input"
             android:gravity="top"
-            android:hint="What was this for?"
+            android:hint="@string/hint_description"
             android:inputType="textMultiLine"
             android:padding="16dp"
             android:textColor="@color/text_primary"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="20dp" />
+
+        <!-- Receipt Image (R09) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Receipt Photo (Optional)"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/border_color"
+            android:layout_marginBottom="32dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivReceipt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAddPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@android:drawable/ic_menu_camera"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to add receipt"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Save Button -->
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Save Expense"
+            android:text="@string/btn_save_expense"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:textStyle="bold"

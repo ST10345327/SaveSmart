@@ -55,6 +55,11 @@
             android:id="@+id/action_dashboardFragment_to_addExpenseFragment"
             app:destination="@id/addExpenseFragment" />
 
+        <!-- Navigate to Expense List (R10) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_expenseListFragment"
+            app:destination="@id/expenseListFragment" />
+
         <!-- Navigate to Category Management (R05) -->
         <action
             android:id="@+id/action_dashboardFragment_to_categoriesFragment"
@@ -72,6 +77,12 @@
         android:id="@+id/addExpenseFragment"
         android:name="com.example.savesmart.ui.expense.AddExpenseFragment"
         android:label="Add Expense" />
+
+    <!-- Expense List Fragment (R10, R11, R12) -->
+    <fragment
+        android:id="@+id/expenseListFragment"
+        android:name="com.example.savesmart.ui.expense.ExpenseListFragment"
+        android:label="My Expenses" />
 
     <!-- Categories List Fragment (R05, R06, R07) -->
     <fragment

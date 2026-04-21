@@ -82,10 +82,14 @@ class DashboardFragment : Fragment() {
             Log.d(TAG, "onViewCreated: FAB clicked - navigating to AddExpenseFragment")
             findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
         }
+
+        // Setup Navigation to Expense List (R10)
+        binding.tvTotalSpending.setOnClickListener {
+            Log.d(TAG, "onViewCreated: Total spending clicked - navigating to ExpenseListFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_expenseListFragment)
+        }
         
         // Setup Navigation to Category Management (R05)
-        // Note: Assuming there is a button with id 'btnManageCategories' in fragment_dashboard.xml
-        // If not, we should use a menu item or another button.
         try {
             val btnManageCategories = binding.root.findViewById<View>(R.id.btnManageCategories)
             btnManageCategories?.setOnClickListener {
