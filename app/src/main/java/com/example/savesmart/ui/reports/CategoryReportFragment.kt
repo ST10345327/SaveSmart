@@ -20,25 +20,19 @@ import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentCategoryReportBinding
 import com.example.savesmart.util.SessionManager
+import com.github.mikephil.charting.components.LimitLine
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 /**
- * CategoryReportFragment — Visualizes spending breakdown using a Pie Chart (Requirement R17).
- *
- * GitHub commit suggestion:
- *   [reports] implement CategoryReportFragment with MPAndroidChart (R17)
- *   - Configured PieChart with percentage display
- *   - Integrated with ReportsViewModel for data observation
- *   Refs: R17, T01, T06
+ * CategoryReportFragment — Visualizes spending breakdown using Pie and Bar Charts (R17, R18).
  */
 class CategoryReportFragment : Fragment() {
-
-    companion object {
-        private const val TAG = "CategoryReportFragment"
-    }
 
     private var _binding: FragmentCategoryReportBinding? = null
     private val binding get() = _binding!!
@@ -51,23 +45,21 @@ class CategoryReportFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView: started")
         _binding = FragmentCategoryReportBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: started")
 
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
         viewModel = ReportsViewModel(repository)
         sessionManager = SessionManager(requireContext())
 
-        setupChart()
+        setupPieChart()
+        setupBarChart()
         
-        // Setup Month Navigation
         binding.btnPrevMonth.setOnClickListener { viewModel.prevMonth() }
         binding.btnNextMonth.setOnClickListener { viewModel.nextMonth() }
         
@@ -75,30 +67,39 @@ class CategoryReportFragment : Fragment() {
 
         val userId = sessionManager.getUserId()
         if (userId != -1) {
-            Log.d(TAG, "onViewCreated: loading report for userId $userId")
             viewModel.loadCategoryReport(userId)
         }
     }
 
-    private fun setupChart() {
-        Log.d(TAG, "setupChart: configuring MPAndroidChart")
+    private fun setupPieChart() {
         binding.pieChart.apply {
             setUsePercentValues(true)
             description.isEnabled = false
             setExtraOffsets(5f, 10f, 5f, 5f)
-            dragDecelerationFrictionCoef = 0.95f
             isDrawHoleEnabled = true
             setHoleColor(Color.WHITE)
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
             holeRadius = 58f
             transparentCircleRadius = 61f
             setDrawCenterText(true)
-            centerText = "Spending %"
-            rotationAngle = 0f
-            isRotationEnabled = true
-            isHighlightPerTapEnabled = true
+            centerText = "Category %"
             legend.isEnabled = true
+        }
+    }
+
+    private fun setupBarChart() {
+        binding.barChart.apply {
+            description.isEnabled = false
+            setDrawGridBackground(false)
+            setDrawBarShadow(false)
+            
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f
+            
+            axisLeft.setDrawGridLines(true)
+            axisRight.isEnabled = false
+            
+            legend.isEnabled = false
         }
     }
 
@@ -108,37 +109,57 @@ class CategoryReportFragment : Fragment() {
         }
 
         viewModel.pieEntries.observe(viewLifecycleOwner) { entries ->
-            Log.d(TAG, "observeViewModel: received ${entries.size} pie entries")
             if (entries.isNotEmpty()) {
                 val dataSet = PieDataSet(entries, "")
-                
-                // Use a mix of material colors
-                val colors = mutableListOf<Int>()
-                for (c in ColorTemplate.MATERIAL_COLORS) colors.add(c)
-                for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-                
-                dataSet.colors = colors
+                dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
                 dataSet.sliceSpace = 3f
-                dataSet.selectionShift = 5f
 
                 val data = PieData(dataSet)
                 data.setValueFormatter(PercentFormatter(binding.pieChart))
                 data.setValueTextSize(11f)
-                data.setValueTextColor(Color.BLACK)
-
                 binding.pieChart.data = data
-                binding.pieChart.invalidate() // Refresh chart
-                Log.d(TAG, "observeViewModel: chart invalidated successfully")
+                binding.pieChart.invalidate()
             } else {
                 binding.pieChart.clear()
-                Log.w(TAG, "observeViewModel: no entries found, chart cleared")
             }
+        }
+
+        viewModel.barEntries.observe(viewLifecycleOwner) { entries ->
+            if (entries.isNotEmpty()) {
+                val dataSet = BarDataSet(entries, "Daily Spending")
+                
+                // R18: Color logic handled by list of colors
+                // We'll calculate the limit and apply colors in the next step
+                dataSet.color = Color.parseColor("#1A6FE8") // Primary Blue
+                
+                val data = BarData(dataSet)
+                data.barWidth = 0.8f
+                binding.barChart.data = data
+                binding.barChart.invalidate()
+            } else {
+                binding.barChart.clear()
+            }
+        }
+
+        viewModel.dailyLimit.observe(viewLifecycleOwner) { limit ->
+            // R18: Add dashed horizontal threshold line
+            val axis = binding.barChart.axisLeft
+            axis.removeAllLimitLines()
+            
+            val limitLine = LimitLine(limit, "Daily Budget")
+            limitLine.lineColor = Color.RED
+            limitLine.lineWidth = 2f
+            limitLine.enableDashedLine(10f, 10f, 0f)
+            limitLine.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+            limitLine.textSize = 10f
+            
+            axis.addLimitLine(limitLine)
+            binding.barChart.invalidate()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView: clearing binding")
         _binding = null
     }
 }

@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_expenses"
         android:title="Expenses" />
     <item
+        android:id="@+id/rewardsFragment"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="Rewards" />
+    <item
         android:id="@+id/categoriesFragment"
         android:icon="@drawable/ic_categories"
         android:title="Categories" />

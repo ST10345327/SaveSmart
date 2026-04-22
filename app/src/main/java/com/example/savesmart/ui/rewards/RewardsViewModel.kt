@@ -12,12 +12,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savesmart.data.entity.Badge
-import com.example.savesmart.data.entity.UserBadge
+import com.example.savesmart.data.entity.User
 import com.example.savesmart.data.repository.SaveSmartRepository
 import kotlinx.coroutines.launch
 
 /**
- * RewardsViewModel — Manages points, levels, and badges (R19, R20, R21).
+ * RewardsViewModel — Manages points, levels, and badges (R19, R20, R21, R22).
  */
 class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 
@@ -29,20 +29,20 @@ class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel(
     private val _level = MutableLiveData<Int>()
     val level: LiveData<Int> = _level
 
+    private val _rankedUsers = MutableLiveData<List<User>>()
+    val rankedUsers: LiveData<List<User>> = _rankedUsers
+
     /**
      * Requirement R20: Observe earned badges.
      */
     fun getEarnedBadges(userId: Int): LiveData<List<Badge>> {
-        Log.d(TAG, "getEarnedBadges: userId $userId")
-        // Note: BadgeDao has getEarnedBadgesLive
         return repository.getEarnedBadgesLive(userId)
     }
 
     /**
-     * Requirement R19: Points are updated in the User entity.
+     * Requirement R19, R21: Load user points and level.
      */
     fun loadUserData(userId: Int) {
-        Log.d(TAG, "loadUserData: userId $userId")
         viewModelScope.launch {
             repository.getUserLive(userId).observeForever { user ->
                 user?.let {
@@ -51,5 +51,18 @@ class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * Requirement R22: Load ranked users for leaderboard.
+     */
+    fun loadLeaderboard() {
+        // We'll use the Repository to fetch ranked users
+        // Since userDao returns a LiveData, we can pipe it here or return it directly
+    }
+
+    fun getAllRankedUsers(): LiveData<List<User>> {
+        // Need to add this to repository
+        return repository.getAllUsersRankedLive()
     }
 }

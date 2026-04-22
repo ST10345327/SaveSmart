@@ -69,6 +69,11 @@ class SaveSmartRepository(
 
     suspend fun updateUser(user: User) = userDao.updateUser(user)
 
+    /**
+     * Requirement R22: Get all users ranked by points.
+     */
+    fun getAllUsersRankedLive(): LiveData<List<User>> = userDao.getAllUsersRankedLive()
+
     // ────────────────────────────────────────────────────────────────────────
     // GAMIFICATION (R19, R20, R21)
     // ────────────────────────────────────────────────────────────────────────

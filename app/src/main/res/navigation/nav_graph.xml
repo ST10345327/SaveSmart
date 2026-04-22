@@ -104,6 +104,24 @@
         android:name="com.example.savesmart.ui.expense.ExpenseListFragment"
         android:label="My Expenses" />
 
+    <!-- Rewards Fragment (R19, R20, R21) -->
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.example.savesmart.ui.rewards.RewardsFragment"
+        android:label="Rewards">
+
+        <!-- Navigate to Leaderboard -->
+        <action
+            android:id="@+id/action_rewardsFragment_to_leaderboardFragment"
+            app:destination="@id/leaderboardFragment" />
+    </fragment>
+
+    <!-- Leaderboard Fragment (R22) -->
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.savesmart.ui.rewards.LeaderboardFragment"
+        android:label="Leaderboard" />
+
     <!-- Categories List Fragment (R05, R06, R07) -->
     <fragment
         android:id="@+id/categoriesFragment"

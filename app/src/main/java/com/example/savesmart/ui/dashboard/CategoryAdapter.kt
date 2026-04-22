@@ -10,7 +10,6 @@ package com.example.savesmart.ui.dashboard
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -24,12 +23,6 @@ import com.example.savesmart.util.CurrencyUtils
 
 /**
  * RecyclerView adapter for displaying category spending summaries on Dashboard.
- *
- * GitHub commit suggestion:
- *   [dashboard] implement CategoryAdapter with budget status indicators
- *   - Added progress bars and color-coded status indicators
- *   - Implemented overspending highlighting (R16)
- *   Refs: R15, R16, T06
  */
 class CategoryAdapter : ListAdapter<CategoryWithSpending, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
 
