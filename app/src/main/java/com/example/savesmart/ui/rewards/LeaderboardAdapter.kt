@@ -1,5 +1,14 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Create dynamic lists with RecyclerView. Google LLC.
+ *   Available at: https://developer.android.com/develop/ui/views/layout/recyclerview (Accessed: 24 March 2026).
+ * - Android Developers (2024) ListAdapter. Google LLC.
+ *   Available at: https://developer.android.com/reference/androidx/recyclerview/widget/ListAdapter (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.ui.rewards
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +17,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.savesmart.data.entity.User
 import com.example.savesmart.databinding.ItemLeaderboardBinding
 
+/**
+ * LeaderboardAdapter — Displays a ranked list of users and their total points (Requirement R22).
+ *
+ * GitHub commit suggestion:
+ *   [rewards] implement LeaderboardAdapter with rank highlighting (R22)
+ *   - Integrated with RewardsViewModel for ranked data
+ *   - Added Gold/Silver/Bronze color highlighting for top 3
+ *   Refs: R22, T06, CS1
+ */
 class LeaderboardAdapter : ListAdapter<User, LeaderboardAdapter.LeaderboardViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeaderboardViewHolder {
@@ -28,12 +46,12 @@ class LeaderboardAdapter : ListAdapter<User, LeaderboardAdapter.LeaderboardViewH
             binding.tvUserLevel.text = "Level ${user.level}"
             binding.tvPoints.text = "${user.totalPoints} pts"
             
-            // Highlight top 3
+            // Highlight top 3 (R22)
             when (rank) {
-                1 -> binding.tvRank.setTextColor(android.graphics.Color.parseColor("#FFD700")) // Gold
-                2 -> binding.tvRank.setTextColor(android.graphics.Color.parseColor("#C0C0C0")) // Silver
-                3 -> binding.tvRank.setTextColor(android.graphics.Color.parseColor("#CD7F32")) // Bronze
-                else -> binding.tvRank.setTextColor(android.graphics.Color.BLACK)
+                1 -> binding.tvRank.setTextColor(Color.parseColor("#FFD700")) // Gold
+                2 -> binding.tvRank.setTextColor(Color.parseColor("#C0C0C0")) // Silver
+                3 -> binding.tvRank.setTextColor(Color.parseColor("#CD7F32")) // Bronze
+                else -> binding.tvRank.setTextColor(Color.BLACK)
             }
         }
     }

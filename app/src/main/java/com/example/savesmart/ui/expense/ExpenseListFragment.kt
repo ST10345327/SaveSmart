@@ -13,9 +13,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.savesmart.R
 import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentExpenseListBinding
@@ -25,6 +27,12 @@ import java.util.Calendar
 /**
  * ExpenseListFragment — Displays a filtered list of expenses (Requirement R10).
  * Supports viewing details (R11) and deletion (R12).
+ *
+ * GitHub commit suggestion:
+ *   [expense] link expense list to full-screen receipt viewer (R11)
+ *   - Implemented navigation to FullReceiptFragment
+ *   - Passed receipt photo path via arguments
+ *   Refs: R10, R11, T06
  */
 class ExpenseListFragment : Fragment() {
 
@@ -60,7 +68,12 @@ class ExpenseListFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = ExpenseAdapter { expense ->
             Log.d(TAG, "Expense clicked: ${expense.expenseId}")
-            // R11: Future implementation — Navigate to detail/receipt view
+            
+            // Requirement R11: Navigate to full-screen receipt view
+            if (!expense.receiptPhotoPath.isNullOrEmpty()) {
+                val bundle = bundleOf("photoPath" to expense.receiptPhotoPath)
+                findNavController().navigate(R.id.action_expenseListFragment_to_fullReceiptFragment, bundle)
+            }
         }
         binding.rvExpenses.layoutManager = LinearLayoutManager(requireContext())
         binding.rvExpenses.adapter = adapter

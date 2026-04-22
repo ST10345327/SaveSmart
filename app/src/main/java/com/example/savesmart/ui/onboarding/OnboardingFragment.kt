@@ -1,3 +1,13 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Fragment overview. Google LLC.
+ *   Available at: https://developer.android.com/guide/fragments (Accessed: 24 March 2026).
+ * - Android Developers (2024) View Binding. Google LLC.
+ *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ * - Android Developers (2024) ViewPager2. Google LLC.
+ *   Available at: https://developer.android.com/training/animation/screen-slide-2 (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.ui.onboarding
 
 import android.os.Bundle
@@ -26,9 +36,16 @@ import com.google.android.material.tabs.TabLayoutMediator
  * Step 1: Set monthly budget goals.
  * Step 2: Create first spending category.
  * Step 3: Explain rewards system.
+ *
+ * GitHub commit suggestion:
+ *   [onboarding] implement 3-step setup flow for new users (R23)
+ *   - Integrated budget and first category creation
+ *   - Added ViewPager2 with progress indicators
+ *   Refs: R23, T06, CS8
  */
 class OnboardingFragment : Fragment() {
 
+    private val TAG = "OnboardingFragment"
     private var _binding: FragmentOnboardingBinding? = null
     private val binding get() = _binding!!
     
@@ -39,6 +56,7 @@ class OnboardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView: entry")
         _binding = FragmentOnboardingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,7 +72,7 @@ class OnboardingFragment : Fragment() {
 
         val adapter = OnboardingAdapter()
         binding.viewPager.adapter = adapter
-        binding.viewPager.isUserInputEnabled = false // Force use of buttons
+        binding.viewPager.isUserInputEnabled = false // Force use of buttons (Requirement R23)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
 
@@ -96,8 +114,10 @@ class OnboardingFragment : Fragment() {
         })
     }
 
+    /**
+     * Move business logic to ViewModel eventually (Requirement 2C fix pending).
+     */
     private fun validateAndSaveStep(step: Int): Boolean {
-        // We find the views within the ViewPager's current child
         val currentView = (binding.viewPager.getChildAt(0) as? RecyclerView)
             ?.findViewHolderForAdapterPosition(step)?.itemView ?: return false
 
@@ -122,7 +142,6 @@ class OnboardingFragment : Fragment() {
                         return false
                     }
                 }
-                // Allow empty goals for now if skip is an option, but here we require if they click Next
                 Toast.makeText(requireContext(), "Please enter your budget goals", Toast.LENGTH_SHORT).show()
                 return false
             }
@@ -143,6 +162,7 @@ class OnboardingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView: cleanup")
         _binding = null
     }
 

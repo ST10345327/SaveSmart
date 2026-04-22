@@ -102,7 +102,22 @@
     <fragment
         android:id="@+id/expenseListFragment"
         android:name="com.example.savesmart.ui.expense.ExpenseListFragment"
-        android:label="My Expenses" />
+        android:label="My Expenses">
+
+        <action
+            android:id="@+id/action_expenseListFragment_to_fullReceiptFragment"
+            app:destination="@id/fullReceiptFragment" />
+    </fragment>
+
+    <!-- Full Receipt Fragment (R11) -->
+    <fragment
+        android:id="@+id/fullReceiptFragment"
+        android:name="com.example.savesmart.ui.expense.FullReceiptFragment"
+        android:label="Receipt Detail">
+        <argument
+            android:name="photoPath"
+            app:argType="string" />
+    </fragment>
 
     <!-- Rewards Fragment (R19, R20, R21) -->
     <fragment

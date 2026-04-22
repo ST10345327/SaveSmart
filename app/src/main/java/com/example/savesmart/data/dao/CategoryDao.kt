@@ -1,3 +1,9 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Room persistence library. Google LLC.
+ *   Available at: https://developer.android.com/training/data-storage/room (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.data.dao
 
 import androidx.lifecycle.LiveData
@@ -21,7 +27,8 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE user_id = :userId AND is_deleted = 0 ORDER BY name ASC")
     suspend fun getCategoriesForUser(userId: Int): List<Category>
 
-    @Query("SELECT * FROM categories WHERE category_id = :categoryId LIMIT 1")
+    // Requirement R07: Ensure specific fetch respects soft-delete
+    @Query("SELECT * FROM categories WHERE category_id = :categoryId AND is_deleted = 0 LIMIT 1")
     suspend fun getCategoryById(categoryId: Int): Category?
 
     @Update
@@ -33,16 +40,9 @@ interface CategoryDao {
     @Query("SELECT COALESCE(SUM(amount_milliunits), 0) FROM expenses WHERE category_id = :categoryId AND date_millis BETWEEN :startMillis AND :endMillis AND is_deleted = 0")
     suspend fun getTotalSpendingForCategory(categoryId: Int, startMillis: Long, endMillis: Long): Long
 
-    /**
-     * Get all categories for a user (R14, R15).
-     */
     @Query("SELECT * FROM categories WHERE user_id = :userId AND is_deleted = 0 ORDER BY name ASC")
     suspend fun getAllCategoriesForUser(userId: Int): List<Category>
 
-    /**
-     * Optimized query to get category spending summaries in a single database call (Performance T08).
-     * Solves the N+1 query problem in the repository.
-     */
     @Query("""
         SELECT 
             c.category_id AS categoryId, 
