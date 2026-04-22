@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Design System Colors (from Figma prototype) -->
+    <!-- Design System Colors - Refined for UX (Softer Contrast) -->
     <color name="primary_blue">#1A6FE8</color>
-    <color name="good_green">#16A34A</color>
+    <color name="primary_blue_variant">#3B82F6</color>
+
+    <!-- Status Colors -->
+    <color name="good_green">#10B981</color> <!-- Modern Emerald -->
     <color name="close_amber">#F59E0B</color>
-    <color name="over_red">#DC2626</color>
-    <color name="red">#DC2626</color> <!-- Added for compatibility with older layouts -->
-    <color name="rewards_purple">#7C3AED</color>
-    <color name="background">#F5F5F7</color>
+    <color name="over_red">#EF4444</color>
+    <color name="red">#EF4444</color>
+
+    <color name="rewards_purple">#8B5CF6</color> <!-- Softer Violet -->
+
+    <!-- Neutral Palette (Soft Light Mode) -->
+    <color name="background">#F9FAFB</color> <!-- Very Soft Gray -->
     <color name="card_surface">#FFFFFF</color>
     <color name="border">#E5E7EB</color>
     <color name="border_color">#E5E7EB</color>
-    <color name="text_primary">#1C1C23</color>
-    <color name="text_secondary">#6B7280</color>
+    <color name="text_primary">#111827</color> <!-- Deep Slate -->
+    <color name="text_secondary">#4B5563</color> <!-- Medium Slate -->
+    <color name="text_hint">#9CA3AF</color>
 
-    <!-- Legacy colors -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Dark Mode Specifics (to be used via theme attrs or night res) -->
+    <color name="dark_background">#0F172A</color>
+    <color name="dark_card_surface">#1E293B</color>
+    <color name="dark_text_primary">#F9FAFB</color>
+    <color name="dark_text_secondary">#9CA3AF</color>
+
+    <!-- Legacy / Utility -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
 </resources>

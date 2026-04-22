@@ -43,6 +43,23 @@
     <string name="onboarding_step2_desc">Create a category like \"Groceries\" or \"Rent\" to organize your spending.</string>
     <string name="onboarding_step3_title">Earn Rewards</string>
     <string name="onboarding_step3_desc">Earn points and badges for consistent tracking and staying under budget!</string>
+    <string name="label_min_monthly_budget">Min Monthly Budget</string>
+    <string name="label_max_monthly_budget">Max Monthly Budget</string>
+    <string name="label_category_name">Category Name</string>
+    <string name="err_invalid_budget_goals">Max goal must be greater than min goal</string>
+    <string name="err_enter_budget_goals">Please enter your budget goals</string>
+    <string name="err_enter_category_name">Please enter a category name</string>
+
+    <!-- Rewards Strings -->
+    <string name="title_rewards">My Rewards</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="subtitle_leaderboard">See how you rank against others</string>
+    <string name="label_unlocked_badges">Unlocked Badges</string>
+    <string name="label_goal_difficulty">Goal Difficulty Adjustment</string>
+    <string name="label_level">Level %d</string>
+    <string name="label_points">%d pts</string>
+    <string name="label_points_progress">%d/1000 to Level %d</string>
+    <string name="label_rank">%d</string>
 
     <!-- Expense Strings -->
     <string name="title_add_expense">Add Expense</string>
@@ -61,8 +78,27 @@
     <string name="err_enter_amount">Enter amount</string>
     <string name="err_invalid_amount">Invalid amount</string>
     <string name="err_select_category">Please select a category</string>
+    <string name="label_receipt_photo">Receipt Photo (Optional)</string>
+    <string name="label_tap_to_add_receipt">Tap to add receipt</string>
+    <string name="msg_no_image_available">No image available</string>
+
+    <!-- Category Strings -->
+    <string name="title_categories">My Categories</string>
+    <string name="subtitle_categories">Set spending goals and customize colors.</string>
+    <string name="btn_new_category">New Category</string>
+    <string name="title_category_details">Category Details</string>
+    <string name="label_name">Name</string>
+    <string name="label_min_goal">Min Monthly Goal</string>
+    <string name="label_max_goal">Max Monthly Goal</string>
+    <string name="btn_save_category">Save Category</string>
+    <string name="btn_delete_category">Delete Category</string>
 
     <string name="filter_this_month">This Month</string>
     <string name="empty_expenses">No expenses found</string>
     <string name="action_delete">Delete</string>
+    <string name="content_desc_go_back">Go Back</string>
+    <string name="title_spending_analysis">Spending Analysis</string>
+    <string name="label_spending_by_category">Spending by Category</string>
+    <string name="label_daily_spending_history">Daily Spending History</string>
+    <string name="label_daily_budget">Daily Budget</string>
 </resources>

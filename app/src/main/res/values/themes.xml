@@ -1,18 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.SaveSmart" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Design System Colors -->
+        <!-- Design System Colors - Refined for better UX -->
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#DBEAFE</item> <!-- Soft Blue Tint -->
+        <item name="colorOnPrimaryContainer">@color/primary_blue</item>
+
         <item name="android:statusBarColor">@color/primary_blue</item>
         <item name="android:windowBackground">@color/background</item>
 
         <!-- Material 3 Customization -->
-        <item name="colorSurface">@color/white</item>
+        <item name="colorSurface">@color/card_surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorOutline">@color/border</item>
+        <item name="colorSurfaceVariant">#F3F4F6</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
 
-        <!-- Definitive Fix for Caps Lock / All Caps Issue -->
+        <!-- Global Text Case Fix -->
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
         <item name="android:editTextStyle">@style/Widget.SaveSmart.EditText</item>
@@ -20,27 +25,37 @@
 
     <style name="Theme.SaveSmart" parent="Base.Theme.SaveSmart" />
 
-    <!-- Custom EditText style to prevent All-Caps issues -->
+    <!-- Enhanced EditText Style - Readability and Focus -->
     <style name="Widget.SaveSmart.EditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
     </style>
 
-    <!-- Custom Button Style -->
+    <!-- Professional Button Style -->
     <style name="Widget.SaveSmart.Button" parent="Widget.Material3.Button">
         <item name="cornerRadius">12dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
-    <!-- Shape Overlay for Rounded Top Cards -->
+    <!-- Shape Overlay for Cards - Modern Radius -->
     <style name="ShapeAppearance.SaveSmart.CardTop" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">24dp</item>
         <item name="cornerSizeTopRight">24dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.SaveSmart.CardAll" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 </resources>

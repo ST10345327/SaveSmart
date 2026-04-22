@@ -1,7 +1,19 @@
+/**
+ * Reference:
+ * - Android Developers (2024) NumberFormat. Google LLC.
+ *   Available at: https://developer.android.com/reference/java/text/NumberFormat (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.util
 
 import android.util.Log
+import java.text.NumberFormat
+import java.util.Locale
 
+/**
+ * Utility for handling currency conversions and formatting (Requirement T10).
+ * Uses NumberFormat for professional currency presentation as required.
+ */
 object CurrencyUtils {
 
     private const val TAG = "CurrencyUtils"
@@ -15,21 +27,24 @@ object CurrencyUtils {
         return milliunits.toDouble() / MILLIUNITS_PER_RAND
     }
 
+    /**
+     * Requirement: Use NumberFormat in the app.
+     */
     fun formatMilliunits(milliunits: Long): String {
         val rands = milliunitsToRands(milliunits)
-        return "R%.2f".format(rands)
+        val format = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
+        return format.format(rands)
     }
 
     fun parseRandInput(input: String): Long? {
         return try {
             val cleaned = input
-                .replace("R", "")
-                .replace(" ", "")
+                .replace(Regex("[^0-9.,]"), "")
                 .replace(",", ".")
                 .trim()
             val rands = cleaned.toDouble()
             randsToMilliunits(rands)
-        } catch (e: NumberFormatException) {
+        } catch (e: Exception) {
             Log.w(TAG, "Failed to parse Rand input: $input — ${e.message}")
             null
         }
