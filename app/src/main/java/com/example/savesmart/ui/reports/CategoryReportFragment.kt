@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.savesmart.R
 import com.example.savesmart.data.database.SaveSmartDatabase
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentCategoryReportBinding
@@ -65,6 +66,11 @@ class CategoryReportFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
 
         setupChart()
+        
+        // Setup Month Navigation
+        binding.btnPrevMonth.setOnClickListener { viewModel.prevMonth() }
+        binding.btnNextMonth.setOnClickListener { viewModel.nextMonth() }
+        
         observeViewModel()
 
         val userId = sessionManager.getUserId()
@@ -97,11 +103,21 @@ class CategoryReportFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel.currentMonthDisplay.observe(viewLifecycleOwner) { month ->
+            binding.tvCurrentMonth.text = month
+        }
+
         viewModel.pieEntries.observe(viewLifecycleOwner) { entries ->
             Log.d(TAG, "observeViewModel: received ${entries.size} pie entries")
             if (entries.isNotEmpty()) {
-                val dataSet = PieDataSet(entries, "Categories")
-                dataSet.setColors(*ColorTemplate.MATERIAL_COLORS)
+                val dataSet = PieDataSet(entries, "")
+                
+                // Use a mix of material colors
+                val colors = mutableListOf<Int>()
+                for (c in ColorTemplate.MATERIAL_COLORS) colors.add(c)
+                for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
+                
+                dataSet.colors = colors
                 dataSet.sliceSpace = 3f
                 dataSet.selectionShift = 5f
 
@@ -114,7 +130,8 @@ class CategoryReportFragment : Fragment() {
                 binding.pieChart.invalidate() // Refresh chart
                 Log.d(TAG, "observeViewModel: chart invalidated successfully")
             } else {
-                Log.w(TAG, "observeViewModel: no entries found, chart remains empty")
+                binding.pieChart.clear()
+                Log.w(TAG, "observeViewModel: no entries found, chart cleared")
             }
         }
     }

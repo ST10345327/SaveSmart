@@ -2,8 +2,6 @@
  * Reference:
  * - Android Developers (2024) ViewModel overview. Google LLC.
  *   Available at: https://developer.android.com/topic/libraries/architecture/viewmodel (Accessed: 24 March 2026).
- * - Android Developers (2024) LiveData overview. Google LLC.
- *   Available at: https://developer.android.com/topic/libraries/architecture/livedata (Accessed: 24 March 2026).
  */
 
 package com.example.savesmart.ui.dashboard
@@ -14,17 +12,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savesmart.data.repository.SaveSmartRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 /**
  * ViewModel for computing Dashboard insights.
- *
- * GitHub commit suggestion:
- *   [dashboard] implement monthly spending and category summary logic
- *   - Added logic for current month date filtering
- *   - Implemented overspending indicator calculation
- *   Refs: R15, R16, T01
  */
 class DashboardViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 
@@ -36,45 +32,76 @@ class DashboardViewModel(private val repository: SaveSmartRepository) : ViewMode
     private val _categoriesSummary = MutableLiveData<List<CategoryWithSpending>>()
     val categoriesSummary: LiveData<List<CategoryWithSpending>> = _categoriesSummary
 
+    private val _currentMonthDisplay = MutableLiveData<String>()
+    val currentMonthDisplay: LiveData<String> = _currentMonthDisplay
+
+    private val calendar = Calendar.getInstance()
+    private var currentUserId: Int = -1
+
+    init {
+        updateMonthDisplay()
+    }
+
+    private fun updateMonthDisplay() {
+        val sdf = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+        _currentMonthDisplay.value = sdf.format(calendar.time)
+    }
+
+    fun nextMonth() {
+        calendar.add(Calendar.MONTH, 1)
+        updateMonthDisplay()
+        if (currentUserId != -1) loadDashboardData(currentUserId)
+    }
+
+    fun prevMonth() {
+        calendar.add(Calendar.MONTH, -1)
+        updateMonthDisplay()
+        if (currentUserId != -1) loadDashboardData(currentUserId)
+    }
+
     /**
-     * Requirement R15: Load dashboard data for the current month.
+     * Optimized Dashboard loading to prevent ANR (Performance T08).
+     * Moves date calculation and data fetching to background threads.
      */
     fun loadDashboardData(userId: Int) {
-        Log.d(TAG, "loadDashboardData() called for userId: $userId")
+        currentUserId = userId
         
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        val startMillis = calendar.timeInMillis
-
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        val endMillis = calendar.timeInMillis
-
         viewModelScope.launch {
+            // Move date processing to Default dispatcher (CPU intensive)
+            val (startMillis, endMillis) = withContext(Dispatchers.Default) {
+                val tempCal = calendar.clone() as Calendar
+                tempCal.set(Calendar.DAY_OF_MONTH, 1)
+                tempCal.set(Calendar.HOUR_OF_DAY, 0)
+                tempCal.set(Calendar.MINUTE, 0)
+                tempCal.set(Calendar.SECOND, 0)
+                val start = tempCal.timeInMillis
+
+                tempCal.set(Calendar.DAY_OF_MONTH, tempCal.getActualMaximum(Calendar.DAY_OF_MONTH))
+                tempCal.set(Calendar.HOUR_OF_DAY, 23)
+                tempCal.set(Calendar.MINUTE, 59)
+                tempCal.set(Calendar.SECOND, 59)
+                val end = tempCal.timeInMillis
+                Pair(start, end)
+            }
+
             try {
-                // Aggregate total spending (R15)
-                val total = repository.getTotalMonthlySpending(userId, startMillis, endMillis)
-                _totalSpent.postValue(total)
-                Log.d(TAG, "loadDashboardData(): Total spent this month = $total milliunits")
+                // Fetch data in parallel to speed up loading
+                val totalDeferred = launch {
+                    val total = repository.getTotalMonthlySpending(userId, startMillis, endMillis)
+                    _totalSpent.postValue(total)
+                }
 
-                // Get category summaries (R16)
-                val summaries = repository.getCategoriesWithSpending(userId, startMillis, endMillis)
-                _categoriesSummary.postValue(summaries)
-                Log.d(TAG, "loadDashboardData(): Loaded ${summaries.size} category summaries")
-
+                val summaryDeferred = launch {
+                    val summaries = repository.getCategoriesWithSpending(userId, startMillis, endMillis)
+                    _categoriesSummary.postValue(summaries)
+                }
             } catch (e: Exception) {
-                Log.e(TAG, "loadDashboardData(): Unexpected error", e)
-            } finally {
-                Log.d(TAG, "loadDashboardData(): Data load completed")
+                Log.e(TAG, "Error loading dashboard data", e)
             }
         }
     }
 }
 
-/**
- * Data model for Dashboard summary items.
- */
 data class CategoryWithSpending(
     val categoryId: Int,
     val name: String,

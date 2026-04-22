@@ -14,18 +14,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savesmart.data.repository.SaveSmartRepository
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 /**
- * ReportsViewModel — Aggregates data for spending visualization (Requirement R17).
- *
- * GitHub commit suggestion:
- *   [reports] implement ReportsViewModel with PieChart data aggregation
- *   - Integrated with SaveSmartRepository for category spending
- *   - Implemented current month filtering logic
- *   Refs: R17, T01, T10
+ * ReportsViewModel — Aggregates data for spending visualization (Requirement R17, R18).
  */
 class ReportsViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 
@@ -36,36 +35,99 @@ class ReportsViewModel(private val repository: SaveSmartRepository) : ViewModel(
     private val _pieEntries = MutableLiveData<List<PieEntry>>()
     val pieEntries: LiveData<List<PieEntry>> = _pieEntries
 
+    private val _barEntries = MutableLiveData<List<BarEntry>>()
+    val barEntries: LiveData<List<BarEntry>> = _barEntries
+
+    private val _dailyLimit = MutableLiveData<Float>()
+    val dailyLimit: LiveData<Float> = _dailyLimit
+
+    private val _currentMonthDisplay = MutableLiveData<String>()
+    val currentMonthDisplay: LiveData<String> = _currentMonthDisplay
+
+    private val calendar = Calendar.getInstance()
+    private var currentUserId: Int = -1
+
+    init {
+        updateMonthDisplay()
+    }
+
+    private fun updateMonthDisplay() {
+        val sdf = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+        _currentMonthDisplay.value = sdf.format(calendar.time)
+    }
+
+    fun nextMonth() {
+        calendar.add(Calendar.MONTH, 1)
+        updateMonthDisplay()
+        if (currentUserId != -1) loadCategoryReport(currentUserId)
+    }
+
+    fun prevMonth() {
+        calendar.add(Calendar.MONTH, -1)
+        updateMonthDisplay()
+        if (currentUserId != -1) loadCategoryReport(currentUserId)
+    }
+
     /**
-     * Requirement R17: Load spending breakdown for the current month.
+     * Requirement R17, R18: Load spending breakdown and daily history.
      */
     fun loadCategoryReport(userId: Int) {
-        Log.d(TAG, "loadCategoryReport: started for userId $userId")
+        currentUserId = userId
         
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        val startMillis = calendar.timeInMillis
-        
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        val endMillis = calendar.timeInMillis
-
         viewModelScope.launch {
+            val (startMillis, endMillis, daysInMonth) = withContext(Dispatchers.Default) {
+                val tempCal = calendar.clone() as Calendar
+                tempCal.set(Calendar.DAY_OF_MONTH, 1)
+                tempCal.set(Calendar.HOUR_OF_DAY, 0)
+                tempCal.set(Calendar.MINUTE, 0)
+                val start = tempCal.timeInMillis
+
+                val maxDay = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH)
+                tempCal.set(Calendar.DAY_OF_MONTH, maxDay)
+                tempCal.set(Calendar.HOUR_OF_DAY, 23)
+                tempCal.set(Calendar.MINUTE, 59)
+                val end = tempCal.timeInMillis
+                Triple(start, end, maxDay)
+            }
+
             try {
-                // T10: Data fetched in milliunits and converted for display
+                // 1. Fetch Pie Chart Data (R17)
                 val summaries = repository.getCategoriesWithSpending(userId, startMillis, endMillis)
-                
-                val entries = summaries.filter { it.totalMilliunits > 0 }.map {
+                _pieEntries.postValue(summaries.filter { it.totalMilliunits > 0 }.map {
                     PieEntry(it.totalMilliunits.toFloat(), it.name)
-                }
+                })
+
+                // 2. Fetch Bar Chart Data (R18)
+                val dailySpending = repository.getDailySpending(userId, startMillis, endMillis)
                 
-                _pieEntries.postValue(entries)
-                Log.d(TAG, "loadCategoryReport: success — generated ${entries.size} entries")
+                // Map database results to BarEntries (X-axis is day of month)
+                val entries = mutableListOf<BarEntry>()
+                val cal = Calendar.getInstance()
+                
+                // Initialize all days with 0 to ensure a full chart
+                val spendingMap = dailySpending.associate { 
+                    cal.timeInMillis = it.dateMillis
+                    cal.get(Calendar.DAY_OF_MONTH) to it.totalMilliunits.toFloat()
+                }
+
+                for (day in 1..daysInMonth) {
+                    entries.add(BarEntry(day.toFloat(), spendingMap[day] ?: 0f))
+                }
+                _barEntries.postValue(entries)
+
+                // 3. Calculate Daily Limit (Based on user's max budget / days in month)
+                val user = repository.getUserById(userId)
+                user?.let {
+                    val limit = if (it.maxMonthlyBudget > 0) {
+                        it.maxMonthlyBudget.toFloat() / daysInMonth
+                    } else {
+                        200_000f // Default fallback R200
+                    }
+                    _dailyLimit.postValue(limit)
+                }
+
             } catch (e: Exception) {
-                Log.e(TAG, "loadCategoryReport: exception", e)
-            } finally {
-                Log.d(TAG, "loadCategoryReport: completed")
+                Log.e(TAG, "Error loading report data", e)
             }
         }
     }

@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="60dp"
             android:src="@drawable/ic_logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,75 +47,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <TextView
-            android:id="@+id/labelUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="@string/hint_username"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTagline" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsername"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:boxBackgroundMode="none"
-            app:hintEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/labelUsername">
+            android:layout_marginTop="48dp"
+            android:hint="@string/hint_username"
+            app:layout_constraintTop_toBottomOf="@id/tvTagline">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsername"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_input"
-                android:hint="@string/hint_enter_username"
-                android:inputType="text"
-                android:padding="16dp"
-                android:textColorHint="@color/text_secondary" />
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textAllCaps="false" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/labelPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/hint_password"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilUsername" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:boxBackgroundMode="none"
+            android:layout_marginTop="16dp"
+            android:hint="@string/hint_password"
             app:endIconMode="password_toggle"
-            app:endIconTint="@color/text_secondary"
-            app:hintEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/labelPassword">
+            app:layout_constraintTop_toBottomOf="@id/tilUsername">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_input"
-                android:hint="@string/hint_enter_password"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColorHint="@color/text_secondary" />
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:text="@string/forgot_password"
             android:textColor="@color/primary_blue"
             android:textStyle="bold"
@@ -124,12 +94,11 @@
 
         <Button
             android:id="@+id/btnLogin"
+            style="@style/Widget.SaveSmart.Button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/bg_button_primary"
+            android:layout_marginTop="32dp"
             android:text="@string/btn_login"
-            android:textAllCaps="false"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />

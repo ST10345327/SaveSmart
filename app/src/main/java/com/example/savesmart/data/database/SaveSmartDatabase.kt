@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
         Badge::class,
         UserBadge::class
     ],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 abstract class SaveSmartDatabase : RoomDatabase() {
@@ -39,7 +39,8 @@ abstract class SaveSmartDatabase : RoomDatabase() {
 
     companion object {
         private const val TAG = "SaveSmartDatabase"
-        private const val DATABASE_NAME = "savesmart.db"
+        // Renamed to v3 to force a clean slate for users unable to clear app data
+        private const val DATABASE_NAME = "savesmart_v3.db"
 
         @Volatile
         private var INSTANCE: SaveSmartDatabase? = null

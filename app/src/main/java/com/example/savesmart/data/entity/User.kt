@@ -32,6 +32,12 @@ data class User(
     @ColumnInfo(name = "onboarding_complete")
     val onboardingComplete: Boolean = false,
 
+    @ColumnInfo(name = "min_monthly_budget")
+    val minMonthlyBudget: Long = 0,
+
+    @ColumnInfo(name = "max_monthly_budget")
+    val maxMonthlyBudget: Long = 0,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis()
 )

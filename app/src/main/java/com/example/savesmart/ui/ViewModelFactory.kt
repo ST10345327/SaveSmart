@@ -6,6 +6,7 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.ui.auth.AuthViewModel
 import com.example.savesmart.ui.dashboard.DashboardViewModel
 import com.example.savesmart.ui.expense.ExpenseViewModel
+import com.example.savesmart.ui.onboarding.OnboardingViewModel
 
 class ViewModelFactory(private val repository: SaveSmartRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -20,6 +21,10 @@ class ViewModelFactory(private val repository: SaveSmartRepository) : ViewModelP
         if (modelClass.isAssignableFrom(ExpenseViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ExpenseViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(OnboardingViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return OnboardingViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

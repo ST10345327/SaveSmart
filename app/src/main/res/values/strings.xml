@@ -19,6 +19,31 @@
     <string name="err_fill_all_fields">Please fill in all fields</string>
     <string name="err_passwords_mismatch">Passwords do not match</string>
 
+    <!-- Dashboard Strings -->
+    <string name="welcome_back">Welcome back, %s!</string>
+    <string name="status_good">Good</string>
+    <string name="status_close">Close</string>
+    <string name="status_over">Over!</string>
+    <string name="status_no_goal">No goal set</string>
+    <string name="label_goal">Goal: %s</string>
+    <string name="label_spent_so_far">Spent so far</string>
+    <string name="msg_overspending_warning">⚠️ You\'ve exceeded your budget in some categories!</string>
+    <string name="btn_manage">Manage</string>
+    <string name="content_desc_logout">Logout</string>
+    <string name="label_current_month">Current Month</string>
+    <string name="label_of_budget">of %s monthly budget</string>
+
+    <!-- Onboarding Strings -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Get Started</string>
+    <string name="onboarding_step1_title">Set Your Budget</string>
+    <string name="onboarding_step1_desc">Let\'s start by setting your monthly spending targets. This helps you stay on track.</string>
+    <string name="onboarding_step2_title">Your First Category</string>
+    <string name="onboarding_step2_desc">Create a category like \"Groceries\" or \"Rent\" to organize your spending.</string>
+    <string name="onboarding_step3_title">Earn Rewards</string>
+    <string name="onboarding_step3_desc">Earn points and badges for consistent tracking and staying under budget!</string>
+
     <!-- Expense Strings -->
     <string name="title_add_expense">Add Expense</string>
     <string name="title_expenses">My Expenses</string>

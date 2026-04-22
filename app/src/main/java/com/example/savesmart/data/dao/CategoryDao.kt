@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.savesmart.data.entity.Category
+import com.example.savesmart.ui.dashboard.CategoryWithSpending
 
 @Dao
 interface CategoryDao {
@@ -37,6 +38,28 @@ interface CategoryDao {
      */
     @Query("SELECT * FROM categories WHERE user_id = :userId AND is_deleted = 0 ORDER BY name ASC")
     suspend fun getAllCategoriesForUser(userId: Int): List<Category>
+
+    /**
+     * Optimized query to get category spending summaries in a single database call (Performance T08).
+     * Solves the N+1 query problem in the repository.
+     */
+    @Query("""
+        SELECT 
+            c.category_id AS categoryId, 
+            c.name, 
+            c.color_hex AS colorHex, 
+            COALESCE(SUM(e.amount_milliunits), 0) AS totalMilliunits,
+            c.max_goal_milliunits AS maxGoalMilliunits,
+            c.min_goal_milliunits AS minGoalMilliunits
+        FROM categories c 
+        LEFT JOIN expenses e ON c.category_id = e.category_id 
+            AND e.date_millis BETWEEN :startMillis AND :endMillis 
+            AND e.is_deleted = 0 
+        WHERE c.user_id = :userId AND c.is_deleted = 0 
+        GROUP BY c.category_id 
+        ORDER BY totalMilliunits DESC
+    """)
+    suspend fun getCategoriesWithSpending(userId: Int, startMillis: Long, endMillis: Long): List<CategoryWithSpending>
 
     @Query("SELECT c.category_id, c.name, c.color_hex, COALESCE(SUM(e.amount_milliunits), 0) AS totalMilliunits FROM categories c LEFT JOIN expenses e ON c.category_id = e.category_id AND e.date_millis BETWEEN :startMillis AND :endMillis AND e.is_deleted = 0 WHERE c.user_id = :userId AND c.is_deleted = 0 GROUP BY c.category_id ORDER BY totalMilliunits DESC")
     fun getCategorySpendingSummaryLive(userId: Int, startMillis: Long, endMillis: Long): LiveData<List<CategorySpendingSummary>>

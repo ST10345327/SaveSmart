@@ -73,7 +73,12 @@ class LoginFragment : Fragment() {
                 is AuthResult.Success -> {
                     sessionManager.saveSession(result.user.userId, result.user.username)
                     Toast.makeText(context, "Welcome back, ${result.user.username}!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
+                    
+                    if (sessionManager.isOnboardingComplete()) {
+                        findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
+                    } else {
+                        findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+                    }
                 }
                 is AuthResult.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()

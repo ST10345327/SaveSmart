@@ -71,6 +71,10 @@ class DashboardFragment : Fragment() {
         // Setup RecyclerView (R15, R16)
         setupRecyclerView()
 
+        // Setup Month Navigation
+        binding.btnPrevMonth.setOnClickListener { viewModel.prevMonth() }
+        binding.btnNextMonth.setOnClickListener { viewModel.nextMonth() }
+
         // Setup logout button (R04)
         binding.btnLogout.setOnClickListener {
             Log.d(TAG, "onViewCreated: logout button clicked")
@@ -90,14 +94,9 @@ class DashboardFragment : Fragment() {
         }
         
         // Setup Navigation to Category Management (R05)
-        try {
-            val btnManageCategories = binding.root.findViewById<View>(R.id.btnManageCategories)
-            btnManageCategories?.setOnClickListener {
-                Log.d(TAG, "onViewCreated: Manage Categories clicked - navigating to CategoriesFragment")
-                findNavController().navigate(R.id.action_dashboardFragment_to_categoriesFragment)
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "onViewCreated: Could not find btnManageCategories", e)
+        binding.btnManageCategories.setOnClickListener {
+            Log.d(TAG, "onViewCreated: Manage Categories clicked - navigating to CategoriesFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_categoriesFragment)
         }
         
         // Setup Navigation to Reports (R17)
@@ -118,7 +117,7 @@ class DashboardFragment : Fragment() {
 
             // Show welcome message with username
             val username = sessionManager.getUsername()
-            binding.tvWelcome.text = "Welcome back, $username!"
+            binding.tvWelcome.text = getString(R.string.welcome_back, username)
         } else {
             Log.w(TAG, "onViewCreated: no active session found")
         }
@@ -138,10 +137,22 @@ class DashboardFragment : Fragment() {
      * Requirement R15, R16: Observe ViewModel state and update UI.
      */
     private fun observeViewModel() {
+        viewModel.currentMonthDisplay.observe(viewLifecycleOwner) { month ->
+            binding.tvCurrentMonth.text = month
+        }
+
         viewModel.totalSpent.observe(viewLifecycleOwner) { total ->
             Log.d(TAG, "observeViewModel: received total spent: $total")
             // Update total spent TextView (Requirement R15)
             binding.tvTotalSpending.text = CurrencyUtils.formatMilliunits(total)
+            
+            // Hardcoded monthly budget for now (e.g., R6000)
+            val monthlyBudget = 6000_000L 
+            binding.tvBudgetSummary.text = getString(R.string.label_of_budget, CurrencyUtils.formatMilliunits(monthlyBudget))
+            
+            val progress = (total.toFloat() / monthlyBudget.toFloat() * 100).toInt().coerceIn(0, 100)
+            binding.progressMonthly.progress = progress
+            binding.tvMonthlyProgressPercent.text = "$progress%"
         }
 
         viewModel.categoriesSummary.observe(viewLifecycleOwner) { summaries ->

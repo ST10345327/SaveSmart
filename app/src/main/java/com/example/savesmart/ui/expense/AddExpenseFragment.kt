@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -128,11 +129,10 @@ class AddExpenseFragment : Fragment() {
             categoriesList = categories
             val adapter = ArrayAdapter(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_dropdown_item_1line,
                 categories.map { it.name }
             )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerCategory.adapter = adapter
+            (binding.spinnerCategory as? AutoCompleteTextView)?.setAdapter(adapter)
         }
 
         viewModel.operationSuccess.observe(viewLifecycleOwner) { success ->
@@ -208,26 +208,31 @@ class AddExpenseFragment : Fragment() {
     private fun validateAndSave() {
         val amountStr = binding.etAmount.text.toString()
         val description = binding.etDescription.text.toString()
-        val categoryIndex = binding.spinnerCategory.selectedItemPosition
-
+        val categoryName = binding.spinnerCategory.text.toString()
+        
         if (amountStr.isEmpty()) {
-            binding.etAmount.error = getString(R.string.err_enter_amount)
+            binding.tilAmount.error = getString(R.string.err_enter_amount)
             return
+        } else {
+            binding.tilAmount.error = null
         }
 
         val amountMilliunits = CurrencyUtils.parseRandInput(amountStr)
         if (amountMilliunits == null || amountMilliunits <= 0) {
-            binding.etAmount.error = getString(R.string.err_invalid_amount)
+            binding.tilAmount.error = getString(R.string.err_invalid_amount)
             return
         }
 
-        if (categoryIndex == -1 || categoriesList.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.err_select_category), Toast.LENGTH_SHORT).show()
+        val category = categoriesList.find { it.name == categoryName }
+        if (category == null) {
+            binding.tilCategory.error = getString(R.string.err_select_category)
             return
+        } else {
+            binding.tilCategory.error = null
         }
 
         val userId = sessionManager.getUserId()
-        val categoryId = categoriesList[categoryIndex].categoryId
+        val categoryId = category.categoryId
 
         val expense = Expense(
             userId = userId,

@@ -11,6 +11,7 @@ class SessionManager(context: Context) {
     private val KEY_USER_ID   = "user_id"
     private val KEY_USERNAME  = "username"
     private val KEY_IS_LOGGED = "is_logged_in"
+    private val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
 
     private val prefs: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -34,6 +35,12 @@ class SessionManager(context: Context) {
     fun getUserId(): Int = prefs.getInt(KEY_USER_ID, -1)
     fun getUsername(): String? = prefs.getString(KEY_USERNAME, null)
     fun isLoggedIn(): Boolean = prefs.getBoolean(KEY_IS_LOGGED, false)
+
+    fun setOnboardingComplete(complete: Boolean) {
+        prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETE, complete).apply()
+    }
+
+    fun isOnboardingComplete(): Boolean = prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
 
     fun clearSession() {
         Log.d(TAG, "Clearing session — user logged out")

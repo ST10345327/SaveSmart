@@ -80,7 +80,9 @@ class RegisterFragment : Fragment() {
                 is AuthResult.Success -> {
                     sessionManager.saveSession(result.user.userId, result.user.username)
                     Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registerFragment_to_dashboardFragment)
+                    
+                    // Navigate to Onboarding after registration (R23)
+                    findNavController().navigate(R.id.action_registerFragment_to_onboardingFragment)
                 }
                 is AuthResult.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()

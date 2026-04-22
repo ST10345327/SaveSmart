@@ -22,6 +22,13 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
+        <!-- Navigate to Onboarding if first time (R23) -->
+        <action
+            android:id="@+id/action_loginFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
     <!-- Register Fragment (R01, T01) -->
@@ -30,18 +37,31 @@
         android:name="com.example.savesmart.ui.auth.RegisterFragment"
         android:label="@string/register_title">
 
-        <!-- Navigate to Dashboard and remove all auth screens from back stack (R01, R02, T01) -->
+        <!-- Navigate to Onboarding after registration (R23) -->
         <action
-            android:id="@+id/action_registerFragment_to_dashboardFragment"
-            app:destination="@id/dashboardFragment"
+            android:id="@+id/action_registerFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
-        <!-- Back to Login to register a different account (user clicked "Already have account") -->
+        <!-- Back to Login -->
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
 
+    </fragment>
+
+    <!-- Onboarding Fragment (R23) -->
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.savesmart.ui.onboarding.OnboardingFragment"
+        android:label="Welcome to SaveSmart">
+
+        <action
+            android:id="@+id/action_onboardingFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Dashboard Fragment (R15, R16) -->

@@ -65,6 +65,10 @@ class SaveSmartRepository(
 
     fun getUserLive(userId: Int): LiveData<User?> = userDao.getUserByIdLive(userId)
 
+    suspend fun getUserById(userId: Int): User? = userDao.getUserById(userId)
+
+    suspend fun updateUser(user: User) = userDao.updateUser(user)
+
     // ────────────────────────────────────────────────────────────────────────
     // GAMIFICATION (R19, R20, R21)
     // ────────────────────────────────────────────────────────────────────────
@@ -111,18 +115,17 @@ class SaveSmartRepository(
         return expenseDao.getTotalSpendingForUser(userId, startMillis, endMillis)
     }
 
+    /**
+     * Optimized category spending summary (Performance T08).
+     * Now uses a single SQL JOIN instead of multiple queries in a loop.
+     */
     suspend fun getCategoriesWithSpending(userId: Int, startMillis: Long, endMillis: Long): List<CategoryWithSpending> {
-        val categories = categoryDao.getAllCategoriesForUser(userId)
-        return categories.map { category ->
-            val spending = categoryDao.getTotalSpendingForCategory(category.categoryId, startMillis, endMillis)
-            CategoryWithSpending(
-                categoryId = category.categoryId,
-                name = category.name,
-                colorHex = category.colorHex,
-                totalMilliunits = spending,
-                maxGoalMilliunits = category.maxGoalMilliunits ?: 0L,
-                minGoalMilliunits = category.minGoalMilliunits ?: 0L
-            )
-        }
+        return categoryDao.getCategoriesWithSpending(userId, startMillis, endMillis)
     }
+
+    /**
+     * Requirement R18: Get daily spending for a user within a range.
+     */
+    suspend fun getDailySpending(userId: Int, startMillis: Long, endMillis: Long) = 
+        expenseDao.getDailySpending(userId, startMillis, endMillis)
 }
