@@ -1,3 +1,11 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Fragment overview. Google LLC.
+ *   Available at: https://developer.android.com/guide/fragments (Accessed: 24 March 2026).
+ * - Android Developers (2024) View Binding. Google LLC.
+ *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.ui.auth
 
 import android.os.Bundle
@@ -14,6 +22,10 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentLoginBinding
 import com.example.savesmart.util.SessionManager
 
+/**
+ * LoginFragment — Handles user authentication (Requirement R02).
+ * Corrected to check onboarding status per user (Requirement R23 bug fix).
+ */
 class LoginFragment : Fragment() {
 
     private val TAG = "LoginFragment"
@@ -35,13 +47,14 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated: entry")
         
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
         viewModel = AuthViewModel(repository)
         sessionManager = SessionManager(requireContext())
 
-        // Clear fields when view is created/re-created (e.g., returning from Register)
+        // Clear fields for security
         binding.etUsername.setText("")
         binding.etPassword.setText("")
 
@@ -71,12 +84,18 @@ class LoginFragment : Fragment() {
         viewModel.authState.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is AuthResult.Success -> {
+                    Log.d(TAG, "Login success for user: ${result.user.username}")
                     sessionManager.saveSession(result.user.userId, result.user.username)
-                    Toast.makeText(context, "Welcome back, ${result.user.username}!", Toast.LENGTH_SHORT).show()
                     
-                    if (sessionManager.isOnboardingComplete()) {
+                    // Requirement R23: Update session manager with onboarding status
+                    sessionManager.setOnboardingComplete(result.user.onboardingComplete)
+                    
+                    // BUG FIX: Check onboardingComplete from the database User object
+                    if (result.user.onboardingComplete) {
+                        Log.d(TAG, "User has completed onboarding. Navigating to Dashboard.")
                         findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
                     } else {
+                        Log.d(TAG, "New user detected. Navigating to Onboarding.")
                         findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
                     }
                 }
@@ -89,6 +108,7 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView: cleanup")
         _binding = null
     }
 }

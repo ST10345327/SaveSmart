@@ -109,8 +109,46 @@ class SaveSmartRepository(
         if (id > 0) {
             // R19: Award 10 points for every expense added
             awardPoints(expense.userId, 10)
+            
+            // Check for badges (Requirement R20)
+            checkForBadges(expense.userId)
         }
         return id
+    }
+
+    /**
+     * Requirement R20: Check and award badges based on user behavior.
+     */
+    private suspend fun checkForBadges(userId: Int) {
+        Log.d(TAG, "checkForBadges: Checking for user $userId")
+        
+        // 1. "First Save" Badge
+        if (!badgeDao.hasBadgeBeenEarned(userId, "FIRST_SAVE")) {
+            val badge = badgeDao.getBadgeByKey("FIRST_SAVE")
+            badge?.let {
+                badgeDao.awardBadge(UserBadge(userId, it.badgeId))
+                awardPoints(userId, it.pointsReward)
+                Log.d(TAG, "checkForBadges: Awarded FIRST_SAVE badge to user $userId")
+            }
+        }
+        
+        // 2. "Quick Logger" Badge (10 expenses in one day)
+        if (!badgeDao.hasBadgeBeenEarned(userId, "QUICK_LOGGER")) {
+            val today = System.currentTimeMillis()
+            // Using approximate 24h window for simplicity
+            val startOfDay = today - (today % (24 * 60 * 60 * 1000))
+            val endOfDay = startOfDay + (24 * 60 * 60 * 1000)
+            
+            val count = expenseDao.getExpenseCountForDay(userId, startOfDay, endOfDay)
+            if (count >= 10) {
+                val badge = badgeDao.getBadgeByKey("QUICK_LOGGER")
+                badge?.let {
+                    badgeDao.awardBadge(UserBadge(userId, it.badgeId))
+                    awardPoints(userId, it.pointsReward)
+                    Log.d(TAG, "checkForBadges: Awarded QUICK_LOGGER badge to user $userId")
+                }
+            }
+        }
     }
 
     fun getExpensesInRangeLive(userId: Int, startMillis: Long, endMillis: Long): LiveData<List<Expense>> = expenseDao.getExpensesInRangeLive(userId, startMillis, endMillis)

@@ -203,6 +203,11 @@ Refs: T03, T04
 | Design System | ✅ Complete | Apr 14 |
 | CI/CD Pipeline | ✅ Complete | Apr 14 |
 | Security Hardening | ✅ Complete | Apr 14 |
+| Categories Management | ✅ Complete | Apr 27 |
+| Expense Tracking | ✅ Complete | Apr 27 |
+| Dashboard & Reports | ✅ Complete | Apr 27 |
+| Rewards System | ✅ Complete | Apr 27 |
+| Unit Testing | ✅ Complete | Apr 27 |
 
 ---
 

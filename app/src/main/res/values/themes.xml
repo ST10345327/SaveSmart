@@ -25,6 +25,13 @@
 
     <style name="Theme.SaveSmart" parent="Base.Theme.SaveSmart" />
 
+    <!-- Splash Screen Theme (Startup) -->
+    <style name="Theme.SaveSmart.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
     <!-- Enhanced EditText Style - Readability and Focus -->
     <style name="Widget.SaveSmart.EditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
         <item name="android:textAllCaps">false</item>

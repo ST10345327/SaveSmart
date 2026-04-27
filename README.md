@@ -1,50 +1,71 @@
 # SaveSmart - Personal Budget Tracker
 
-Smart Saving Made Simple
+**Smart Saving Made Simple**
 
-## Overview
+SaveSmart is a robust, security-focused Android application designed to help users track their spending, manage budgets, and achieve financial goals through a gamified experience.
 
-SaveSmart is an Android application for personal budget tracking built with Kotlin and Material Design 3.
+## 🚀 Key Features
 
-**Platform:** Android (SDK 26+)  
-**Architecture:** MVVM + Room Database  
-**Language:** Kotlin  
+### 🔐 Secure Authentication
+- **SHA-256 Hashing**: User credentials are never stored in plain text.
+- **Session Management**: Secure auto-login and session persistence.
+- **Onboarding**: A guided 3-step setup flow for new users.
 
-## Project Structure
+### 💰 Expense & Category Management
+- **Dynamic Categories**: Create, edit, and customize categories with a professional color picker.
+- **Precision Tracking**: Uses the **Milliunit Convention** (integer-based storage) for 100% financial accuracy.
+- **Receipt Capture**: Integrated camera support to store photos of physical receipts.
+
+### 📊 Insights & Analytics
+- **Live Dashboard**: Real-time spending progress bars and budget status alerts.
+- **Visual Reports**: Interactive Pie and Bar charts (using MPAndroidChart) for historical spending analysis.
+- **Dynamic Goals**: Monthly budget goals that adapt based on your category settings.
+
+### 🏆 Gamification
+- **Points & Levels**: Earn points for consistent logging and level up.
+- **Milestone Badges**: Unlock 7 unique badges for achieving savings milestones.
+- **Leaderboard**: Compete with other users in global rankings.
+
+## 🛠 Technical Stack
+
+- **Language**: Kotlin
+- **Architecture**: MVVM (Model-View-ViewModel) + Repository Pattern
+- **Database**: Room Persistence Library (SQLite)
+- **Networking**: Coroutines for background tasks
+- **UI**: Material Design 3, ViewBinding, Navigation Component
+- **Charts**: MPAndroidChart
+- **CI/CD**: GitHub Actions
+
+## 🏗 Project Structure
 
 ```
 SaveSmart/
 ├── app/
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── res/          (Layout, colors, strings, drawables)
-│   │   │   ├── java/         (Kotlin source code)
-│   │   │   └── AndroidManifest.xml
-│   │   ├── test/
-│   │   └── androidTest/
-│   └── build.gradle.kts
-├── gradle/
-├── build.gradle.kts
-└── settings.gradle.kts
+│   │   │   ├── java/com/example/savesmart/
+│   │   │   │   ├── data/       (Entities, DAOs, Database, Repository)
+│   │   │   │   ├── ui/         (Fragments & ViewModels per feature)
+│   │   │   │   └── util/       (Security, Currency, Session utilities)
+│   │   │   └── res/            (Layouts, Themes, Navigation Graph)
+│   │   └── test/               (Unit Tests for core logic)
+└── docs/                       (Project Workflow & Gantt Charts)
 ```
 
-## Features
+## 📋 Requirements Reference
 
-- User authentication with password hashing
-- Expense tracking with categories
-- Budget goals and spending reports
-- Points and badges system
-- Offline-first with Room database
+This project implements all requirements for the OPSC6311 POE:
+- **R01-R23**: All functional features from Auth to Gamification.
+- **T01-T10**: Technical standards including MVVM, Room, and Unit Testing.
 
-## Getting Started
+## 🚦 Getting Started
 
-1. Clone the repository
-2. Open in Android Studio
-3. Build and run on emulator or device
+1. Clone the repository: `git clone <repo-url>`
+2. Open in **Android Studio 2024.1+**.
+3. Ensure you have **JDK 17** configured.
+4. Build and run on an emulator or device (API 26+).
 
-## Requirements
-
-- Android Studio 2024.1+
-- JDK 11+
-- Gradle 8.0+
-
+---
+**Author:** Olebogeng Phawe (ST10345327)  
+**Course:** OPSC6311 Personal Budget Tracker  
+**Institution:** IIE Varsity College

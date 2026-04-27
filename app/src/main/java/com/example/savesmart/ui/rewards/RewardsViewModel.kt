@@ -57,12 +57,10 @@ class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel(
      * Requirement R22: Load ranked users for leaderboard.
      */
     fun loadLeaderboard() {
-        // We'll use the Repository to fetch ranked users
-        // Since userDao returns a LiveData, we can pipe it here or return it directly
+        // Data is observed via getAllRankedUsers() which returns LiveData from Room
     }
 
     fun getAllRankedUsers(): LiveData<List<User>> {
-        // Need to add this to repository
         return repository.getAllUsersRankedLive()
     }
 }

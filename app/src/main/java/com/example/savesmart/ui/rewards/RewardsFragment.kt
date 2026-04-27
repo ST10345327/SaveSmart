@@ -41,6 +41,7 @@ class RewardsFragment : Fragment() {
 
     private lateinit var viewModel: RewardsViewModel
     private lateinit var sessionManager: SessionManager
+    private lateinit var badgeAdapter: BadgeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +73,11 @@ class RewardsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         Log.d(TAG, "setupRecyclerView: Initializing badge grid")
-        binding.rvBadges.layoutManager = GridLayoutManager(requireContext(), 2)
+        badgeAdapter = BadgeAdapter()
+        binding.rvBadges.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = badgeAdapter
+        }
     }
 
     private fun setupListeners() {
@@ -100,7 +105,13 @@ class RewardsFragment : Fragment() {
         val userId = sessionManager.getUserId()
         viewModel.getEarnedBadges(userId).observe(viewLifecycleOwner) { badges ->
             Log.d(TAG, "observeViewModel: received ${badges.size} earned badges")
-            // Adapter submitList would go here
+            badgeAdapter.submitList(badges)
+            
+            if (badges.isEmpty()) {
+                binding.tvUnlockedBadges.text = getString(R.string.label_unlocked_badges) + " (None yet)"
+            } else {
+                binding.tvUnlockedBadges.text = getString(R.string.label_unlocked_badges) + " (${badges.size})"
+            }
         }
     }
 

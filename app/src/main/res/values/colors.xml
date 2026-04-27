@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Design System Colors - Refined for UX (Softer Contrast) -->
-    <color name="primary_blue">#1A6FE8</color>
-    <color name="primary_blue_variant">#3B82F6</color>
+    <!-- Design System Colors - High Contrast & Visibility -->
+    <color name="primary_blue">#1A56DB</color>
+    <color name="primary_blue_variant">#1E40AF</color>
 
     <!-- Status Colors -->
-    <color name="good_green">#10B981</color> <!-- Modern Emerald -->
-    <color name="close_amber">#F59E0B</color>
-    <color name="over_red">#EF4444</color>
-    <color name="red">#EF4444</color>
+    <color name="good_green">#059669</color>
+    <color name="close_amber">#D97706</color>
+    <color name="over_red">#B91C1C</color>
+    <color name="red">#B91C1C</color>
 
-    <color name="rewards_purple">#8B5CF6</color> <!-- Softer Violet -->
+    <!-- Rewards Colors - Optimized Visibility -->
+    <color name="rewards_purple">#4C1D95</color>
+    <color name="rewards_accent_yellow">#FACC15</color> <!-- HIGH CONTRAST YELLOW for Level Tab -->
+    <color name="rewards_text_on_purple">#FFFFFF</color>
+    <color name="rewards_subtext_on_purple">#E5E7EB</color>
 
-    <!-- Neutral Palette (Soft Light Mode) -->
-    <color name="background">#F9FAFB</color> <!-- Very Soft Gray -->
+    <!-- Neutral Palette -->
+    <color name="background">#E5E7EB</color>
     <color name="card_surface">#FFFFFF</color>
-    <color name="border">#E5E7EB</color>
-    <color name="border_color">#E5E7EB</color>
-    <color name="text_primary">#111827</color> <!-- Deep Slate -->
-    <color name="text_secondary">#4B5563</color> <!-- Medium Slate -->
-    <color name="text_hint">#9CA3AF</color>
+    <color name="border">#9CA3AF</color>
+    <color name="border_color">#9CA3AF</color>
 
-    <!-- Dark Mode Specifics (to be used via theme attrs or night res) -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#374151</color>
+    <color name="text_hint">#6B7280</color>
+
+    <!-- Dark Mode -->
     <color name="dark_background">#0F172A</color>
     <color name="dark_card_surface">#1E293B</color>
-    <color name="dark_text_primary">#F9FAFB</color>
-    <color name="dark_text_secondary">#9CA3AF</color>
 
-    <!-- Legacy / Utility -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>

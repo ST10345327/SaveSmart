@@ -24,6 +24,7 @@ import com.example.savesmart.databinding.FragmentDashboardBinding
 import com.example.savesmart.util.BudgetStatus
 import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Fragment responsible for displaying the user's monthly spending summary.
@@ -78,7 +79,7 @@ class DashboardFragment : Fragment() {
         // Setup logout button (R04)
         binding.btnLogout.setOnClickListener {
             Log.d(TAG, "onViewCreated: logout button clicked")
-            logout()
+            showLogoutConfirmation()
         }
 
         // Setup Floating Action Button for Add Expense (R08)
@@ -145,14 +146,13 @@ class DashboardFragment : Fragment() {
             Log.d(TAG, "observeViewModel: received total spent: $total")
             // Update total spent TextView (Requirement R15)
             binding.tvTotalSpending.text = CurrencyUtils.formatMilliunits(total)
-            
-            // Hardcoded monthly budget for now (e.g., R6000)
-            val monthlyBudget = 6000_000L 
-            binding.tvBudgetSummary.text = getString(R.string.label_of_budget, CurrencyUtils.formatMilliunits(monthlyBudget))
-            
-            val progress = (total.toFloat() / monthlyBudget.toFloat() * 100).toInt().coerceIn(0, 100)
-            binding.progressMonthly.progress = progress
-            binding.tvMonthlyProgressPercent.text = "$progress%"
+            updateProgress(total, viewModel.totalBudget.value ?: 0L)
+        }
+
+        viewModel.totalBudget.observe(viewLifecycleOwner) { budget ->
+            Log.d(TAG, "observeViewModel: received total budget: $budget")
+            binding.tvBudgetSummary.text = getString(R.string.label_of_budget, CurrencyUtils.formatMilliunits(budget))
+            updateProgress(viewModel.totalSpent.value ?: 0L, budget)
         }
 
         viewModel.categoriesSummary.observe(viewLifecycleOwner) { summaries ->
@@ -167,6 +167,34 @@ class DashboardFragment : Fragment() {
             }
             binding.tvOverspendingWarning.visibility = if (hasOverspending) View.VISIBLE else View.GONE
         }
+    }
+
+    /**
+     * Update the monthly progress bar and percentage.
+     */
+    private fun updateProgress(total: Long, budget: Long) {
+        if (budget > 0) {
+            val progress = (total.toFloat() / budget.toFloat() * 100).toInt().coerceIn(0, 100)
+            binding.progressMonthly.progress = progress
+            binding.tvMonthlyProgressPercent.text = "$progress%"
+        } else {
+            binding.progressMonthly.progress = 0
+            binding.tvMonthlyProgressPercent.text = "0%"
+        }
+    }
+
+    /**
+     * Requirement R04: Show confirmation dialog before logout.
+     */
+    private fun showLogoutConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out of SaveSmart?")
+            .setPositiveButton("Logout") { _, _ ->
+                logout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     /**

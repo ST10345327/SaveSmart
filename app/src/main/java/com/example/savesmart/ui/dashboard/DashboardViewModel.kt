@@ -29,6 +29,9 @@ class DashboardViewModel(private val repository: SaveSmartRepository) : ViewMode
     private val _totalSpent = MutableLiveData<Long>()
     val totalSpent: LiveData<Long> = _totalSpent
 
+    private val _totalBudget = MutableLiveData<Long>()
+    val totalBudget: LiveData<Long> = _totalBudget
+
     private val _categoriesSummary = MutableLiveData<List<CategoryWithSpending>>()
     val categoriesSummary: LiveData<List<CategoryWithSpending>> = _categoriesSummary
 
@@ -94,6 +97,10 @@ class DashboardViewModel(private val repository: SaveSmartRepository) : ViewMode
                 val summaryDeferred = launch {
                     val summaries = repository.getCategoriesWithSpending(userId, startMillis, endMillis)
                     _categoriesSummary.postValue(summaries)
+                    
+                    // Calculate total budget from all categories
+                    val budget = summaries.sumOf { it.maxGoalMilliunits }
+                    _totalBudget.postValue(budget)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading dashboard data", e)

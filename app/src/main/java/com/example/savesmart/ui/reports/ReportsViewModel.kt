@@ -35,6 +35,9 @@ class ReportsViewModel(private val repository: SaveSmartRepository) : ViewModel(
     private val _pieEntries = MutableLiveData<List<PieEntry>>()
     val pieEntries: LiveData<List<PieEntry>> = _pieEntries
 
+    private val _pieColors = MutableLiveData<List<Int>>()
+    val pieColors: LiveData<List<Int>> = _pieColors
+
     private val _barEntries = MutableLiveData<List<BarEntry>>()
     val barEntries: LiveData<List<BarEntry>> = _barEntries
 
@@ -93,8 +96,15 @@ class ReportsViewModel(private val repository: SaveSmartRepository) : ViewModel(
             try {
                 // 1. Fetch Pie Chart Data (R17)
                 val summaries = repository.getCategoriesWithSpending(userId, startMillis, endMillis)
-                _pieEntries.postValue(summaries.filter { it.totalMilliunits > 0 }.map {
+                val filteredSummaries = summaries.filter { it.totalMilliunits > 0 }
+                
+                _pieEntries.postValue(filteredSummaries.map {
                     PieEntry(it.totalMilliunits.toFloat(), it.name)
+                })
+                
+                // Collect colors corresponding to the entries
+                _pieColors.postValue(filteredSummaries.map { 
+                    android.graphics.Color.parseColor(it.colorHex)
                 })
 
                 // 2. Fetch Bar Chart Data (R18)

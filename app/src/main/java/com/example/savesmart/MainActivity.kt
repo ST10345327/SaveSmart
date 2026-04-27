@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_SaveSmart)
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: Initializing MainActivity")
 
@@ -63,6 +64,20 @@ class MainActivity : AppCompatActivity() {
             // Setup navigation
             val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
+
+            // AUTO-LOGIN & ONBOARDING CHECK (Requirement R23)
+            if (sessionManager.isLoggedIn()) {
+                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+                
+                if (sessionManager.isOnboardingComplete()) {
+                    Log.d(TAG, "onCreate: User logged in and onboarding complete. Starting at Dashboard.")
+                    navGraph.setStartDestination(R.id.dashboardFragment)
+                } else {
+                    Log.d(TAG, "onCreate: User logged in but onboarding NOT complete. Starting at Onboarding.")
+                    navGraph.setStartDestination(R.id.onboardingFragment)
+                }
+                navController.graph = navGraph
+            }
             
             // Setup Bottom Navigation (Requirement R05, R10, R15, R17)
             bottomNav = findViewById(R.id.bottom_navigation)

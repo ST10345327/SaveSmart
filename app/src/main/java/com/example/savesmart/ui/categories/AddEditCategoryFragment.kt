@@ -57,7 +57,14 @@ class AddEditCategoryFragment : Fragment() {
     // Using Navigation Safe Args to pass category ID for editing
     private val args: AddEditCategoryFragmentArgs by navArgs()
     
-    private var selectedColorHex: String = "#1A6FE8" // Default primary blue
+    private var selectedColorHex: String = "#1A56DB" // Default primary blue
+    private lateinit var colorAdapter: ColorPickerAdapter
+
+    private val colorPalette = listOf(
+        "#1A56DB", "#1E40AF", "#059669", "#D97706", 
+        "#B91C1C", "#4C1D95", "#7C3AED", "#DB2777",
+        "#2563EB", "#0891B2", "#0D9488", "#EA580C"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +98,13 @@ class AddEditCategoryFragment : Fragment() {
     private fun setupUI() {
         Log.d(TAG, "setupUI: initializing listeners")
         
+        // Color Picker (R05)
+        colorAdapter = ColorPickerAdapter(colorPalette, selectedColorHex) { color ->
+            selectedColorHex = color
+            Log.d(TAG, "Color selected: $color")
+        }
+        binding.rvColors.adapter = colorAdapter
+
         // Save Button (R05, R06, R14)
         binding.btnSaveCategory.setOnClickListener {
             validateAndSave()
@@ -127,7 +141,7 @@ class AddEditCategoryFragment : Fragment() {
                     }
                     
                     selectedColorHex = cat.colorHex
-                    // Note: Update color UI if implemented
+                    colorAdapter.setSelectedColor(selectedColorHex)
                 }
             }
         }

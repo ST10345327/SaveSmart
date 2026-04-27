@@ -71,6 +71,23 @@
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category Color"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvColors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         <Button
             android:id="@+id/btnSaveCategory"
             style="@style/Widget.SaveSmart.Button"

@@ -79,6 +79,7 @@ class RegisterFragment : Fragment() {
             when (result) {
                 is AuthResult.Success -> {
                     sessionManager.saveSession(result.user.userId, result.user.username)
+                    sessionManager.setOnboardingComplete(false) // New user must onboard
                     Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
                     
                     // Navigate to Onboarding after registration (R23)

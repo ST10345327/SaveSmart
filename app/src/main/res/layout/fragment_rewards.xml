@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reference:
+    - Material Design (2024) Material Design 3. Google LLC.
+      Available at: https://m3.material.io (Accessed: 24 March 2026).
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="#111827"> <!-- Deep Slate Background: Fixed "too bright" issue -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background">
+        android:background="#1F2937"
+        app:elevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +30,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="My Rewards"
-                    android:textColor="@color/text_primary"
+                    android:text="@string/title_rewards"
+                    android:textColor="@color/white"
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
@@ -35,18 +41,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="Leaderboard"
+                    android:text="@string/title_leaderboard"
+                    android:textColor="@color/primary_blue_variant"
                     android:textSize="14sp" />
             </RelativeLayout>
 
-            <!-- Points & Level Card (R19, R21) -->
+            <!-- Points & Level Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:backgroundTint="@color/rewards_purple"
+                app:backgroundTint="#312E81"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardElevation="8dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,13 +68,14 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <!-- LEVEL TAB - UPDATED FONT COLOR TO VIBRANT AMBER/GOLD FOR READABILITY -->
                         <TextView
                             android:id="@+id/tvLevel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 1"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textColor="#FBBF24"
+                            android:textSize="26sp"
                             android:textStyle="bold" />
 
                         <View
@@ -80,49 +89,32 @@
                             android:layout_height="wrap_content"
                             android:text="0 pts"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progressLevel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="24dp"
                         android:progress="0"
-                        app:indicatorColor="@color/white"
-                        app:trackColor="#40FFFFFF"
+                        app:indicatorColor="#FBBF24"
+                        app:trackColor="#1E1B4B"
                         app:trackCornerRadius="4dp"
-                        app:trackThickness="8dp" />
+                        app:trackThickness="12dp" />
 
                     <TextView
                         android:id="@+id/tvProgressDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:text="0/1000 to Level 2"
-                        android:textColor="#CCFFFFFF"
-                        android:textSize="12sp" />
+                        android:textColor="#9CA3AF"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Goal Difficulty Selector (Requirement: Use SeekBar) -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Goal Difficulty Adjustment"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <SeekBar
-                android:id="@+id/seekBarDifficulty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:max="10"
-                android:progress="5" />
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -136,15 +128,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Badges Section (R20) -->
+            <!-- Goal Difficulty Selector -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="Unlocked Badges"
-                android:textColor="@color/text_primary"
+                android:text="@string/label_goal_difficulty"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/seekBarDifficulty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:max="10"
+                android:progress="5" />
+
+            <!-- Badges Section -->
+            <TextView
+                android:id="@+id/tvUnlockedBadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/label_unlocked_badges"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

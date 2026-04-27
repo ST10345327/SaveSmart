@@ -24,8 +24,10 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
@@ -103,25 +105,34 @@ class CategoryReportFragment : Fragment() {
         }
     }
 
+    private fun updatePieChart(entries: List<PieEntry>, colors: List<Int>) {
+        if (entries.isNotEmpty() && colors.isNotEmpty() && entries.size == colors.size) {
+            val dataSet = PieDataSet(entries, "")
+            dataSet.colors = colors
+            dataSet.sliceSpace = 3f
+            dataSet.valueTextColor = Color.WHITE
+            dataSet.valueTextSize = 12f
+
+            val data = PieData(dataSet)
+            data.setValueFormatter(PercentFormatter(binding.pieChart))
+            binding.pieChart.data = data
+            binding.pieChart.invalidate()
+        } else {
+            binding.pieChart.clear()
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.currentMonthDisplay.observe(viewLifecycleOwner) { month ->
             binding.tvCurrentMonth.text = month
         }
 
         viewModel.pieEntries.observe(viewLifecycleOwner) { entries ->
-            if (entries.isNotEmpty()) {
-                val dataSet = PieDataSet(entries, "")
-                dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-                dataSet.sliceSpace = 3f
+            updatePieChart(entries, viewModel.pieColors.value ?: emptyList())
+        }
 
-                val data = PieData(dataSet)
-                data.setValueFormatter(PercentFormatter(binding.pieChart))
-                data.setValueTextSize(11f)
-                binding.pieChart.data = data
-                binding.pieChart.invalidate()
-            } else {
-                binding.pieChart.clear()
-            }
+        viewModel.pieColors.observe(viewLifecycleOwner) { colors ->
+            updatePieChart(viewModel.pieEntries.value ?: emptyList(), colors)
         }
 
         viewModel.barEntries.observe(viewLifecycleOwner) { entries ->
