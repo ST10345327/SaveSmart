@@ -79,13 +79,44 @@ class CategoryReportFragment : Fragment() {
             setUsePercentValues(true)
             description.isEnabled = false
             setExtraOffsets(5f, 10f, 5f, 5f)
+            
             isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
+            setHoleColor(Color.TRANSPARENT)
             holeRadius = 58f
             transparentCircleRadius = 61f
+            
             setDrawCenterText(true)
-            centerText = "Category %"
-            legend.isEnabled = true
+            centerText = "Category Breakdown"
+            setCenterTextColor(Color.GRAY)
+            setCenterTextSize(16f)
+
+            // Animation for better UX
+            animateY(1400, com.github.mikephil.charting.animation.Easing.EaseInOutQuad)
+
+            legend.apply {
+                isEnabled = true
+                verticalAlignment = com.github.mikephil.charting.components.Legend.LegendVerticalAlignment.BOTTOM
+                horizontalAlignment = com.github.mikephil.charting.components.Legend.LegendHorizontalAlignment.CENTER
+                orientation = com.github.mikephil.charting.components.Legend.LegendOrientation.HORIZONTAL
+                setDrawInside(false)
+                xEntrySpace = 7f
+                yEntrySpace = 0f
+                yOffset = 0f
+                isWordWrapEnabled = true
+            }
+
+            // Enable touch and tooltips
+            setTouchEnabled(true)
+            setOnChartValueSelectedListener(object : com.github.mikephil.charting.listener.OnChartValueSelectedListener {
+                override fun onValueSelected(e: com.github.mikephil.charting.data.Entry?, h: com.github.mikephil.charting.highlight.Highlight?) {
+                    if (e == null) return
+                    val pieEntry = e as PieEntry
+                    centerText = "${pieEntry.label}\n${String.format(java.util.Locale.getDefault(), "%.1f", e.value)}%"
+                }
+                override fun onNothingSelected() {
+                    centerText = "Category Breakdown"
+                }
+            })
         }
     }
 
@@ -95,13 +126,29 @@ class CategoryReportFragment : Fragment() {
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.granularity = 1f
+            // Interaction
+            setTouchEnabled(true)
+            isDragEnabled = true
+            setScaleEnabled(true)
+            setPinchZoom(true)
+
+            // Animation
+            animateY(1000)
             
-            axisLeft.setDrawGridLines(true)
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                granularity = 1f
+                textColor = Color.GRAY
+            }
+            
+            axisLeft.apply {
+                setDrawGridLines(true)
+                textColor = Color.GRAY
+                axisMinimum = 0f
+            }
+            
             axisRight.isEnabled = false
-            
             legend.isEnabled = false
         }
     }
@@ -140,13 +187,19 @@ class CategoryReportFragment : Fragment() {
             if (entries.isNotEmpty()) {
                 val dataSet = BarDataSet(entries, "Daily Spending")
                 
-                // R18: Color logic handled by list of colors
-                // We'll calculate the limit and apply colors in the next step
-                dataSet.color = Color.parseColor("#1A6FE8") // Primary Blue
+                // R18: Apply dynamic colors based on threshold
+                val limit = viewModel.dailyLimit.value ?: 0f
+                val colors = entries.map { entry ->
+                    if (entry.y > limit) Color.parseColor("#B91C1C") // Over Red
+                    else Color.parseColor("#1A6FE8") // Primary Blue
+                }
+                dataSet.colors = colors
+                dataSet.setDrawValues(false) // Keep it clean
                 
                 val data = BarData(dataSet)
                 data.barWidth = 0.8f
                 binding.barChart.data = data
+                binding.barChart.highlightValue(null) // Clear selection
                 binding.barChart.invalidate()
             } else {
                 binding.barChart.clear()

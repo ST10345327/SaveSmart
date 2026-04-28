@@ -21,8 +21,7 @@
             android:id="@+id/ivBadgeIcon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@android:drawable/btn_star_big_on"
-            app:tint="@color/text_secondary" />
+            android:src="@android:drawable/btn_star_big_on" />
 
         <TextView
             android:id="@+id/tvBadgeName"
