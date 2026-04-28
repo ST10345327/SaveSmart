@@ -6,32 +6,20 @@
     android:viewportHeight="120">
 
     <!-- Background circle -->
-    <circle
-        android:cx="60"
-        android:cy="60"
-        android:r="55"
-        android:fillColor="#E8F2FF" />
+    <path
+        android:fillColor="#E8F2FF"
+        android:pathData="M60,60m-55,0a55,55 0 1,1 110,0a55,55 0 1,1 -110,0" />
 
     <!-- Wallet body -->
-    <rect
-        android:left="25"
-        android:top="45"
-        android:right="85"
-        android:bottom="80"
-        android:rx="4"
-        android:ry="4"
-        android:fillColor="#1A6FE8" />
+    <path
+        android:fillColor="#1A6FE8"
+        android:pathData="M29,45h52a4,4 0 0 1 4,4v27a4,4 0 0 1 -4,4h-52a4,4 0 0 1 -4,-4v-27a4,4 0 0 1 4,-4z" />
 
     <!-- Wallet shine/highlight -->
-    <rect
-        android:left="25"
-        android:top="45"
-        android:right="85"
-        android:bottom="50"
-        android:rx="4"
-        android:ry="4"
+    <path
         android:fillColor="#4A8FFF"
-        android:alpha="0.6" />
+        android:alpha="0.6"
+        android:pathData="M29,45h52a4,4 0 0 1 4,4v-3a4,4 0 0 1 -4,4h-52a4,4 0 0 1 -4,-4v3a4,4 0 0 1 4,-4z" />
 
     <!-- Upward arrow -->
     <path
@@ -39,21 +27,15 @@
         android:pathData="M60,35 L55,42 L58,42 L58,58 L62,58 L62,42 L65,42 Z" />
 
     <!-- Currency indicator dot -->
-    <circle
-        android:cx="50"
-        android:cy="62"
-        android:r="3"
-        android:fillColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
 
-    <circle
-        android:cx="60"
-        android:cy="62"
-        android:r="3"
-        android:fillColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
 
-    <circle
-        android:cx="70"
-        android:cy="62"
-        android:r="3"
-        android:fillColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
 </vector>

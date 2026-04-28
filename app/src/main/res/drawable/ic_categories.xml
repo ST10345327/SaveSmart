@@ -3,51 +3,12 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-
-    <!-- Folder body -->
+    <!-- Category/Label Icon -->
     <path
         android:fillColor="#1A6FE8"
-        android:pathData="M2,6 L2,18 Q2,20 4,20 L20,20 Q22,20 22,18 L22,8 Q22,6 20,6 L10,6 Q9,6 8,5 L4,5 Q2,5 2,6 Z" />
-
-    <!-- Folder tab -->
+        android:pathData="M21.41,11.58l-9,-9C12.05,2.22 11.55,2 11,2H4c-1.1,0 -2,0.9 -2,2v7c0,0.55 0.22,1.05 0.59,1.42l9,9c0.36,0.36 0.86,0.58 1.41,0.58s1.05,-0.22 1.41,-0.59l7,-7c0.37,-0.36 0.59,-0.86 0.59,-1.41s-0.23,-1.06 -0.59,-1.42zM5.5,7C4.67,7 4,6.33 4,5.5S4.67,4 5.5,4 7,4.67 7,5.5 6.33,7 5.5,7z" />
     <path
-        android:fillColor="#1A6FE8"
-        android:pathData="M4,5 L8,5 Q9,5 10,6 L10,8 Q10,8 10,8 L4,8 Q2,8 2,6 Q2,5 4,5 Z"
-        android:alpha="0.9" />
-
-    <!-- Shine/highlight -->
-    <rect
-        android:left="2"
-        android:top="6"
-        android:right="22"
-        android:bottom="9"
-        android:rx="2"
-        android:fillColor="#FFFFFF"
-        android:alpha="0.15" />
-
-    <!-- Document lines inside -->
-    <line
-        android:startX="6"
-        android:startY="12"
-        android:endX="18"
-        android:endY="12"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.2"
-        android:alpha="0.6" />
-
-    <line
-        android:startX="6"
-        android:startY="15"
-        android:endX="18"
-        android:endY="15"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.2"
-        android:alpha="0.4" />
-
-    <!-- Status dot -->
-    <circle
-        android:cx="19"
-        android:cy="11"
-        android:r="1.5"
-        android:fillColor="#2DBF60" />
+        android:fillColor="#2DBF60"
+        android:pathData="M13,20l7,-7 -1.41,-1.41L11.58,18.59 13,20z"
+        android:alpha="0.3" />
 </vector>

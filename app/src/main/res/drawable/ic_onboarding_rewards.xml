@@ -6,11 +6,9 @@
     android:viewportHeight="120">
 
     <!-- Background circle -->
-    <circle
-        android:cx="60"
-        android:cy="60"
-        android:r="55"
-        android:fillColor="#FFF4E8" />
+    <path
+        android:fillColor="#FFF4E8"
+        android:pathData="M60,60m-55,0a55,55 0 1,1 110,0a55,55 0 1,1 -110,0" />
 
     <!-- Trophy body -->
     <path
@@ -20,55 +18,37 @@
     <!-- Trophy cup (rounded rectangle) -->
     <path
         android:fillColor="#FFB143"
-        android:pathData="M45,55 L75,55 L75,70 Q75,75 70,75 L50,75 Q45,75 45,70 Z"
-        android:alpha="0.8" />
+        android:alpha="0.8"
+        android:pathData="M45,55 L75,55 L75,70 Q75,75 70,75 L50,75 Q45,75 45,70 Z" />
 
     <!-- Trophy shine -->
-    <rect
-        android:left="50"
-        android:top="35"
-        android:right="56"
-        android:bottom="55"
-        android:rx="3"
+    <path
         android:fillColor="#FFFFFF"
-        android:alpha="0.3" />
+        android:alpha="0.3"
+        android:pathData="M53,35h0a3,3 0 0 1 3,3v14a3,3 0 0 1 -3,3h0a3,3 0 0 1 -3,-3v-14a3,3 0 0 1 3,-3z" />
 
     <!-- Trophy base -->
-    <rect
-        android:left="48"
-        android:top="75"
-        android:right="72"
-        android:bottom="80"
-        android:rx="2"
-        android:fillColor="#FF9500" />
+    <path
+        android:fillColor="#FF9500"
+        android:pathData="M50,75h20a2,2 0 0 1 2,2v1a2,2 0 0 1 -2,2h-20a2,2 0 0 1 -2,-2v-1a2,2 0 0 1 2,-2z" />
 
     <!-- Trophy stem -->
-    <rect
-        android:left="58"
-        android:top="80"
-        android:right="62"
-        android:bottom="90"
-        android:rx="2"
-        android:fillColor="#FF9500" />
+    <path
+        android:fillColor="#FF9500"
+        android:pathData="M60,80h0a2,2 0 0 1 2,2v6a2,2 0 0 1 -2,2h0a2,2 0 0 1 -2,-2v-6a2,2 0 0 1 2,-2z" />
 
     <!-- Star sparkle above trophy -->
-    <g>
-        <circle
-            android:cx="65"
-            android:cy="25"
-            android:r="2"
-            android:fillColor="#FFD60A" />
-        <circle
-            android:cx="38"
-            android:cy="45"
-            android:r="1.5"
+    <group>
+        <path
             android:fillColor="#FFD60A"
-            android:alpha="0.7" />
-        <circle
-            android:cx="82"
-            android:cy="48"
-            android:r="1.5"
+            android:pathData="M65,25m-2,0a2,2 0 1,1 4,0a2,2 0 1,1 -4,0" />
+        <path
             android:fillColor="#FFD60A"
-            android:alpha="0.7" />
-    </g>
+            android:alpha="0.7"
+            android:pathData="M38,45m-1.5,0a1.5,1.5 0 1,1 3,0a1.5,1.5 0 1,1 -3,0" />
+        <path
+            android:fillColor="#FFD60A"
+            android:alpha="0.7"
+            android:pathData="M82,48m-1.5,0a1.5,1.5 0 1,1 3,0a1.5,1.5 0 1,1 -3,0" />
+    </group>
 </vector>
