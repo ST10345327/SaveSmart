@@ -62,7 +62,8 @@ class CategoriesFragment : Fragment() {
         // Initialization (T01)
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        viewModel = CategoriesViewModel(repository)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[CategoriesViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         setupRecyclerView()

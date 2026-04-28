@@ -51,7 +51,8 @@ class LoginFragment : Fragment() {
         
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        viewModel = AuthViewModel(repository)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[AuthViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         // Clear fields for security

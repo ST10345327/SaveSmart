@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background circle -->
+    <circle
+        android:cx="60"
+        android:cy="60"
+        android:r="55"
+        android:fillColor="#F0E8FF" />
+
+    <!-- Folder body -->
+    <path
+        android:fillColor="#7C5DFF"
+        android:pathData="M30,50 L30,85 Q30,88 33,88 L87,88 Q90,88 90,85 L90,50 Q90,47 87,47 L57,47 L52,42 Q50,40 47,42 L33,47 Q30,47 30,50 Z" />
+
+    <!-- Folder tab highlight -->
+    <path
+        android:fillColor="#9B7FFF"
+        android:pathData="M47,42 L52,47 L57,47 L57,42 Q57,40 55,42 Z"
+        android:alpha="0.7" />
+
+    <!-- Plus sign for adding category -->
+    <g>
+        <!-- Horizontal line -->
+        <rect
+            android:left="53"
+            android:top="62"
+            android:right="67"
+            android:bottom="65"
+            android:rx="1.5"
+            android:ry="1.5"
+            android:fillColor="#FFFFFF" />
+
+        <!-- Vertical line -->
+        <rect
+            android:left="59"
+            android:top="56"
+            android:right="62"
+            android:bottom="72"
+            android:rx="1.5"
+            android:ry="1.5"
+            android:fillColor="#FFFFFF" />
+    </g>
+
+    <!-- Folder shine -->
+    <rect
+        android:left="30"
+        android:top="50"
+        android:right="90"
+        android:bottom="54"
+        android:rx="3"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.2" />
+</vector>

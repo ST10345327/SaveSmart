@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background circle -->
+    <circle
+        android:cx="60"
+        android:cy="60"
+        android:r="55"
+        android:fillColor="#FFF4E8" />
+
+    <!-- Trophy body -->
+    <path
+        android:fillColor="#FF9500"
+        android:pathData="M50,50 L50,35 Q50,30 55,30 L65,30 Q70,30 70,35 L70,50 Q75,50 78,53 L78,58 L42,58 L42,53 Q45,50 50,50 Z" />
+
+    <!-- Trophy cup (rounded rectangle) -->
+    <path
+        android:fillColor="#FFB143"
+        android:pathData="M45,55 L75,55 L75,70 Q75,75 70,75 L50,75 Q45,75 45,70 Z"
+        android:alpha="0.8" />
+
+    <!-- Trophy shine -->
+    <rect
+        android:left="50"
+        android:top="35"
+        android:right="56"
+        android:bottom="55"
+        android:rx="3"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.3" />
+
+    <!-- Trophy base -->
+    <rect
+        android:left="48"
+        android:top="75"
+        android:right="72"
+        android:bottom="80"
+        android:rx="2"
+        android:fillColor="#FF9500" />
+
+    <!-- Trophy stem -->
+    <rect
+        android:left="58"
+        android:top="80"
+        android:right="62"
+        android:bottom="90"
+        android:rx="2"
+        android:fillColor="#FF9500" />
+
+    <!-- Star sparkle above trophy -->
+    <g>
+        <circle
+            android:cx="65"
+            android:cy="25"
+            android:r="2"
+            android:fillColor="#FFD60A" />
+        <circle
+            android:cx="38"
+            android:cy="45"
+            android:r="1.5"
+            android:fillColor="#FFD60A"
+            android:alpha="0.7" />
+        <circle
+            android:cx="82"
+            android:cy="48"
+            android:r="1.5"
+            android:fillColor="#FFD60A"
+            android:alpha="0.7" />
+    </g>
+</vector>

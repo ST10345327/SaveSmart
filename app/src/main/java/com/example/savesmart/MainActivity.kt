@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             navController = navHostFragment.navController
 
             // AUTO-LOGIN & ONBOARDING CHECK (Requirement R23)
-            if (sessionManager.isLoggedIn()) {
+            if (savedInstanceState == null && sessionManager.isLoggedIn()) {
                 val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
                 
                 if (sessionManager.isOnboardingComplete()) {

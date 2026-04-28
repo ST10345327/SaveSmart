@@ -82,7 +82,8 @@ class AddEditCategoryFragment : Fragment() {
 
         val db = SaveSmartDatabase.getInstance(requireContext())
         repository = SaveSmartRepository(db)
-        viewModel = CategoriesViewModel(repository)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[CategoriesViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         setupUI()

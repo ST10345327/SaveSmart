@@ -3,7 +3,55 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+
+    <!-- Wallet/card body -->
     <path
         android:fillColor="#1A6FE8"
-        android:pathData="M11.8,10.9c-2.27,-0.59 -3,-1.2 -3,-2.15c0,-1.09 1.01,-1.85 2.7,-1.85c1.78,0 2.44,0.85 2.5,2.1h2.21c-0.07,-1.72 -1.12,-3.3 -3.21,-3.81L13,3h-2v2.19c-1.91,0.41 -3.5,1.64 -3.5,3.71c0,2.49 2.07,3.74 5.1,4.47c2.51,0.61 3.01,1.47 3.01,2.45c0,1.02 -1.01,2.1 -3.11,2.1c-2.14,0 -2.93,-0.98 -3.06,-2.1H7.23c0.14,2.27 1.71,3.48 3.77,3.91L11,21h2v-2.22c1.97,-0.38 3.5,-1.6 3.5,-3.74c0,-2.79 -2.33,-3.54 -4.7,-4.14z" />
+        android:pathData="M2,6 Q2,4 4,4 L20,4 Q22,4 22,6 L22,18 Q22,20 20,20 L4,20 Q2,20 2,18 Z" />
+
+    <!-- Shine/highlight -->
+    <rect
+        android:left="2"
+        android:top="4"
+        android:right="22"
+        android:bottom="7"
+        android:rx="2"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.2" />
+
+    <!-- Coin/currency circle -->
+    <circle
+        android:cx="18"
+        android:cy="12"
+        android:r="3.5"
+        android:fillColor="#2DBF60" />
+
+    <!-- Dollar sign -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,9.5 L18,14.5 M16.5,10.5 L19.5,10.5 M16.5,13.5 L19.5,13.5"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Expense dots -->
+    <circle
+        android:cx="6"
+        android:cy="12"
+        android:r="1.2"
+        android:fillColor="#FFFFFF" />
+
+    <circle
+        android:cx="6"
+        android:cy="12"
+        android:r="1.2"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.6" />
+
+    <circle
+        android:cx="11"
+        android:cy="12"
+        android:r="1.2"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.4" />
 </vector>

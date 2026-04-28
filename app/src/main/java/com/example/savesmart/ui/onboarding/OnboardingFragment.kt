@@ -66,8 +66,8 @@ class OnboardingFragment : Fragment() {
         
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        val factory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[OnboardingViewModel::class.java]
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[OnboardingViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         val adapter = OnboardingAdapter()

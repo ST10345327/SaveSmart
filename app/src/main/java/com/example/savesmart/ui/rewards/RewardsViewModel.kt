@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.savesmart.data.entity.Badge
 import com.example.savesmart.data.entity.User
@@ -32,6 +33,11 @@ class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel(
     private val _rankedUsers = MutableLiveData<List<User>>()
     val rankedUsers: LiveData<List<User>> = _rankedUsers
 
+    private val _userId = MutableLiveData<Int>()
+    val userData: LiveData<com.example.savesmart.data.entity.User?> = _userId.switchMap { userId ->
+        repository.getUserLive(userId)
+    }
+
     /**
      * Requirement R20: Observe earned badges.
      */
@@ -43,14 +49,7 @@ class RewardsViewModel(private val repository: SaveSmartRepository) : ViewModel(
      * Requirement R19, R21: Load user points and level.
      */
     fun loadUserData(userId: Int) {
-        viewModelScope.launch {
-            repository.getUserLive(userId).observeForever { user ->
-                user?.let {
-                    _points.postValue(it.totalPoints)
-                    _level.postValue(it.level)
-                }
-            }
-        }
+        _userId.value = userId
     }
 
     /**

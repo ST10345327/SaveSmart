@@ -3,7 +3,51 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <path
+
+    <!-- Grid cells for dashboard -->
+    <rect
+        android:left="2"
+        android:top="2"
+        android:right="9"
+        android:bottom="9"
+        android:rx="1.5"
+        android:ry="1.5"
+        android:fillColor="#1A6FE8" />
+
+    <rect
+        android:left="11"
+        android:top="2"
+        android:right="18"
+        android:bottom="9"
+        android:rx="1.5"
+        android:ry="1.5"
         android:fillColor="#1A6FE8"
-        android:pathData="M3,13h8L11,3L3,3v10zM3,21h8v-6L3,15v6zM13,21h8L21,11h-8v10zM13,3v6h8L21,3h-8z" />
+        android:alpha="0.8" />
+
+    <rect
+        android:left="2"
+        android:top="11"
+        android:right="9"
+        android:bottom="18"
+        android:rx="1.5"
+        android:ry="1.5"
+        android:fillColor="#1A6FE8"
+        android:alpha="0.8" />
+
+    <rect
+        android:left="11"
+        android:top="11"
+        android:right="18"
+        android:bottom="18"
+        android:rx="1.5"
+        android:ry="1.5"
+        android:fillColor="#1A6FE8"
+        android:alpha="0.6" />
+
+    <!-- Status dot -->
+    <circle
+        android:cx="20"
+        android:cy="4"
+        android:r="1.5"
+        android:fillColor="#2DBF60" />
 </vector>

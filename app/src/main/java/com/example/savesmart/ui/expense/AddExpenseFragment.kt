@@ -96,7 +96,8 @@ class AddExpenseFragment : Fragment() {
 
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        viewModel = ExpenseViewModel(repository)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[ExpenseViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         setupUI()

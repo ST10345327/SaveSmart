@@ -66,7 +66,8 @@ class DashboardFragment : Fragment() {
         // Initialization (T01)
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        viewModel = DashboardViewModel(repository)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[DashboardViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         // Setup RecyclerView (R15, R16)

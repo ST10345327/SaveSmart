@@ -3,7 +3,51 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+
+    <!-- Folder body -->
     <path
         android:fillColor="#1A6FE8"
-        android:pathData="M12,2l-5.5,9h11L12,2zM3,21h8v-8H3V21zM17.5,13c-2.2,0 -4,1.8 -4,4s1.8,4 4,4s4,-1.8 4,-4S19.7,13 17.5,13z" />
+        android:pathData="M2,6 L2,18 Q2,20 4,20 L20,20 Q22,20 22,18 L22,8 Q22,6 20,6 L10,6 Q9,6 8,5 L4,5 Q2,5 2,6 Z" />
+
+    <!-- Folder tab -->
+    <path
+        android:fillColor="#1A6FE8"
+        android:pathData="M4,5 L8,5 Q9,5 10,6 L10,8 Q10,8 10,8 L4,8 Q2,8 2,6 Q2,5 4,5 Z"
+        android:alpha="0.9" />
+
+    <!-- Shine/highlight -->
+    <rect
+        android:left="2"
+        android:top="6"
+        android:right="22"
+        android:bottom="9"
+        android:rx="2"
+        android:fillColor="#FFFFFF"
+        android:alpha="0.15" />
+
+    <!-- Document lines inside -->
+    <line
+        android:startX="6"
+        android:startY="12"
+        android:endX="18"
+        android:endY="12"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:alpha="0.6" />
+
+    <line
+        android:startX="6"
+        android:startY="15"
+        android:endX="18"
+        android:endY="15"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:alpha="0.4" />
+
+    <!-- Status dot -->
+    <circle
+        android:cx="19"
+        android:cy="11"
+        android:r="1.5"
+        android:fillColor="#2DBF60" />
 </vector>

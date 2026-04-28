@@ -3,28 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tvStepIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Step 3 of 3"
+        android:textColor="@color/primary_blue"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivIllustration"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="40dp"
-        android:src="@android:drawable/btn_star_big_on"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_onboarding_rewards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/primary_blue"
-        android:contentDescription="Rewards Icon" />
+        app:layout_constraintTop_toBottomOf="@id/tvStepIndicator"
+        android:contentDescription="Rewards System" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/onboarding_step3_title"
         android:textColor="@color/text_primary"
-        android:textSize="24sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

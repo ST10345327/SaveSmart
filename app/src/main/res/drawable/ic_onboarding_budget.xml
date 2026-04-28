@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background circle -->
+    <circle
+        android:cx="60"
+        android:cy="60"
+        android:r="55"
+        android:fillColor="#E8F2FF" />
+
+    <!-- Wallet body -->
+    <rect
+        android:left="25"
+        android:top="45"
+        android:right="85"
+        android:bottom="80"
+        android:rx="4"
+        android:ry="4"
+        android:fillColor="#1A6FE8" />
+
+    <!-- Wallet shine/highlight -->
+    <rect
+        android:left="25"
+        android:top="45"
+        android:right="85"
+        android:bottom="50"
+        android:rx="4"
+        android:ry="4"
+        android:fillColor="#4A8FFF"
+        android:alpha="0.6" />
+
+    <!-- Upward arrow -->
+    <path
+        android:fillColor="#2DBF60"
+        android:pathData="M60,35 L55,42 L58,42 L58,58 L62,58 L62,42 L65,42 Z" />
+
+    <!-- Currency indicator dot -->
+    <circle
+        android:cx="50"
+        android:cy="62"
+        android:r="3"
+        android:fillColor="#FFFFFF" />
+
+    <circle
+        android:cx="60"
+        android:cy="62"
+        android:r="3"
+        android:fillColor="#FFFFFF" />
+
+    <circle
+        android:cx="70"
+        android:cy="62"
+        android:r="3"
+        android:fillColor="#FFFFFF" />
+</vector>

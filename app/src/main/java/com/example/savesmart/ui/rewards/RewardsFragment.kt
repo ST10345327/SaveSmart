@@ -57,8 +57,8 @@ class RewardsFragment : Fragment() {
 
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
-        val factory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[RewardsViewModel::class.java]
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[RewardsViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
         setupRecyclerView()
@@ -88,18 +88,21 @@ class RewardsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.points.observe(viewLifecycleOwner) { points ->
-            Log.d(TAG, "observeViewModel: Updated points: $points")
-            binding.tvTotalPoints.text = "$points pts"
-            
-            // Requirement R21: 1000 pts per level
-            val currentLevel = (points / 1000) + 1
-            val pointsInCurrentLevel = points % 1000
-            val progress = (pointsInCurrentLevel.toFloat() / 1000f * 100).toInt()
-            
-            binding.tvLevel.text = "Level $currentLevel"
-            binding.progressLevel.progress = progress
-            binding.tvProgressDesc.text = "$pointsInCurrentLevel/1000 to Level ${currentLevel + 1}"
+        viewModel.userData.observe(viewLifecycleOwner) { user ->
+            user?.let {
+                val points = it.totalPoints
+                Log.d(TAG, "observeViewModel: Updated points: $points")
+                binding.tvTotalPoints.text = "$points pts"
+                
+                // Requirement R21: 1000 pts per level
+                val currentLevel = it.level
+                val pointsInCurrentLevel = points % 1000
+                val progress = (pointsInCurrentLevel.toFloat() / 1000f * 100).toInt()
+                
+                binding.tvLevel.text = "Level $currentLevel"
+                binding.progressLevel.progress = progress
+                binding.tvProgressDesc.text = "$pointsInCurrentLevel/1000 to Level ${currentLevel + 1}"
+            }
         }
         
         val userId = sessionManager.getUserId()
