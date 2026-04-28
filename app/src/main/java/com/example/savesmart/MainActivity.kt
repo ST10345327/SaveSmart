@@ -109,7 +109,13 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "logout: Clearing session and returning to login")
         sessionManager.clearSession()
 
-        // Navigate back to login
-        navController.navigate(R.id.loginFragment)
+        // Navigate back to login and clear backstack
+        navController.navigate(
+            R.id.loginFragment,
+            null,
+            androidx.navigation.NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build()
+        )
     }
 }

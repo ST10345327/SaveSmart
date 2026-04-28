@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -27,6 +28,7 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentAddEditCategoryBinding
 import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -94,6 +96,33 @@ class AddEditCategoryFragment : Fragment() {
             binding.tvTitle.text = "Create Category"
             binding.btnDeleteCategory.visibility = View.GONE
         }
+
+        // Handle discard changes (Requirement Rule 8 UX)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (hasUnsavedChanges()) {
+                showDiscardDialog()
+            } else {
+                isEnabled = false
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        return binding.etCategoryName.text?.isNotEmpty() == true || 
+               binding.etMinGoal.text?.isNotEmpty() == true || 
+               binding.etMaxGoal.text?.isNotEmpty() == true
+    }
+
+    private fun showDiscardDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Discard Changes?")
+            .setMessage("You have unsaved changes. Are you sure you want to leave?")
+            .setPositiveButton("Discard") { _, _ ->
+                findNavController().navigateUp()
+            }
+            .setNegativeButton("Keep Editing", null)
+            .show()
     }
 
     private fun setupUI() {

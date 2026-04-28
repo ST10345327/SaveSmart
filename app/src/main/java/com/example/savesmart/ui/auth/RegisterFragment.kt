@@ -41,10 +41,12 @@ class RegisterFragment : Fragment() {
         viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[AuthViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
-        // Clear fields when returning to this screen
-        binding.etUsername.setText("")
-        binding.etPassword.setText("")
-        binding.etConfirmPassword.setText("")
+        // Clear fields when returning to this screen fresh
+        if (savedInstanceState == null) {
+            binding.etUsername.setText("")
+            binding.etPassword.setText("")
+            binding.etConfirmPassword.setText("")
+        }
 
         setupListeners()
         observeViewModel()

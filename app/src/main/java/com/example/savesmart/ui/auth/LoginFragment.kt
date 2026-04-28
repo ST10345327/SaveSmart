@@ -55,9 +55,11 @@ class LoginFragment : Fragment() {
         viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[AuthViewModel::class.java]
         sessionManager = SessionManager(requireContext())
 
-        // Clear fields for security
-        binding.etUsername.setText("")
-        binding.etPassword.setText("")
+        // Clear fields for security only on fresh start (not rotation)
+        if (savedInstanceState == null) {
+            binding.etUsername.setText("")
+            binding.etPassword.setText("")
+        }
 
         setupListeners()
         observeViewModel()

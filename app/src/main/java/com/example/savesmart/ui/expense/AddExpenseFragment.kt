@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -38,6 +39,7 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentAddExpenseBinding
 import com.example.savesmart.util.CurrencyUtils
 import com.example.savesmart.util.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -123,6 +125,33 @@ class AddExpenseFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             validateAndSave()
         }
+
+        // Handle discard changes (Requirement Rule 8 UX)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (hasUnsavedChanges()) {
+                showDiscardDialog()
+            } else {
+                isEnabled = false
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        return binding.etAmount.text?.isNotEmpty() == true || 
+               binding.etDescription.text?.isNotEmpty() == true ||
+               currentPhotoPath != null
+    }
+
+    private fun showDiscardDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Discard Expense?")
+            .setMessage("You have unsaved details. Are you sure you want to discard this expense?")
+            .setPositiveButton("Discard") { _, _ ->
+                findNavController().navigateUp()
+            }
+            .setNegativeButton("Keep Editing", null)
+            .show()
     }
 
     private fun observeViewModel() {

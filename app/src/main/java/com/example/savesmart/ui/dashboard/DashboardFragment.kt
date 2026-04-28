@@ -15,6 +15,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.savesmart.R
@@ -111,6 +113,19 @@ class DashboardFragment : Fragment() {
         // Observe ViewModel state and update UI
         observeViewModel()
         
+        // Double back to exit (Requirement Rule 8 UX)
+        var lastBackPressTime = 0L
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastBackPressTime < 2000) {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } else {
+                lastBackPressTime = currentTime
+                Toast.makeText(requireContext(), "Press back again to exit", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
         // Load data for current user (R15)
         val userId = sessionManager.getUserId()
         if (userId != -1) {
@@ -205,8 +220,14 @@ class DashboardFragment : Fragment() {
         Log.d(TAG, "logout: user requested logout")
         sessionManager.clearSession()
 
-        // Navigate back to login screen
-        findNavController().navigate(R.id.loginFragment)
+        // Navigate back to login screen and clear backstack to prevent going back to dashboard
+        findNavController().navigate(
+            R.id.loginFragment,
+            null,
+            androidx.navigation.NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build()
+        )
     }
 
     override fun onDestroyView() {

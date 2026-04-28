@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -75,6 +76,17 @@ class OnboardingFragment : Fragment() {
         binding.viewPager.isUserInputEnabled = false // Force use of buttons (Requirement R23)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
+
+        // Handle back press to move between onboarding steps (Requirement R23 polish)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (binding.viewPager.currentItem > 0) {
+                binding.viewPager.currentItem -= 1
+            } else {
+                // If on first step, exit app
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
 
         binding.btnNext.setOnClickListener {
             val currentStep = binding.viewPager.currentItem
