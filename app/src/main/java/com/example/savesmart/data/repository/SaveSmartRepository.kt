@@ -37,26 +37,7 @@ class SaveSmartRepository(
         
         val newUser = User(username = username, passwordHash = passwordHash, fullName = username)
         val userId = userDao.insertUser(newUser)
-        val success = userId > 0
-
-        if (success) {
-            createSampleCategoriesForUser(userId.toInt())
-        }
-        return success
-    }
-
-    private suspend fun createSampleCategoriesForUser(userId: Int) {
-        Log.d(TAG, "createSampleCategoriesForUser: Creating sample categories for userId=$userId")
-        val sampleCategories = listOf(
-            Category(userId = userId, name = "Food & Dining", colorHex = "#FF6B6B", maxGoalMilliunits = 200_000L, minGoalMilliunits = 100_000L),
-            Category(userId = userId, name = "Transport", colorHex = "#4ECDC4", maxGoalMilliunits = 150_000L, minGoalMilliunits = 75_000L),
-            Category(userId = userId, name = "Entertainment", colorHex = "#45B7D1", maxGoalMilliunits = 100_000L, minGoalMilliunits = 50_000L),
-            Category(userId = userId, name = "Shopping", colorHex = "#96CEB4", maxGoalMilliunits = 80_000L, minGoalMilliunits = 40_000L)
-        )
-
-        for (category in sampleCategories) {
-            categoryDao.insertCategory(category)
-        }
+        return userId > 0
     }
 
     suspend fun loginUser(username: String, passwordHash: String): User? {
