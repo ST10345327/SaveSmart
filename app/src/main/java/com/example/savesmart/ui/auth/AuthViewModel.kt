@@ -62,8 +62,14 @@ class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
             return
         }
 
-        if (password.length < 6) {
-            _authState.value = AuthResult.Error("Password must be at least 6 characters")
+        // Security Audit Fix: Professional validation for credentials
+        if (!SecurityUtils.isValidUsername(username)) {
+            _authState.value = AuthResult.Error("Username must be 3-20 characters (letters, numbers, underscores only)")
+            return
+        }
+
+        if (!SecurityUtils.isValidPassword(password)) {
+            _authState.value = AuthResult.Error("Password must be at least 6 characters with letters and numbers")
             return
         }
 

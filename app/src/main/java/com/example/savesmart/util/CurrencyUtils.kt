@@ -38,11 +38,21 @@ object CurrencyUtils {
 
     fun parseRandInput(input: String): Long? {
         return try {
+            // Security Audit: Check for excessive length to prevent memory issues
+            if (input.length > 15) return null
+
             val cleaned = input
                 .replace(Regex("[^0-9.,]"), "")
                 .replace(",", ".")
                 .trim()
+            
+            if (cleaned.isEmpty()) return null
+
             val rands = cleaned.toDouble()
+            
+            // Limit to reasonable financial bounds (max R100 million)
+            if (rands < 0 || rands > 100_000_000) return null
+
             randsToMilliunits(rands)
         } catch (e: Exception) {
             Log.w(TAG, "Failed to parse Rand input: $input — ${e.message}")
