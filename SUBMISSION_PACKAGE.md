@@ -1,5 +1,5 @@
 # SaveSmart — Final Submission Package
-**Student:** Olebogeng Phawe (ST10345327)  
+**Students:** Olebogeng Phawe (ST10345327), Nkosikhona (ST10347200), Mbuso (ST10449154)
 **POE:** OPSC6311 Personal Budget Tracker  
 **Submission Date:** May 6, 2026
 
