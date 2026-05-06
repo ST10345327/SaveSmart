@@ -42,15 +42,24 @@ class ExpenseViewModelTest {
 
     @Test
     fun `loadCategories updates categories live data`() = runTest {
-        val categories = listOf(Category(categoryId = 1, userId = 1, name = "Food", color = "#FF0000", minGoalMilliunits = 0, maxGoalMilliunits = 0))
+        val userId = 1
+        val categories = listOf(
+            Category(
+                categoryId = 1,
+                userId = userId,
+                name = "Food",
+                color = "#FF0000",
+                minGoalMilliunits = 0,
+                maxGoalMilliunits = 0
+            )
+        )
         val liveData = MutableLiveData<List<Category>>(categories)
         
-        every { repository.getCategoriesForUserLive(1) } returns liveData
+        every { repository.getCategoriesForUserLive(userId) } returns liveData
 
-        viewModel.loadCategories(1)
+        viewModel.loadCategories(userId)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // The categories LiveData is updated via switchMap when _userIdForCategories changes
         assertEquals(categories, viewModel.categories.value)
     }
 }
