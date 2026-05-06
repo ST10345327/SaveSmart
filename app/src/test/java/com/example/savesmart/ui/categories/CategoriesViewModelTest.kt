@@ -40,7 +40,7 @@ class CategoriesViewModelTest {
 
     @Test
     fun `saveCategory calls repository insertCategory`() = runTest {
-        val category = Category(1, 1, "Bills", "#000000", 100, 50)
+        val category = Category(categoryId = 0, userId = 1, name = "Bills", color = "#000000", minGoalMilliunits = 100, maxGoalMilliunits = 50)
         
         viewModel.saveCategory(category)
         testDispatcher.scheduler.advanceUntilIdle()
