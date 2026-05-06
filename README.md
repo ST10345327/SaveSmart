@@ -64,9 +64,14 @@ This project implements all requirements for the OPSC6311 POE:
 2. Open in **Android Studio 2024.1+**.
 3. Ensure you have **JDK 17** configured.
 4. Build and run on an emulator or device (API 26+).
-5. Demo Video on Youtube: 
+5. Demo Video on Youtube:
+
+##  Presentation 
+
+PowerPoint Presentation: https://advtechonline-my.sharepoint.com/:p:/g/personal/st10437200_rcconnect_edu_za/IQBn65wBWD1lQKlcxjtnw88JAQ-_tQDWjkcgiwGYIMDd6vU?e=qvCNB9 
 
 ---
-**Author:** Olebogeng Phawe (ST10345327)  
+**Author:** Olebogeng Phawe (ST10345327), Nkosikhona Dlamini (ST10437200), Mbuso Sbusiso Dube (ST10449154)  
 **Course:** OPSC6311 Personal Budget Tracker  
 **Institution:** IIE Rosebank College
+
