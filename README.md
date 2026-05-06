@@ -49,11 +49,11 @@ SaveSmart/
 │   │   │   │   └── util/       (Security, Currency, Session utilities)
 │   │   │   └── res/            (Layouts, Themes, Navigation Graph)
 │   │   └── test/               (Unit Tests for core logic)
-└── docs/                       (Project Workflow & Gantt Charts)
+└── docs/                       (Project Workflow, Gantt Charts, PART 1 Research, PART 1 Planning & Design)
 ```
 
 ## 📋 Requirements Reference
-
+ 1
 This project implements all requirements for the OPSC6311 POE:
 - **R01-R23**: All functional features from Auth to Gamification.
 - **T01-T10**: Technical standards including MVVM, Room, and Unit Testing.
@@ -64,7 +64,7 @@ This project implements all requirements for the OPSC6311 POE:
 2. Open in **Android Studio 2024.1+**.
 3. Ensure you have **JDK 17** configured.
 4. Build and run on an emulator or device (API 26+).
-5. Demo Video on Youtube:
+5. Demo Video on YouTube: https://youtube.com/shorts/o-3LbOdyXBU
 
 ##  Presentation 
 
