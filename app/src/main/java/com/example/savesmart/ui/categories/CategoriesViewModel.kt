@@ -41,17 +41,11 @@ class CategoriesViewModel(private val repository: SaveSmartRepository) : ViewMod
      * Requirement R05, R06: Save or update a category.
      */
     fun saveCategory(category: Category) {
-        Log.d(TAG, "saveCategory: saving category '${category.name}'")
         viewModelScope.launch {
-            try {
-                if (category.categoryId == 0) {
-                    repository.insertCategory(category)
-                } else {
-                    repository.updateCategory(category)
-                }
-                Log.d(TAG, "saveCategory: success")
-            } catch (e: Exception) {
-                Log.e(TAG, "saveCategory: error", e)
+            if (category.categoryId == 0) {
+                repository.insertCategory(category)
+            } else {
+                repository.updateCategory(category)
             }
         }
     }
@@ -60,14 +54,8 @@ class CategoriesViewModel(private val repository: SaveSmartRepository) : ViewMod
      * Requirement R07: Soft delete a category.
      */
     fun deleteCategory(categoryId: Int) {
-        Log.d(TAG, "deleteCategory: Soft deleting categoryId $categoryId")
         viewModelScope.launch {
-            try {
-                repository.deleteCategory(categoryId)
-                Log.d(TAG, "deleteCategory: Success")
-            } catch (e: Exception) {
-                Log.e(TAG, "deleteCategory: Error", e)
-            }
+            repository.deleteCategory(categoryId)
         }
     }
 }

@@ -1,3 +1,11 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Room persistence library. Google LLC.
+ *   Available at: https://developer.android.com/training/data-storage/room (Accessed: 24 March 2026).
+ * - Android Developers (2024) Kotlin coroutines on Android. Google LLC.
+ *   Available at: https://developer.android.com/kotlin/coroutines (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.data.database
 
 import android.content.Context
@@ -19,6 +27,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * SaveSmartDatabase — Room database initialization and schema definition (Requirement T02).
+ *
+ * GitHub commit suggestion:
+ *   [db] implement room database with multi-entity schema and badge initialization
+ *   - Entities: User, Category, Expense, Badge, UserBadge
+ *   - Version 3 with fallbackToDestructiveMigration for development
+ *   - DatabaseCallback populates badges on creation
+ *   - Singleton pattern with thread-safe getInstance()
+ *   Refs: T02, T01
+ */
 @Database(
     entities = [
         User::class,
@@ -39,14 +58,21 @@ abstract class SaveSmartDatabase : RoomDatabase() {
 
     companion object {
         private const val TAG = "SaveSmartDatabase"
-        // Renamed to v3 to force a clean slate for users unable to clear app data
+        // Renamed to v3 to force a clean slate for users unable to clear app userData
         private const val DATABASE_NAME = "savesmart_v3.db"
 
         @Volatile
         private var INSTANCE: SaveSmartDatabase? = null
 
+        /**
+         * Get database singleton instance (thread-safe) (Requirement T02).
+         * @param context Android context
+         * @return SaveSmartDatabase singleton
+         */
         fun getInstance(context: Context): SaveSmartDatabase {
+            Log.d(TAG, "getInstance() entry")
             return INSTANCE ?: synchronized(this) {
+                Log.d(TAG, "getInstance() creating new database instance")
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     SaveSmartDatabase::class.java,
@@ -56,24 +82,44 @@ abstract class SaveSmartDatabase : RoomDatabase() {
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
+                Log.d(TAG, "getInstance() complete")
                 instance
             }
         }
 
+        /**
+         * Alias for getInstance() for backwards compatibility.
+         * @param context Android context
+         * @return SaveSmartDatabase singleton
+         */
         fun getDatabase(context: Context): SaveSmartDatabase = getInstance(context)
     }
 
+    /**
+     * DatabaseCallback — Runs on database creation to seed default data.
+     */
     private class DatabaseCallback : RoomDatabase.Callback() {
+        /**
+         * Called on first database creation.
+         * Populates default badges for gamification (Requirement R20).
+         */
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
+            Log.d(TAG, "DatabaseCallback.onCreate() entry")
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
                     populateBadges(database.badgeDao())
+                    Log.d(TAG, "DatabaseCallback.onCreate() complete")
                 }
             }
         }
 
+        /**
+         * Populate default badges on database creation (Requirement R20).
+         * @param badgeDao BadgeDao for insertion
+         */
         private suspend fun populateBadges(badgeDao: BadgeDao) {
+            Log.d(TAG, "populateBadges() entry")
             val badges = listOf(
                 Badge(badgeKey = "FIRST_SAVE", name = "First Save", description = "Saved money for the first time", iconResName = "ic_badge_first_save", pointsReward = 10),
                 Badge(badgeKey = "STREAK_7", name = "7-Day Streak", description = "Logged expenses 7 days in a row", iconResName = "ic_badge_streak_7", pointsReward = 50),
@@ -84,6 +130,7 @@ abstract class SaveSmartDatabase : RoomDatabase() {
                 Badge(badgeKey = "GOAL_CRUSHER", name = "Goal Crusher", description = "All categories within limits for a full month", iconResName = "ic_badge_goal_crusher", pointsReward = 100)
             )
             badgeDao.insertAllBadges(badges)
+            Log.d(TAG, "populateBadges() complete — ${badges.size} badges seeded")
         }
     }
 }

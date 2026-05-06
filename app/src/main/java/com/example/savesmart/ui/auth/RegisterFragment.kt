@@ -1,3 +1,11 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Fragment overview. Google LLC.
+ *   Available at: https://developer.android.com/guide/fragments (Accessed: 24 March 2026).
+ * - Android Developers (2024) View Binding. Google LLC.
+ *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ */
+
 package com.example.savesmart.ui.auth
 
 import android.os.Bundle
@@ -14,6 +22,21 @@ import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.databinding.FragmentRegisterBinding
 import com.example.savesmart.util.SessionManager
 
+/**
+ * RegisterFragment — Handles new user registration flow (Requirement R01, R03, R23).
+ *
+ * Manages registration UI, input validation, password confirmation, and navigation
+ * to Onboarding after successful account creation.
+ *
+ * GitHub commit suggestion:
+ *   [ui] implement register fragment with password validation and account creation
+ *   - Observes authState LiveData from AuthViewModel for reactive updates (T01)
+ *   - Validates password strength (6+ chars, letters + numbers) (R03)
+ *   - Prevents duplicate usernames via repository query (R01)
+ *   - SessionManager saves new user login (R02)
+ *   - Navigate to Onboarding after registration (R23)
+ *   Refs: R01, R03, R23, T01, T06
+ */
 class RegisterFragment : Fragment() {
 
     private val TAG = "RegisterFragment"
@@ -28,12 +51,14 @@ class RegisterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView() entry")
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated() entry")
 
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
@@ -43,6 +68,7 @@ class RegisterFragment : Fragment() {
 
         // Clear fields when returning to this screen fresh
         if (savedInstanceState == null) {
+            Log.d(TAG, "onViewCreated() clearing form fields")
             binding.etUsername.setText("")
             binding.etPassword.setText("")
             binding.etConfirmPassword.setText("")
@@ -50,9 +76,11 @@ class RegisterFragment : Fragment() {
 
         setupListeners()
         observeViewModel()
+        Log.d(TAG, "onViewCreated() complete")
     }
 
     private fun setupListeners() {
+        Log.d(TAG, "setupListeners() entry")
         binding.btnRegister.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString()

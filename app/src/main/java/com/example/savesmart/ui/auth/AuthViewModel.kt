@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savesmart.data.repository.SaveSmartRepository
 import com.example.savesmart.util.SecurityUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for managing user authentication (Requirement R01, R02, R03).
@@ -33,11 +31,8 @@ class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                // Background processing to keep UI snappy
                 val normalizedUsername = username.lowercase().trim()
-                val hashedPassword = withContext(Dispatchers.Default) {
-                    SecurityUtils.hashPassword(password)
-                }
+                val hashedPassword = SecurityUtils.hashPassword(password)
                 
                 val user = repository.loginUser(normalizedUsername, hashedPassword)
                 
@@ -47,7 +42,6 @@ class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
                     _authState.value = AuthResult.Error("Invalid username or password")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "login() error", e)
                 _authState.value = AuthResult.Error("Login failed")
             }
         }
@@ -83,9 +77,7 @@ class AuthViewModel(private val repository: SaveSmartRepository) : ViewModel() {
                     return@launch
                 }
 
-                val hashedPassword = withContext(Dispatchers.Default) {
-                    SecurityUtils.hashPassword(password)
-                }
+                val hashedPassword = SecurityUtils.hashPassword(password)
                 
                 val success = repository.registerUser(normalizedUsername, hashedPassword)
                 

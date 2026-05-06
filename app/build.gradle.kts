@@ -43,6 +43,13 @@ android {
         jvmTarget = "11"
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     // Requirement T06: Enable ViewBinding for cleaner UI code
     viewBinding {
         enable = true
@@ -79,6 +86,8 @@ dependencies {
     // Unit testing
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.core.testing)
 
     // Android instrumented testing
     androidTestImplementation(libs.androidx.junit)
