@@ -18,13 +18,6 @@ import com.example.savesmart.data.entity.User
 
 /**
  * UserDao — Data Access Object for User entity (Requirement T02).
- *
- * GitHub commit suggestion:
- *   [db] implement user DAO with credential queries and gamification updates
- *   - insertUser() enforces username uniqueness via Room constraint
- *   - getUserByCredentials() for login authentication (R02)
- *   - addPoints() increments user score for gamification (R19)
- *   Refs: R01, R02, R19, R21, T02, T05
  */
 @Dao
 interface UserDao {

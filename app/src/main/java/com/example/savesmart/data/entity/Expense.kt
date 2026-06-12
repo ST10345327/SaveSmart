@@ -19,15 +19,6 @@ import androidx.room.PrimaryKey
  * Stores expense amount in milliunits (no Double/Float) for 100% financial precision (T10).
  * Receipt photo path enables receipt capture workflow (Requirement R09, R11).
  * Soft delete (is_deleted flag) preserves history and financial calculations (Requirement R12).
- *
- * GitHub commit suggestion:
- *   [db] define expense entity with receipt photo and time tracking
- *   - amount_milliunits stores in Long (1000 = R1.00) per YNAB convention (T10)
- *   - date_millis, start_time_millis, end_time_millis track expense timing (R08)
- *   - receipt_photo_path nullable for optional camera capture (R09)
- *   - is_deleted flag preserves all transactions for reports
- *   - Indexed on user_id, category_id, date_millis for fast range queries
- *   Refs: R08, R09, R10, R12, T02, T10
  */
 @Entity(
     tableName = "expenses",

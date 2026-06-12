@@ -18,14 +18,6 @@ import androidx.room.PrimaryKey
  *
  * Stores user credentials (hashed), account metadata, and gamification state.
  * onboarding_complete flag ensures 3-step flow only shows once (Requirement R23).
- *
- * GitHub commit suggestion:
- *   [db] define user entity with password hashing and gamification fields
- *   - username unique indexed for fast credential lookup
- *   - password_hash stores SHA-256 for security (never plaintext)
- *   - total_points and level track gamification progress
- *   - min/max_monthly_budget for dashboard spending goals
- *   Refs: R01, R02, R21, T02, T10
  */
 @Entity(
     tableName = "users",

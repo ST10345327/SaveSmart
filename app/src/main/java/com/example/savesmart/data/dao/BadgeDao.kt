@@ -18,14 +18,6 @@ import com.example.savesmart.data.entity.UserBadge
 
 /**
  * BadgeDao — Data Access Object for Badge and UserBadge entities (Requirement T02, R20).
- *
- * GitHub commit suggestion:
- *   [db] implement badge DAO for milestone and achievement tracking
- *   - insertBadge() seed badges on database creation
- *   - awardBadge() when user unlocks achievement (R20)
- *   - getEarnedBadgesLive() feeds Rewards screen UI (R20)
- *   - hasBadgeBeenEarned() prevents duplicate awards
- *   Refs: R20, T02, T01
  */
 @Dao
 interface BadgeDao {

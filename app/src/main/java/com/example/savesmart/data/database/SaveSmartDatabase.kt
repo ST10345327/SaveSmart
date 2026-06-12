@@ -29,14 +29,6 @@ import kotlinx.coroutines.launch
 
 /**
  * SaveSmartDatabase — Room database initialization and schema definition (Requirement T02).
- *
- * GitHub commit suggestion:
- *   [db] implement room database with multi-entity schema and badge initialization
- *   - Entities: User, Category, Expense, Badge, UserBadge
- *   - Version 3 with fallbackToDestructiveMigration for development
- *   - DatabaseCallback populates badges on creation
- *   - Singleton pattern with thread-safe getInstance()
- *   Refs: T02, T01
  */
 @Database(
     entities = [

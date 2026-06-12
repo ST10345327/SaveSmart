@@ -20,13 +20,6 @@ import com.example.savesmart.ui.dashboard.CategoryWithSpending
 
 /**
  * CategoryDao — Data Access Object for Category entity (Requirement T02).
- *
- * GitHub commit suggestion:
- *   [db] implement category DAO with spending aggregation queries
- *   - Supports CRUD operations with soft-delete pattern (R07)
- *   - getTotalSpendingForCategory() joins with expenses for dashboard (R15)
- *   - getCategorySpendingSummaryLive() feeds pie chart rendering (R17)
- *   Refs: R05, R06, R07, R14, R15, T02
  */
 @Dao
 interface CategoryDao {

@@ -19,14 +19,6 @@ import androidx.room.PrimaryKey
  *
  * Supports min/max budget goals per category for dashboard progress bars (Requirement R14).
  * Soft delete (is_deleted flag) ensures categories remain in history (Requirement R07).
- *
- * GitHub commit suggestion:
- *   [db] define category entity with colour picker and budget goals
- *   - user_id foreign key enforces per-user isolation
- *   - color_hex stores 6-digit hex colour (#RRGGBB)
- *   - min/max_goal_milliunits for financial tracking (T10)
- *   - is_deleted flag soft-delete pattern — never hard-delete
- *   Refs: R05, R06, R07, R14, T02, T10
  */
 @Entity(
     tableName = "categories",

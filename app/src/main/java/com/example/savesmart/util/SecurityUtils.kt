@@ -14,14 +14,6 @@ import java.security.NoSuchAlgorithmException
 
 /**
  * SecurityUtils — Cryptographic password hashing and validation (Requirement R01).
- *
- * GitHub commit suggestion:
- *   [util] implement SHA-256 password hashing and validation
- *   - hashPassword() uses SHA-256 for irreversible encryption
- *   - verifyPassword() compares plaintext with stored hash
- *   - isValidPassword() enforces 6+ chars with letters + numbers
- *   - isValidUsername() validates 3–20 chars, alphanumeric + underscore
- *   Refs: R01, R03, T05
  */
 object SecurityUtils {
 

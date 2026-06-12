@@ -13,14 +13,6 @@ import android.util.Log
 /**
  * SessionManager — Handles user session persistence via SharedPreferences (Requirement R02, R04).
  * Stores user ID, username, and login status for auto-login on app restart.
- *
- * GitHub commit suggestion:
- *   [util] implement session manager for persistent user login
- *   - saveSession() persists user login across app restart
- *   - clearSession() on logout removes all session data
- *   - isLoggedIn() polls current session state
- *   - Onboarding completion flag stored separately
- *   Refs: R02, R04, T01
  */
 class SessionManager(context: Context) {
 
