@@ -1,0 +1,261 @@
+/**
+ * Reference:
+ * - Android Developers (2024) Fragment overview. Google LLC.
+ *   Available at: https://developer.android.com/guide/fragments (Accessed: 24 March 2026).
+ * - Android Developers (2024) View Binding. Google LLC.
+ *   Available at: https://developer.android.com/topic/libraries/view-binding (Accessed: 24 March 2026).
+ * - Android Developers (2024) Navigation component. Google LLC.
+ *   Available at: https://developer.android.com/guide/navigation (Accessed: 24 March 2026).
+ */
+
+package com.example.savesmart.ui.dashboard
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.savesmart.R
+import com.example.savesmart.data.database.SaveSmartDatabase
+import com.example.savesmart.data.repository.SaveSmartRepository
+import com.example.savesmart.databinding.FragmentDashboardBinding
+import com.example.savesmart.util.BudgetStatus
+import com.example.savesmart.util.CurrencyUtils
+import com.example.savesmart.util.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+/**
+ * Fragment responsible for displaying the user's monthly spending summary.
+ *
+ * GitHub commit suggestion:
+ *   [dashboard] implement DashboardFragment with progress visualization
+ *   - Integrated MVVM with DashboardViewModel
+ *   - Added logic for monthly spending progress bar
+ *   - Added navigation to Category Management
+ *   Refs: R15, R16, T01, T06
+ */
+class DashboardFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "DashboardFragment"
+    }
+
+    // Requirement T06: ViewBinding pattern to prevent memory leaks
+    private var _binding: FragmentDashboardBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var viewModel: DashboardViewModel
+    private lateinit var sessionManager: SessionManager
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        Log.d(TAG, "onCreateView: started")
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated: started")
+
+        // Initialization (T01)
+        val db = SaveSmartDatabase.getInstance(requireContext())
+        val repository = SaveSmartRepository(db)
+        val factory = com.example.savesmart.ui.ViewModelFactory(repository)
+        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[DashboardViewModel::class.java]
+        sessionManager = SessionManager(requireContext())
+
+        // Setup RecyclerView (R15, R16)
+        setupRecyclerView()
+
+        // Setup Month Navigation
+        binding.btnPrevMonth.setOnClickListener { viewModel.prevMonth() }
+        binding.btnNextMonth.setOnClickListener { viewModel.nextMonth() }
+
+        // Setup logout button (R04)
+        binding.btnLogout.setOnClickListener {
+            Log.d(TAG, "onViewCreated: logout button clicked")
+            showLogoutConfirmation()
+        }
+
+        // Setup Floating Action Button for Add Expense (R08)
+        binding.fabAddExpense.setOnClickListener {
+            Log.d(TAG, "onViewCreated: FAB clicked - navigating to AddExpenseFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
+        }
+
+        // Setup Navigation to Expense List (R10)
+        binding.tvTotalSpending.setOnClickListener {
+            Log.d(TAG, "onViewCreated: Total spending clicked - navigating to ExpenseListFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_expenseListFragment)
+        }
+        
+        // Setup Navigation to Category Management (R05)
+        binding.btnManageCategories.setOnClickListener {
+            Log.d(TAG, "onViewCreated: Manage Categories clicked - navigating to CategoriesFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_categoriesFragment)
+        }
+        
+        // Setup Navigation to Reports (R17)
+        binding.tvTotalSpending.setOnLongClickListener {
+            Log.d(TAG, "onViewCreated: Total spending long-clicked - navigating to CategoryReportFragment")
+            findNavController().navigate(R.id.action_dashboardFragment_to_categoryReportFragment)
+            true
+        }
+
+        // Observe ViewModel state and update UI
+        observeViewModel()
+        
+        // Double back to exit (Requirement Rule 8 UX)
+        var lastBackPressTime = 0L
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastBackPressTime < 2000) {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } else {
+                lastBackPressTime = currentTime
+                Toast.makeText(requireContext(), "Press back again to exit", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        // Load data for current user (R15)
+        val userId = sessionManager.getUserId()
+        if (userId != -1) {
+            Log.d(TAG, "onViewCreated: loading data for userId $userId")
+            viewModel.loadDashboardData(userId)
+
+            // Show welcome message with username
+            val username = sessionManager.getUsername()
+            binding.tvWelcome.text = getString(R.string.welcome_back, username)
+            // Check if user has budget goals set and show setup card if missing
+            val dbInstance = SaveSmartDatabase.getInstance(requireContext())
+            val repo = SaveSmartRepository(dbInstance)
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val user = withContext(Dispatchers.IO) { repo.getUserById(userId) }
+                    val missingBudget = (user == null) || (user.maxMonthlyBudget <= 0L)
+                    binding.cvBudgetSetup.visibility = if (missingBudget) View.VISIBLE else View.GONE
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to load user for budget setup check", e)
+                }
+            }
+            // Open Budget Goals screen when the card is tapped
+            binding.cvBudgetSetup.setOnClickListener {
+                Log.d(TAG, "onViewCreated: Budget setup card clicked - navigating to BudgetGoalsFragment")
+                findNavController().navigate(R.id.action_dashboardFragment_to_budgetGoalsFragment)
+            }
+        } else {
+            Log.w(TAG, "onViewCreated: no active session found. Redirecting to login.")
+            findNavController().navigate(R.id.loginFragment)
+        }
+    }
+
+    /**
+     * Setup RecyclerView with CategoryAdapter (R15, R16).
+     */
+    private fun setupRecyclerView() {
+        Log.d(TAG, "setupRecyclerView: started")
+        val adapter = CategoryAdapter()
+        binding.rvCategories.adapter = adapter
+        binding.rvCategories.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+    }
+
+    /**
+     * Requirement R15, R16: Observe ViewModel state and update UI.
+     */
+    private fun observeViewModel() {
+        viewModel.currentMonthDisplay.observe(viewLifecycleOwner) { month ->
+            binding.tvCurrentMonth.text = month
+        }
+
+        viewModel.totalSpent.observe(viewLifecycleOwner) { total ->
+            Log.d(TAG, "observeViewModel: received total spent: $total")
+            // Update total spent TextView (Requirement R15)
+            binding.tvTotalSpending.text = CurrencyUtils.formatMilliunits(total)
+            updateProgress(total, viewModel.totalBudget.value ?: 0L)
+        }
+
+        viewModel.totalBudget.observe(viewLifecycleOwner) { budget ->
+            Log.d(TAG, "observeViewModel: received total budget: $budget")
+            binding.tvBudgetSummary.text = getString(R.string.label_of_budget, CurrencyUtils.formatMilliunits(budget))
+            updateProgress(viewModel.totalSpent.value ?: 0L, budget)
+        }
+
+        viewModel.categoriesSummary.observe(viewLifecycleOwner) { summaries ->
+            Log.d(TAG, "observeViewModel: received ${summaries.size} category summaries")
+            // Update RecyclerView with category summaries (Requirement R16)
+            val adapter = binding.rvCategories.adapter as? CategoryAdapter
+            adapter?.submitList(summaries)
+
+            // Check for overspending (R16)
+            val hasOverspending = summaries.any { category ->
+                CurrencyUtils.getBudgetStatus(category.totalMilliunits, category.maxGoalMilliunits) == BudgetStatus.OVER
+            }
+            binding.tvOverspendingWarning.visibility = if (hasOverspending) View.VISIBLE else View.GONE
+        }
+    }
+
+    /**
+     * Update the monthly progress bar and percentage.
+     */
+    private fun updateProgress(total: Long, budget: Long) {
+        if (budget > 0) {
+            val progress = (total.toFloat() / budget.toFloat() * 100).toInt().coerceIn(0, 100)
+            binding.progressMonthly.progress = progress
+            binding.tvMonthlyProgressPercent.text = "$progress%"
+        } else {
+            binding.progressMonthly.progress = 0
+            binding.tvMonthlyProgressPercent.text = "0%"
+        }
+    }
+
+    /**
+     * Requirement R04: Show confirmation dialog before logout.
+     */
+    private fun showLogoutConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out of SaveSmart?")
+            .setPositiveButton("Logout") { _, _ ->
+                logout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    /**
+     * Handle user logout (R04).
+     */
+    private fun logout() {
+        Log.d(TAG, "logout: user requested logout")
+        sessionManager.clearSession()
+
+        // Navigate back to login screen and clear backstack to prevent going back to dashboard
+        findNavController().navigate(
+            R.id.loginFragment,
+            null,
+            androidx.navigation.NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build()
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: clearing binding")
+        // Requirement Rule 8: Prevent memory leaks
+        _binding = null
+    }
+}

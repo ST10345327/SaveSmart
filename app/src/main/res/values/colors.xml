@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Design System Colors - High Contrast & Visibility -->
+    <color name="primary_blue">#1A56DB</color>
+    <color name="primary_blue_variant">#1E40AF</color>
+
+    <!-- Status Colors -->
+    <color name="good_green">#059669</color>
+    <color name="close_amber">#D97706</color>
+    <color name="over_red">#B91C1C</color>
+    <color name="red">#B91C1C</color>
+
+    <!-- Rewards Colors - Optimized Visibility -->
+    <color name="rewards_purple">#4C1D95</color>
+    <color name="rewards_accent_yellow">#FACC15</color> <!-- HIGH CONTRAST YELLOW for Level Tab -->
+    <color name="rewards_text_on_purple">#FFFFFF</color>
+    <color name="rewards_subtext_on_purple">#E5E7EB</color>
+
+    <!-- Neutral Palette -->
+    <color name="background">#E5E7EB</color>
+    <color name="card_surface">#FFFFFF</color>
+    <color name="border">#9CA3AF</color>
+    <color name="border_color">#9CA3AF</color>
+
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#374151</color>
+    <color name="text_hint">#6B7280</color>
+
+    <!-- Dark Mode -->
+    <color name="dark_background">#0F172A</color>
+    <color name="dark_card_surface">#1E293B</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#E8F2FF"
+        android:pathData="M60,60m-55,0a55,55 0 1,1 110,0a55,55 0 1,1 -110,0" />
+
+    <!-- Wallet body -->
+    <path
+        android:fillColor="#1A6FE8"
+        android:pathData="M29,45h52a4,4 0 0 1 4,4v27a4,4 0 0 1 -4,4h-52a4,4 0 0 1 -4,-4v-27a4,4 0 0 1 4,-4z" />
+
+    <!-- Wallet shine/highlight -->
+    <path
+        android:fillColor="#4A8FFF"
+        android:alpha="0.6"
+        android:pathData="M29,45h52a4,4 0 0 1 4,4v-3a4,4 0 0 1 -4,4h-52a4,4 0 0 1 -4,-4v3a4,4 0 0 1 4,-4z" />
+
+    <!-- Upward arrow -->
+    <path
+        android:fillColor="#2DBF60"
+        android:pathData="M60,35 L55,42 L58,42 L58,58 L62,58 L62,42 L65,42 Z" />
+
+    <!-- Currency indicator dot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,62m-3,0a3,3 0 1,1 6,0a3,3 0 1,1 -6,0" />
+</vector>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- White background to match the icon background and screen -->
+    <item>
+        <color android:color="#FFFFFF" />
+    </item>
+
+    <!-- Real App Icon Foreground in the center -->
+    <item
+        android:drawable="@mipmap/ic_launcher_foreground"
+        android:gravity="center"
+        android:width="160dp"
+        android:height="160dp" />
+</layer-list>

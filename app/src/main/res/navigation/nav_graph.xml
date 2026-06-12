@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- Login Fragment (R02, T01) -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.savesmart.ui.auth.LoginFragment"
+        android:label="@string/login_title">
+
+        <!-- Navigate to Register screen -->
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+
+        <!-- Navigate to Dashboard and remove Login from back stack (R02, T01) -->
+        <action
+            android:id="@+id/action_loginFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Navigate to Onboarding if first time (R23) -->
+        <action
+            android:id="@+id/action_loginFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <!-- Register Fragment (R01, T01) -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.savesmart.ui.auth.RegisterFragment"
+        android:label="@string/register_title">
+
+        <!-- Navigate to Onboarding after registration (R23) -->
+        <action
+            android:id="@+id/action_registerFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Back to Login -->
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <!-- Onboarding Fragment (R23) -->
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.savesmart.ui.onboarding.OnboardingFragment"
+        android:label="Welcome to SaveSmart">
+
+        <action
+            android:id="@+id/action_onboardingFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Dashboard Fragment (R15, R16) -->
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.savesmart.ui.dashboard.DashboardFragment"
+        android:label="@string/dashboard_title">
+
+        <!-- Navigate to Add Expense screen (R08) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_addExpenseFragment"
+            app:destination="@id/addExpenseFragment" />
+
+        <!-- Navigate to Expense List (R10) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_expenseListFragment"
+            app:destination="@id/expenseListFragment" />
+
+        <!-- Navigate to Category Management (R05) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
+
+        <!-- Navigate to Reports (R17) -->
+        <action
+            android:id="@+id/action_dashboardFragment_to_categoryReportFragment"
+            app:destination="@id/categoryReportFragment" />
+
+    </fragment>
+
+    <!-- Budget Goals Fragment (allow users to create/edit monthly budget goals) -->
+    <fragment
+        android:id="@+id/budgetGoalsFragment"
+        android:name="com.example.savesmart.ui.dashboard.BudgetGoalsFragment"
+        android:label="Budget Goals" />
+
+    <!-- Navigation from Dashboard to Budget Goals -->
+    <action
+        android:id="@+id/action_dashboardFragment_to_budgetGoalsFragment"
+        app:destination="@id/budgetGoalsFragment" />
+
+    <!-- Add Expense Fragment (R08, R13) -->
+    <fragment
+        android:id="@+id/addExpenseFragment"
+        android:name="com.example.savesmart.ui.expense.AddExpenseFragment"
+        android:label="Expense Details">
+        <argument
+            android:name="expenseId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- Expense List Fragment (R10, R11, R12) -->
+    <fragment
+        android:id="@+id/expenseListFragment"
+        android:name="com.example.savesmart.ui.expense.ExpenseListFragment"
+        android:label="My Expenses">
+
+        <action
+            android:id="@+id/action_expenseListFragment_to_fullReceiptFragment"
+            app:destination="@id/fullReceiptFragment" />
+
+        <action
+            android:id="@+id/action_expenseListFragment_to_addExpenseFragment"
+            app:destination="@id/addExpenseFragment" />
+    </fragment>
+
+    <!-- Full Receipt Fragment (R11) -->
+    <fragment
+        android:id="@+id/fullReceiptFragment"
+        android:name="com.example.savesmart.ui.expense.FullReceiptFragment"
+        android:label="Receipt Detail">
+        <argument
+            android:name="photoPath"
+            app:argType="string" />
+    </fragment>
+
+    <!-- Rewards Fragment (R19, R20, R21) -->
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.example.savesmart.ui.rewards.RewardsFragment"
+        android:label="Rewards">
+
+        <!-- Navigate to Leaderboard -->
+        <action
+            android:id="@+id/action_rewardsFragment_to_leaderboardFragment"
+            app:destination="@id/leaderboardFragment" />
+    </fragment>
+
+    <!-- Leaderboard Fragment (R22) -->
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.savesmart.ui.rewards.LeaderboardFragment"
+        android:label="Leaderboard" />
+
+    <!-- Categories List Fragment (R05, R06, R07) -->
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.savesmart.ui.categories.CategoriesFragment"
+        android:label="My Categories">
+
+        <!-- Navigate to Add/Edit Category screen -->
+        <action
+            android:id="@+id/action_categoriesFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+    </fragment>
+
+    <!-- Add/Edit Category Fragment (R05, R06, R14) -->
+    <fragment
+        android:id="@+id/addEditCategoryFragment"
+        android:name="com.example.savesmart.ui.categories.AddEditCategoryFragment"
+        android:label="Category Details">
+
+        <!-- Pass Category ID for editing; default -1 means "New Category" -->
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- Category Spending Report Fragment (R17) -->
+    <fragment
+        android:id="@+id/categoryReportFragment"
+        android:name="com.example.savesmart.ui.reports.CategoryReportFragment"
+        android:label="Spending Analysis" />
+
+</navigation>
