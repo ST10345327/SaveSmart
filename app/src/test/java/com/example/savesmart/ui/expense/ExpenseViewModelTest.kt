@@ -56,34 +56,17 @@ class ExpenseViewModelTest {
                 userId = userId,
                 name = "Food",
                 minGoalMilliunits = 0,
-                maxGoalMilliunits = 0
+                maxGoalMilliunits = 0,
             )
         )
-        val categories = listOf(Category(categoryId = 1, userId = 1, name = "Food", minGoalMilliunits = 0, maxGoalMilliunits = 0))
-=======
-        every { repository.getCategoriesForUserLive(userId) } returns liveData
-        val categories = listOf(
-            Category(
-                categoryId = 1,
-                userId = userId,
-        viewModel.loadCategories(userId)
-                minGoalMilliunits = 0,
-                maxGoalMilliunits = 0
-            )
-        )
->>>>>>> ce038ab2d766f20e06e2c9ab1a9ab065e6b9ee31
-        val liveData = MutableLiveData<List<Category>>(categories)
+        val liveData = MutableLiveData(categories)
         
         every { repository.getCategoriesForUserLive(userId) } returns liveData
 
-<<<<<<< HEAD
         // switchMap requires observation to trigger
         viewModel.categories.observeForever {}
 
-        viewModel.loadCategories(1)
-=======
         viewModel.loadCategories(userId)
->>>>>>> ce038ab2d766f20e06e2c9ab1a9ab065e6b9ee31
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(categories, viewModel.categories.value)
