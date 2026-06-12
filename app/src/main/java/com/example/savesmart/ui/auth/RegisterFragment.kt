@@ -27,15 +27,6 @@ import com.example.savesmart.util.SessionManager
  *
  * Manages registration UI, input validation, password confirmation, and navigation
  * to Onboarding after successful account creation.
- *
- * GitHub commit suggestion:
- *   [ui] implement register fragment with password validation and account creation
- *   - Observes authState LiveData from AuthViewModel for reactive updates (T01)
- *   - Validates password strength (6+ chars, letters + numbers) (R03)
- *   - Prevents duplicate usernames via repository query (R01)
- *   - SessionManager saves new user login (R02)
- *   - Navigate to Onboarding after registration (R23)
- *   Refs: R01, R03, R23, T01, T06
  */
 class RegisterFragment : Fragment() {
 

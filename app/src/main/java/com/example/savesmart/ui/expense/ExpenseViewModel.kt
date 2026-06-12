@@ -20,12 +20,6 @@ import java.util.Calendar
 
 /**
  * ViewModel for managing expense operations (Requirement R08, R10, R12, R13).
- *
- * GitHub commit suggestion:
- *   [expense] implement ExpenseViewModel with CRUD and filtering
- *   - Integrated with SaveSmartRepository
- *   - Added logic for date range filtering
- *   Refs: R08, R10, R12, R13, T01
  */
 class ExpenseViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 

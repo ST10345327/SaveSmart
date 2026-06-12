@@ -25,12 +25,6 @@ import com.example.savesmart.util.SessionManager
 
 /**
  * CategoriesFragment — UI for managing spending categories.
- *
- * GitHub commit suggestion:
- *   [categories] implement CategoriesFragment with RecyclerView integration
- *   - Set up CategoryManagementAdapter for list display
- *   - Integrated navigation to Add/Edit screens
- *   Refs: R05, R06, T01, T06
  */
 class CategoriesFragment : Fragment() {
 

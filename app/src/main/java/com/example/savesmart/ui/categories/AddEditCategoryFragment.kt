@@ -35,13 +35,6 @@ import kotlinx.coroutines.withContext
 
 /**
  * AddEditCategoryFragment — Handles creating and editing expense categories (R05, R06, R14).
- *
- * GitHub commit suggestion:
- *   [categories] implement AddEditCategoryFragment with color selection and goals (R05, R06, R14)
- *   - Integrated with Room via SaveSmartRepository
- *   - Implemented min/max goal validation in milliunits
- *   - Added soft delete functionality (R07)
- *   Refs: R05, R06, R07, R14, T10
  */
 class AddEditCategoryFragment : Fragment() {
 

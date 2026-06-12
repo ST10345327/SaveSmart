@@ -37,12 +37,6 @@ import com.google.android.material.tabs.TabLayoutMediator
  * Step 1: Set monthly budget goals.
  * Step 2: Create first spending category.
  * Step 3: Explain rewards system.
- *
- * GitHub commit suggestion:
- *   [onboarding] implement 3-step setup flow for new users (R23)
- *   - Integrated budget and first category creation
- *   - Added ViewPager2 with progress indicators
- *   Refs: R23, T06, CS8
  */
 class OnboardingFragment : Fragment() {
 

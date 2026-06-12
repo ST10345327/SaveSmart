@@ -21,12 +21,6 @@ import com.example.savesmart.util.CurrencyUtils
 
 /**
  * CategoryManagementAdapter — Adapter for managing the categories list (Requirement R05, R06).
- *
- * GitHub commit suggestion:
- *   [categories] implement CategoryManagementAdapter with goals display
- *   - Displays name, color, and min/max goals (R14)
- *   - Implements callback for edit actions
- *   Refs: R05, R06, R14, T01
  */
 class CategoryManagementAdapter(
     private val onEditClick: (Category) -> Unit

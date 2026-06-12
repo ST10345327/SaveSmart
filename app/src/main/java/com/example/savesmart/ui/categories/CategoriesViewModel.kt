@@ -17,12 +17,6 @@ import kotlinx.coroutines.launch
 
 /**
  * CategoriesViewModel — Manages category-related data and logic (Requirement R05, R06, R07).
- *
- * GitHub commit suggestion:
- *   [categories] implement CategoriesViewModel with CRUD and soft-delete (R05, R06, R07)
- *   - Integrated with SaveSmartRepository for category operations
- *   - Implemented soft-delete logic (R07)
- *   Refs: R05, R06, R07, T01
  */
 class CategoriesViewModel(private val repository: SaveSmartRepository) : ViewModel() {
 

@@ -26,12 +26,6 @@ import com.example.savesmart.util.SessionManager
 
 /**
  * RewardsFragment — Displays user points, levels, and unlocked badges (R19, R20, R21).
- *
- * GitHub commit suggestion:
- *   [rewards] implement RewardsFragment with level and badge visualization (R19, R20, R21)
- *   - Integrated points tracking and level progression
- *   - Added navigation to Leaderboard
- *   Refs: R19, R20, R21, T06
  */
 class RewardsFragment : Fragment() {
 

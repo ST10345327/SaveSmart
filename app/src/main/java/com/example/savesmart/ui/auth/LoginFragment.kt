@@ -27,14 +27,6 @@ import com.example.savesmart.util.SessionManager
  *
  * Manages login UI, credential input validation, session persistence, and navigation
  * to Dashboard on success or Onboarding on first registration.
- *
- * GitHub commit suggestion:
- *   [ui] implement login fragment with credential validation and session management
- *   - Observes authState LiveData from AuthViewModel for reactive updates (T01)
- *   - SessionManager saves user login for auto-login on restart (R02)
- *   - Navigate to Onboarding if first login (R23) or Dashboard if returning user
- *   - ViewBinding for memory-safe UI access (T06)
- *   Refs: R02, R04, R23, T01, T06
  */
 class LoginFragment : Fragment() {
 

@@ -21,12 +21,6 @@ import java.io.File
 
 /**
  * FullReceiptFragment — Displays a captured receipt photo in full screen (Requirement R11).
- *
- * GitHub commit suggestion:
- *   [expense] implement FullReceiptFragment for detailed receipt viewing (R11)
- *   - Added navigation from expense list to full-screen photo
- *   - Handled missing file state to prevent crashes
- *   Refs: R11, T06
  */
 class FullReceiptFragment : Fragment() {
 

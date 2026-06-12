@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -27,12 +28,6 @@ import kotlinx.coroutines.launch
 
 /**
  * Main entry point activity.
- *
- * GitHub commit suggestion:
- *   [ui] implement BottomNavigationView with Navigation component
- *   - Integrated BottomNavigationView with NavController
- *   - Added visibility logic for auth vs main screens
- *   Refs: R05, R10, R15, R17
  */
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_SaveSmart)
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         Log.d(TAG, "onCreate: Initializing MainActivity")
 
         setContentView(R.layout.activity_main)
@@ -56,9 +52,30 @@ class MainActivity : AppCompatActivity() {
             val mainLayout = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.main_layout)
             ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                // Only apply horizontal and top padding to the root layout
-                // Bottom padding is handled by the BottomNavigationView itself
+                val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+                
+                // Horizontal and top padding are always handled at root for system bars
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+                
+                // Bottom padding logic
+                // If the keyboard is visible, we apply the keyboard height as padding
+                // to push the content (including buttons and indicators) up
+                val bottomPadding = if (imeInsets.bottom > 0) {
+                    imeInsets.bottom
+                } else if (bottomNav.visibility == View.GONE) {
+                    // For screens without bottom nav (onboarding/auth), ensure navigation bar doesn't overlap
+                    systemBars.bottom
+                } else {
+                    // For screens with bottom nav, the nav view handles the bottom insets
+                    0
+                }
+                
+                // Instead of padding the root layout which can cause "dots on top of input" if not careful,
+                // we apply bottom margin/padding to the NavHostFragment container or handle it via padding
+                // To keep it simple and effective, we padding the main layout but we removed the 
+                // conflicting fitsSystemWindows from ViewPager2 to allow NestedScrollView to do its job.
+                v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, bottomPadding)
+
                 insets
             }
 
@@ -139,6 +156,8 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.isEnabled = true
                     }
                 }
+                // Force inset re-evaluation when visibility changes
+                ViewCompat.requestApplyInsets(mainLayout)
             }
 
             Log.d(TAG, "onCreate: Navigation setup complete")

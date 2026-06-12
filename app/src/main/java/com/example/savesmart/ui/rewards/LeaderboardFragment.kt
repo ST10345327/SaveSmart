@@ -23,12 +23,6 @@ import com.example.savesmart.ui.ViewModelFactory
 
 /**
  * LeaderboardFragment — Displays a ranked list of all users by points (Requirement R22).
- *
- * GitHub commit suggestion:
- *   [rewards] implement LeaderboardFragment with global rankings (R22)
- *   - Integrated with RewardsViewModel for global ranked data
- *   - Added RecyclerView with rank-based styling
- *   Refs: R22, T06, CS1
  */
 class LeaderboardFragment : Fragment() {
 

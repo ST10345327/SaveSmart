@@ -19,12 +19,6 @@ import com.example.savesmart.databinding.ItemLeaderboardBinding
 
 /**
  * LeaderboardAdapter — Displays a ranked list of users and their total points (Requirement R22).
- *
- * GitHub commit suggestion:
- *   [rewards] implement LeaderboardAdapter with rank highlighting (R22)
- *   - Integrated with RewardsViewModel for ranked data
- *   - Added Gold/Silver/Bronze color highlighting for top 3
- *   Refs: R22, T06, CS1
  */
 class LeaderboardAdapter : ListAdapter<User, LeaderboardAdapter.LeaderboardViewHolder>(UserDiffCallback()) {
 

@@ -34,13 +34,6 @@ import kotlinx.coroutines.withContext
 
 /**
  * Fragment responsible for displaying the user's monthly spending summary.
- *
- * GitHub commit suggestion:
- *   [dashboard] implement DashboardFragment with progress visualization
- *   - Integrated MVVM with DashboardViewModel
- *   - Added logic for monthly spending progress bar
- *   - Added navigation to Category Management
- *   Refs: R15, R16, T01, T06
  */
 class DashboardFragment : Fragment() {
 
