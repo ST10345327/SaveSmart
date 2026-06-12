@@ -1,68 +1,44 @@
-# SaveSmart
+# SaveSmart: Personal Budgeting Application
 
 ## Overview
-SaveSmart is an offline-first Android budgeting application built with Kotlin and Room. It provides a secure and robust way for users to track spending, manage category-based budgets, and stay motivated through a built-in gamification system.
+SaveSmart is an offline-first Android application designed for personal financial management. Developed using Kotlin and the Room Persistence Library, the application provides a secure environment for tracking expenditures, managing category-specific budget goals, and enhancing user engagement through a structured gamification system.
 
-## Features
-- **Expense Tracking**: Log daily expenses with precision using milliunit conversion.
-- **Category Management**: Custom categories with budget goals and color customization.
-- **Gamification**: Earn points, unlock achievement badges, and track levels.
-- **Receipt Attachments**: Integrated camera support to capture and store receipt images.
-- **Offline Storage**: Secure, local SQLite database using Room persistence.
-- **Security**: SHA-256 password hashing and secure session management.
+## Key Features
+- **Expenditure Tracking**: Comprehensive logging of daily expenses with high-precision currency handling.
+- **Categorization**: Customizable spending categories with individual budget limits and visual identifiers.
+- **Gamification Framework**: System-managed point allocation, achievement badges, and progression levels to incentivise financial discipline.
+- **Digital Receipt Management**: Integrated camera functionality for the digitisation and storage of physical receipts.
+- **Data Persistence**: Robust offline data management using a local SQLite database with Room ORM.
+- **Security Protocols**: Implementation of SHA-256 hashing for credential security and managed session states.
 
-## Architecture
-- **Language**: Kotlin
-- **Pattern**: MVVM (Model-View-ViewModel) + Repository Pattern
-- **Database**: Room Persistence Library
-- **UI**: Material Design 3, ViewBinding, Navigation Component
+## Technical Architecture
+- **Programming Language**: Kotlin
+- **Architectural Pattern**: MVVM (Model-View-ViewModel) supported by the Repository Pattern.
+- **Data Layer**: Room Persistence Library (SQLite).
+- **User Interface**: Material Design 3, View Binding, and Jetpack Navigation Component.
 
-## Build Instructions
-1. Clone the repository.
-2. Open the project in Android Studio (Ladybug or newer).
-3. Ensure JDK 17 is configured in Project Structure.
-4. Sync Gradle and run on an emulator or device (Min SDK 26).
+## Project Structure
+- `app/src/main/java/.../data/`: Data entities, DAOs, and Room database configuration.
+- `app/src/main/java/.../ui/`: Feature-specific Fragments and ViewModels.
+- `app/src/main/java/.../util/`: Security, session management, and currency utilities.
+- `docs/`: Supplemental research, planning documentation, and project workflow charts.
 
-<<<<<<< HEAD
-## Test Instructions
-- Run unit tests: `./gradlew test`
-- Build APK: `./gradlew assembleDebug`
-=======
-```
-SaveSmart/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/example/savesmart/
-│   │   │   │   ├── data/       (Entities, DAOs, Database, Repository)
-│   │   │   │   ├── ui/         (Fragments & ViewModels per feature)
-│   │   │   │   └── util/       (Security, Currency, Session utilities)
-│   │   │   └── res/            (Layouts, Themes, Navigation Graph)
-│   │   └── test/               (Unit Tests for core logic)
-└── docs/                       (Project Workflow, Gantt Charts, PART 1 Research, PART 1 Planning & Design)
-```
+## Requirements Compliance
+This implementation adheres to the OPSC6311 Portfolio of Evidence (POE) specifications:
+- **Functional Requirements (R01-R23)**: Full implementation of features ranging from Authentication to Gamification.
+- **Technical Requirements (T01-T10)**: Adherence to architectural standards, including MVVM, Room Database implementation, and Unit Testing.
 
-## 📋 Requirements Reference
- 1
-This project implements all requirements for the OPSC6311 POE:
-- **R01-R23**: All functional features from Auth to Gamification.
-- **T01-T10**: Technical standards including MVVM, Room, and Unit Testing.
+## Setup and Installation
+1. Clone the repository to your local environment.
+2. Open the project in Android Studio (Version 2024.1 or later).
+3. Verify the project is configured to use JDK 17.
+4. Synchronise the Gradle files.
+5. Deploy the application to an Android Emulator or physical device (Minimum SDK: API 26).
 
-## 🚦 Getting Started
+## Contributors
+- **Olebogeng Phawe** (ST10345327)
+- **Nkosikhona Dlamini** (ST10437200)
+- **Mbuso Sbusiso Dube** (ST10449154)
 
-1. Clone the repository: `git clone <repo-url>`
-2. Open in **Android Studio 2024.1+**.
-3. Ensure you have **JDK 17** configured.
-4. Build and run on an emulator or device (API 26+).
-5. Demo Video on YouTube: https://youtube.com/shorts/o-3LbOdyXBU
-
-##  Presentation 
-
-PowerPoint Presentation: https://advtechonline-my.sharepoint.com/:p:/g/personal/st10437200_rcconnect_edu_za/IQBn65wBWD1lQKlcxjtnw88JAQ-_tQDWjkcgiwGYIMDd6vU?e=qvCNB9 
-
----
-**Author:** Olebogeng Phawe (ST10345327), Nkosikhona Dlamini (ST10437200), Mbuso Sbusiso Dube (ST10449154)  
-**Course:** OPSC6311 Personal Budget Tracker  
-**Institution:** IIE Rosebank College
-
->>>>>>> ce038ab2d766f20e06e2c9ab1a9ab065e6b9ee31
+**Course**: OPSC6311 Personal Budget Tracker  
+**Institution**: IIE Rosebank College
