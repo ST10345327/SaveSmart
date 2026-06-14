@@ -59,7 +59,7 @@ class ExpenseViewModelTest {
                 maxGoalMilliunits = 0,
             )
         )
-        val liveData = MutableLiveData(categories)
+        val liveData = MutableLiveData<List<Category>>()
         
         every { repository.getCategoriesForUserLive(userId) } returns liveData
 
@@ -67,6 +67,10 @@ class ExpenseViewModelTest {
         viewModel.categories.observeForever {}
 
         viewModel.loadCategories(userId)
+        
+        // Post value after the observer is attached and loadCategories is called
+        liveData.value = categories
+
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(categories, viewModel.categories.value)
