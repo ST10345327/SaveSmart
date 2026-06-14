@@ -5,7 +5,7 @@
         android:height="10dp"
         android:gravity="center">
         <shape android:shape="oval">
-            <solid android:color="#E5E7EB" />
+            <solid android:color="@color/background" />
         </shape>
     </item>
 </layer-list>

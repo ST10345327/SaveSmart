@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- White background to match the icon background and screen -->
     <item>
-        <color android:color="#FFFFFF" />
+        <color android:color="@color/card_surface" />
     </item>
 
     <!-- Real App Icon Foreground in the center -->

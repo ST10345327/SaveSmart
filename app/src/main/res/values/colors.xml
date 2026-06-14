@@ -9,6 +9,7 @@
     <color name="close_amber">#D97706</color>
     <color name="over_red">#B91C1C</color>
     <color name="red">#B91C1C</color>
+    <color name="warning_red_bg">#FEE2E2</color>
 
     <!-- Rewards Colors - Optimized Visibility -->
     <color name="rewards_purple">#4C1D95</color>

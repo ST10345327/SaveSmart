@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/background">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:background="#FEE2E2"
+                    android:background="@color/warning_red_bg"
                     android:padding="12dp"
                     android:text="@string/msg_overspending_warning"
                     android:textColor="@color/over_red"
@@ -143,7 +143,7 @@
                     android:layout_marginTop="12dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white"
+                    app:cardBackgroundColor="@color/card_surface"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -179,7 +179,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/white"
+                    app:cardBackgroundColor="@color/card_surface"
                     app:strokeWidth="1dp"
                     app:strokeColor="@color/border">
 
@@ -197,7 +197,7 @@
                             app:trackThickness="12dp"
                             app:trackCornerRadius="6dp"
                             app:indicatorColor="@color/primary_blue"
-                            app:trackColor="#F1F5F9" />
+                            app:trackColor="?attr/colorSurfaceVariant" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Neutral Palette for Dark Mode -->
+    <color name="background">#0F172A</color>
+    <color name="card_surface">#1E293B</color>
+    <color name="border">#334155</color>
+    <color name="border_color">#334155</color>
+
+    <color name="text_primary">#F9FAFB</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_hint">#64748B</color>
+
+    <!-- Refined Status Colors for Dark Mode -->
+    <color name="good_green">#10B981</color>
+    <color name="close_amber">#F59E0B</color>
+    <color name="over_red">#EF4444</color>
+    <color name="red">#EF4444</color>
+    <color name="warning_red_bg">#450A0A</color>
+
+    <!-- Rewards Colors - Dark Mode Optimization -->
+    <color name="rewards_purple">#6D28D9</color>
+    <color name="rewards_subtext_on_purple">#D1D5DB</color>
+</resources>
