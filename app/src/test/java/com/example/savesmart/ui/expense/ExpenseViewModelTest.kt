@@ -11,7 +11,8 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -27,7 +28,7 @@ class ExpenseViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var repository: SaveSmartRepository
     private lateinit var viewModel: ExpenseViewModel
 
@@ -36,15 +37,17 @@ class ExpenseViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+        every { Log.e(any(), any(), any()) } returns 0
         
-        repository = mockk()
+        repository = mockk(relaxed = true)
         viewModel = ExpenseViewModel(repository)
     }
 
     @After
     fun tearDown() {
-        unmockkStatic(Log::class)
         Dispatchers.resetMain()
+        unmockkStatic(Log::class)
     }
 
     @Test
@@ -71,7 +74,7 @@ class ExpenseViewModelTest {
         // Post value after the observer is attached and loadCategories is called
         liveData.value = categories
 
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         assertEquals(categories, viewModel.categories.value)
     }
