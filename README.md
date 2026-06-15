@@ -1,70 +1,103 @@
 # SaveSmart: Advanced Personal Budgeting and Gamified Finance
 
-## Overview
-SaveSmart is an offline-first Android application designed for personal financial management. Built with Kotlin and modern Android architecture, the application enables users to track spending through precision logging, granular budgeting, and a gamification engine designed to encourage financial discipline.
+## 1. Purpose of the App
+SaveSmart is an offline-first Android application designed to bridge the gap between standard financial management and user engagement. 
 
-This project was developed for the OPSC6311 Portfolio of Evidence (POE), focusing on bridging the gap between standard financial tools and user engagement.
+### The Problem
+Traditional budgeting tools are often perceived as tedious or complex, leading to "tracking fatigue" where users stop logging their expenses after a few days. Additionally, many applications suffer from floating-point rounding errors when handling multiple currencies or small transactions, leading to inaccurate financial records over time.
 
-## App Demo Video
-Youtube Link: https://youtu.be/I4lUI_FgktQ?si=SJl-pIUOGxOnJDag
-
-
-## Feature Set and Research Alignment
-
-The development process was guided by research into market-leading applications such as YNAB, Wallet, and Money Manager. This resulted in a two-tier feature strategy:
-
-### 1. Features Inspired by Research
-These features were identified as industry standards during research and implemented with custom adaptations for SaveSmart:
-- **Precision Currency Handling**: Utilizes milliunit storage (inspired by the YNAB API) to eliminate floating-point rounding errors.
-- **Interactive Onboarding**: A guided walkthrough (inspired by YNAB) to reduce the initial learning curve.
-- **Receipt Digitization**: Integrated camera functionality (inspired by Money Manager) for physical record-keeping.
-- **Offline-First Architecture**: Robust Room database implementation (inspired by Money Manager) for data privacy and local performance.
-- **Color-Coded Dashboard**: Visual status indicators (inspired by Wallet and YNAB) for instant budget health assessment.
-
-### 2. Original Innovations
-These features represent the unique value proposition of SaveSmart and were developed to address the engagement gap found in current market solutions:
-- **Unified Gamification Engine**: A comprehensive system combining points, badges, and levels into a core feedback loop.
-- **Global Leaderboard (Requirement R22)**: An original competitive feature that ranks registered users by points earned, fostering community and accountability.
-- **Level Progression System (Requirement R21)**: A dynamic leveling mechanic (1000 points per level) with visual progress tracking.
-- **Achievement Gallery**: A specialized badge system that rewards positive financial behaviors such as consistent logging and budget adherence.
-- **Advanced Expense Management (Requirement R12)**: A custom interface for the modification and deletion of historical data.
+### The Solution
+SaveSmart solves these issues by:
+- **Gamification**: Integrating a unified engine with points, levels, and badges to turn financial discipline into a rewarding experience.
+- **Precision Engineering**: Utilizing milliunit storage (storing currency as integers) to eliminate rounding errors entirely.
+- **Privacy and Speed**: An offline-first architecture ensures user data remains on the device, providing instant performance without requiring a constant internet connection.
 
 ---
 
-## Technical Architecture and Stack
+## 2. Design of the App
+The application follows a modern, clean aesthetic using **Material Design 3** and is structured to guide the user from setup to mastery.
 
-- **Language**: 100% Kotlin
-- **Architecture**: MVVM (Model-View-ViewModel) with the Repository Pattern.
-- **Database**: Room Persistence Library with foreign-key integrity and optimized queries for gamification logic.
-- **UI and UX**: Material Design 3, View Binding, and Jetpack Navigation.
-- **Asynchrony**: Kotlin Coroutines for responsive background processing.
-- **Analytics**: MPAndroidChart for visual spending breakdowns.
+### Screen-by-Screen Structure
+- **Interactive Onboarding**: A 3-step guided walkthrough that introduces core concepts and helps users set their initial budget goals.
+- **Secure Authentication**: A SHA-256 hashed login and registration system to protect user profiles.
+- **Central Dashboard**: The command center of the app, featuring color-coded budget health indicators and visual spending breakdowns via **MPAndroidChart**.
+- **Expense Management**: A robust list view (Requirement R10) with date-range filtering and swipe-to-delete actions (R12).
+- **Receipt Digitization**: A specialized interface for capturing and viewing physical receipts using the device camera.
+- **Category Customization**: Allows users to define their own spending categories with custom colors and budget limits.
+- **Global Leaderboard**: A competitive ranking screen where users can see how their financial discipline compares to others.
+- **Achievement Gallery**: A visual trophy room showcasing earned badges like "First Save", "7-Day Streak", and "Goal Crusher".
 
----
+### UI Components and Decisions
+- **Material Design 3**: Used for modern components like the Floating Action Button (FAB), Navigation Bar, and elevated Cards.
+- **Dynamic Theming**: Fully optimized for both Light and Dark modes to ensure accessibility in all lighting conditions.
+- **MVVM Architecture**: Ensures a separation of concerns, making the UI responsive and the data logic testable.
 
-## Dark Mode and Accessibility
-A technical focus was placed on accessibility and visual consistency across system themes:
-- **Dark Mode Optimization**: Resolved visibility issues via a dedicated night-mode color palette.
-- **Onboarding Indicator Fix**: Implemented custom logic for the page indicator using TabLayoutMediator to ensure accurate synchronization.
-- **High-Contrast Indicators**: Utilized theme-aware status colors to ensure readability in all environments.
-
----
-
-## Project Structure
-- `data/`: Room entities, DAOs, and the SaveSmartRepository.
-- `ui/`: Feature-specific Fragments, Adapters, and ViewModels.
-- `util/`: Session management, SHA-256 security implementation, and currency formatting.
-- `docs/`: Research, planning, and design documentation.
+> *[Insert App Screen Images Here]*
 
 ---
 
-## Setup and Installation
-1. Clone the repository.
-2. Open the project in Android Studio (Ladybug or later).
-3. Perform a Gradle Sync to resolve dependencies.
-4. Deploy to an emulator or physical device (Minimum SDK: API 26).
+## 3. GitHub and GitHub Actions
+The development of SaveSmart followed professional DevOps practices to ensure code integrity and collaborative efficiency.
+
+### Version Control Strategy
+We utilized **GitHub** as our primary repository hosting service. Our strategy included:
+- **Atomic Commits**: Ensuring each commit represents a single logical change with a descriptive message.
+- **Branch Management**: Using a stable `main` branch for releases and feature-specific development to prevent regressions.
+- **Issue Tracking**: Documentation of requirements (R01-R23) were mapped to development milestones.
+
+### CI/CD with GitHub Actions
+We implemented a **GitHub Actions** workflow defined in `.github/workflows/android_ci.yml` to automate our quality assurance.
+
+#### Workflow Configuration (`android_ci.yml`):
+```yaml
+name: Android CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Downloads the code to the runner
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4 # Configures the Java environment
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew # Ensures the build script can run
+
+      - name: Build project
+        run: ./gradlew build # Compiles the app and checks for syntax errors
+
+      - name: Run unit tests
+        run: ./gradlew test # Executes logic tests to ensure stability
+```
+
+**What this workflow does:**
+1. **Triggers**: Runs automatically every time code is pushed to the `main` branch or a Pull Request is opened.
+2. **Environment Setup**: Provisions a virtual Linux machine and installs Java 17.
+3. **Build Validation**: Attempts to compile the entire project. If the code has errors, the "Build" step fails, alerting the team immediately.
+4. **Automated Testing**: Runs all unit tests. This ensures that new features don't break existing functionality (Regression Testing).
+
+> *[Insert Images of GitHub Repository and Actions Page Here]*
 
 ---
+
+## Technical Stack Summary
+- **Language**: Kotlin
+- **Architecture**: MVVM + Repository Pattern
+- **Database**: Room Persistence Library
+- **UI**: Material 3, View Binding, Jetpack Navigation
+- **Asynchrony**: Coroutines
+- **Analytics**: MPAndroidChart
 
 ## Contributors
 - **Olebogeng Phawe** (ST10345327)
@@ -72,4 +105,4 @@ A technical focus was placed on accessibility and visual consistency across syst
 - **Mbuso Sbusiso Dube** (ST10449154)
 
 **Institution**: IIE Rosebank International 
-**Final Submission**: 15 June 2026
+**Final Submission Date**: 15 June 2026
