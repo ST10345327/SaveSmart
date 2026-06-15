@@ -6,7 +6,7 @@ SaveSmart is an offline-first Android application designed for personal financia
 This project was developed for the OPSC6311 Portfolio of Evidence (POE), focusing on bridging the gap between standard financial tools and user engagement.
 
 ## App Demon Video
-- **Youtube Link: https://youtu.be/I4lUI_FgktQ?si=SJl-pIUOGxOnJDag
+Youtube Link: https://youtu.be/I4lUI_FgktQ?si=SJl-pIUOGxOnJDag
 
 
 ## Feature Set and Research Alignment
