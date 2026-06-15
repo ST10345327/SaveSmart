@@ -53,7 +53,7 @@ class CategoriesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: started")
 
-        // Initialization (T01)
+        // Initialize dependencies (Database, Repository, ViewModel)
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
         val factory = com.example.savesmart.ui.ViewModelFactory(repository)
@@ -65,10 +65,14 @@ class CategoriesFragment : Fragment() {
         observeData()
     }
 
+    /**
+     * Initializes the RecyclerView with a custom adapter for category management
+     */
     private fun setupRecyclerView() {
         Log.d(TAG, "setupRecyclerView: initializing adapter")
         adapter = CategoryManagementAdapter { category ->
             Log.d(TAG, "setupRecyclerView: navigating to edit category '${category.name}'")
+            // Navigate to edit screen using the selected category ID
             val action = CategoriesFragmentDirections.actionCategoriesFragmentToAddEditCategoryFragment(category.categoryId)
             findNavController().navigate(action)
         }
@@ -79,14 +83,21 @@ class CategoriesFragment : Fragment() {
         }
     }
 
+    /**
+     * Sets up click listeners for interactive UI elements
+     */
     private fun setupListeners() {
         binding.fabAddCategory.setOnClickListener {
             Log.d(TAG, "setupListeners: FAB clicked - navigating to AddCategory")
+            // Navigate to add screen with ID -1 to indicate a new category
             val action = CategoriesFragmentDirections.actionCategoriesFragmentToAddEditCategoryFragment(-1)
             findNavController().navigate(action)
         }
     }
 
+    /**
+     * Observes the category data from ViewModel and updates the adapter
+     */
     private fun observeData() {
         val userId = sessionManager.getUserId()
         if (userId != -1) {

@@ -44,20 +44,27 @@ class SaveSmartRepository(
     /**
      * Requirement R01 Hardening: Atomic registration with duplicate prevention.
      */
+    /**
+     * Requirement R01: Registers a new user with duplicate check.
+     * Transaction ensures atomic operations.
+     */
     suspend fun registerUser(username: String, passwordHash: String): Boolean = database.withTransaction {
         val existingUser = userDao.getUserByUsername(username)
-        if (existingUser != null) return@withTransaction false
+        if (existingUser != null) return@withTransaction false // Prevent duplicate usernames
         
         val newUser = User(username = username, passwordHash = passwordHash, fullName = username)
         try {
             val userId = userDao.insertUser(newUser)
             return@withTransaction userId > 0
         } catch (e: Exception) {
-            Log.e(TAG, "registerUser: Constraint violation or failure", e)
+            Log.e(TAG, "registerUser: Failure during insertion", e)
             false
         }
     }
 
+    /**
+     * Authenticates user against credentials
+     */
     suspend fun loginUser(username: String, passwordHash: String): User? {
         return userDao.getUserByCredentials(username, passwordHash)
     }
@@ -73,7 +80,7 @@ class SaveSmartRepository(
     suspend fun updateUser(user: User) = userDao.updateUser(user)
 
     /**
-     * Requirement R22: Get all users ranked by points.
+     * Requirement R22: Fetches all users ordered by points for the leaderboard
      */
     fun getAllUsersRankedLive(): LiveData<List<User>> = userDao.getAllUsersRankedLive()
 
@@ -86,8 +93,7 @@ class SaveSmartRepository(
     }
 
     /**
-     * Requirement R19: Award points to the user.
-     * Guaranteed atomic via UserDao @Transaction.
+     * Requirement R19: Updates user points and handles level-up logic
      */
     suspend fun awardPoints(userId: Int, points: Int) {
         Log.d(TAG, "awardPoints: Adding $points points to user $userId")
@@ -99,17 +105,16 @@ class SaveSmartRepository(
     fun getCategoriesForUserLive(userId: Int): LiveData<List<Category>> = categoryDao.getCategoriesForUserLive(userId)
 
     /**
-     * Requirement R05 Hardening: Atomic category creation with point award.
+     * Requirement R05: Inserts a new category and awards setup points
      */
     suspend fun insertCategory(category: Category): Long = database.withTransaction {
-        // Idempotency Check
+        // Prevent accidental double clicks
         val key = "CAT_${category.userId}_${category.name.hashCode()}"
         if (isDuplicateSubmission(key)) return@withTransaction -1L
 
-        Log.d(TAG, "insertCategory: ${category.name} for user ${category.userId}")
         val id = categoryDao.insertCategory(category)
         if (id > 0) {
-            // R19: Award 25 points for setting up a category
+            // Reward user for organizing their finance
             awardPoints(category.userId, 25)
         }
         id
@@ -118,32 +123,30 @@ class SaveSmartRepository(
     suspend fun updateCategory(category: Category) = categoryDao.updateCategory(category)
 
     /**
-     * Requirement R07 Hardening: Atomic delete with point deduction.
+     * Requirement R07: Soft deletes a category and removes corresponding points
      */
     suspend fun deleteCategory(categoryId: Int) = database.withTransaction {
         val category = categoryDao.getCategoryById(categoryId)
         category?.let {
-            Log.d(TAG, "deleteCategory: Deducting 25 points from user ${it.userId}")
             userDao.addPointsAndLevelUp(it.userId, -25)
             categoryDao.softDeleteCategory(categoryId)
         }
     }
     
     /**
-     * Requirement R08 Hardening: Atomic expense creation with point award and badge check.
+     * Requirement R08: Records an expense and awards points/badges
      */
     suspend fun insertExpense(expense: Expense): Long = database.withTransaction {
-        // Idempotency Check (Prevent rapid double-taps)
+        // Double-tap prevention
         val key = "EXP_${expense.userId}_${expense.amountMilliunits}_${expense.dateMillis}_${expense.description.hashCode()}"
         if (isDuplicateSubmission(key)) return@withTransaction -1L
 
-        Log.d(TAG, "insertExpense(): user=${expense.userId}, amount=${expense.amountMilliunits}")
         val id = expenseDao.insertExpense(expense)
         if (id > 0) {
-            // R19: Award 10 points for every expense added
+            // Reward for consistent logging
             awardPoints(expense.userId, 10)
             
-            // Check for badges (Requirement R20)
+            // Check if any badge conditions are met (Requirement R20)
             checkForBadgesInternal(expense.userId, expense.dateMillis)
         }
         id

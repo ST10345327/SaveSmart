@@ -63,6 +63,7 @@ class ExpenseListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Initialize dependencies
         sessionManager = SessionManager(requireContext())
         val db = SaveSmartDatabase.getInstance(requireContext())
         val repository = SaveSmartRepository(db)
@@ -72,16 +73,20 @@ class ExpenseListFragment : Fragment() {
         setupRecyclerView()
         setupFilters()
         
-        // Initialize with current month
+        // Initialize with current month range by default
         setDefaultDateRange()
         setupObservers()
     }
 
+    /**
+     * Observes the filtered expense list from ViewModel and updates UI
+     */
     private fun setupObservers() {
         val userId = sessionManager.getUserId()
         if (userId == -1) return
 
         viewModel.filteredExpensesWithCategory.observe(viewLifecycleOwner) { list ->
+            // Toggle empty state visibility based on data availability
             if (list.isEmpty()) {
                 binding.layoutEmpty.visibility = View.VISIBLE
                 binding.rvExpenses.visibility = View.GONE
@@ -92,14 +97,18 @@ class ExpenseListFragment : Fragment() {
             }
         }
         
-        // Trigger initial load
+        // Trigger initial data load for the current user and date range
         viewModel.setExpenseFilter(userId, startDate, endDate)
     }
 
+    /**
+     * Configures the RecyclerView with the ExpenseAdapter and swipe-to-delete functionality
+     */
     private fun setupRecyclerView() {
         adapter = ExpenseAdapter(
             onItemClicked = { expense ->
                 Log.d(TAG, "Expense clicked: ${expense.expenseId}")
+                // If the expense has a receipt photo, navigate to full view
                 if (!expense.receiptPhotoPath.isNullOrEmpty()) {
                     val bundle = bundleOf("photoPath" to expense.receiptPhotoPath)
                     findNavController().navigate(R.id.action_expenseListFragment_to_fullReceiptFragment, bundle)
@@ -107,12 +116,12 @@ class ExpenseListFragment : Fragment() {
             },
             onEditClicked = { expense ->
                 Log.d(TAG, "Edit clicked: ${expense.expenseId}")
+                // Navigate to add/edit fragment with existing expense ID
                 val bundle = bundleOf("expenseId" to expense.expenseId)
                 findNavController().navigate(R.id.action_expenseListFragment_to_addExpenseFragment, bundle)
             },
             onDeleteClicked = { expense ->
                 Log.d(TAG, "Delete clicked: ${expense.expenseId}")
-                // Find position for swipe-like confirmation logic
                 val position = adapter.currentList.indexOf(expense)
                 if (position != -1) {
                     showDeleteConfirmation(expense, position)
@@ -122,7 +131,7 @@ class ExpenseListFragment : Fragment() {
         binding.rvExpenses.layoutManager = LinearLayoutManager(requireContext())
         binding.rvExpenses.adapter = adapter
 
-        // Requirement R12: Swipe to delete expense
+        // Implementation of Requirement R12: Swipe to delete expense
         val swipeHandler = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, t: RecyclerView.ViewHolder) = false
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -141,14 +150,19 @@ class ExpenseListFragment : Fragment() {
         }
     }
 
+    /**
+     * Sets the default filter range to the current month
+     */
     private fun setDefaultDateRange() {
         val calendar = Calendar.getInstance()
+        // Start of month
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         startDate = calendar.timeInMillis
 
+        // End of month
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
         calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 59)
@@ -157,6 +171,9 @@ class ExpenseListFragment : Fragment() {
         updateDateRangeText()
     }
 
+    /**
+     * Opens a Material Date Range Picker to filter expenses
+     */
     private fun showDateRangePicker() {
         val builder = MaterialDatePicker.Builder.dateRangePicker()
         builder.setTitleText("Select Date Range")
@@ -164,7 +181,7 @@ class ExpenseListFragment : Fragment() {
         
         picker.addOnPositiveButtonClickListener { range ->
             startDate = range.first
-            // Set end date to end of the selected day
+            // Ensure end date includes the full final day
             val cal = Calendar.getInstance()
             cal.timeInMillis = range.second
             cal.set(Calendar.HOUR_OF_DAY, 23)
@@ -180,6 +197,9 @@ class ExpenseListFragment : Fragment() {
         picker.show(childFragmentManager, "DATE_RANGE_PICKER")
     }
 
+    /**
+     * Updates the UI text displaying the current filter range
+     */
     private fun updateDateRangeText() {
         val sdf = SimpleDateFormat("dd MMM", Locale.getDefault())
         val dateText = "${sdf.format(Date(startDate))} - ${sdf.format(Date(endDate))}"
@@ -187,6 +207,9 @@ class ExpenseListFragment : Fragment() {
     }
 
 
+    /**
+     * Shows a confirmation dialog before deleting an expense
+     */
     private fun showDeleteConfirmation(expense: com.example.savesmart.data.dao.ExpenseWithCategory, position: Int) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete Expense")
@@ -196,6 +219,7 @@ class ExpenseListFragment : Fragment() {
                 Toast.makeText(context, "Expense deleted", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel") { _, _ ->
+                // Restore item in RecyclerView if canceled
                 adapter.notifyItemChanged(position)
             }
             .show()
