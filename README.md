@@ -32,9 +32,6 @@ The application follows a modern, clean aesthetic using **Material Design 3** an
 - **Dynamic Theming**: Fully optimized for both Light and Dark modes to ensure accessibility in all lighting conditions.
 - **MVVM Architecture**: Ensures a separation of concerns, making the UI responsive and the data logic testable.
 
-> *[Insert App Screen Images Here]*
-
----
 
 ## 3. GitHub and GitHub Actions
 The development of SaveSmart followed professional DevOps practices to ensure code integrity and collaborative efficiency.
@@ -87,9 +84,6 @@ jobs:
 3. **Build Validation**: Attempts to compile the entire project. If the code has errors, the "Build" step fails, alerting the team immediately.
 4. **Automated Testing**: Runs all unit tests. This ensures that new features don't break existing functionality (Regression Testing).
 
-> *[Insert Images of GitHub Repository and Actions Page Here]*
-
----
 
 ## Technical Stack Summary
 - **Language**: Kotlin
