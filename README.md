@@ -99,6 +99,9 @@ jobs:
 - **Asynchrony**: Coroutines
 - **Analytics**: MPAndroidChart
 
+## YouTube Demo
+https://youtu.be/I4lUI_FgktQ?si=0H9ZXaBOh7aLXsCc
+
 ## Contributors
 - **Olebogeng Phawe** (ST10345327)
 - **Nkosikhona Dlamini** (ST10437200)
